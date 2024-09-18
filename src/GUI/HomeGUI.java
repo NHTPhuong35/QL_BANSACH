@@ -392,7 +392,7 @@ public class HomeGUI extends JFrame {
         
 //        GridBagConstraints Menuconstraints = new GridBagConstraints();
 //        constraints.gridwidth = 2;
-//        constraints.fill = GridBagConstraints.HORIZONTAL; //lấp đầy theo chiều
+//        constraints.fill = GridBagConstraints.HORIZONTAL; //
 //        add(jPanel, constraints);
 
     }
