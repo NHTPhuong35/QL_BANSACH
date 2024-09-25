@@ -85,10 +85,10 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnDsAnh.setLayout(new FlowLayout(FlowLayout.CENTER));
         pnDsAnh.setMinimumSize(new Dimension(200, 230));
         pnDsAnh.setPreferredSize(new Dimension(200, 230));
-        pnDsAnh.setMaximumSize(new Dimension(width, 500));
+        pnDsAnh.setMaximumSize(new Dimension(width, 230));
 
         JScrollPane scrollPane = new JScrollPane(pnDsAnh);
-        scrollPane.setPreferredSize(new Dimension(200, 300));
+        scrollPane.setPreferredSize(new Dimension(200, 230));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -311,10 +311,12 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
         pnThaoTac.add(btnHuy);
         this.add(pnThaoTac);
+        this.add(Box.createVerticalStrut(20));
         setVisible(true);
     }
 
     public void initEdit() {
+        this.setSize(new Dimension(width, 650));
         lblHeader.setText("Sửa sách");
         pnThuocTinh[4].setVisible(false);
         pnThuocTinh[5].setVisible(false);
@@ -322,6 +324,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
         pnThaoTac.add(btnHuy);
         this.add(pnThaoTac);
+        this.add(Box.createVerticalStrut(20));
         
         txtTenSach.setText(spDTO.getTenSach());
         txtNhaXB.setText(spDTO.getNxb());
@@ -333,8 +336,8 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     public static void main(String[] args) {
 
         ChucNangSanPhamGUI t = new ChucNangSanPhamGUI();
-        t.initAdd();
-//            t.initEdit();
+//        t.initAdd();
+            t.initEdit();
     }
 
     @Override

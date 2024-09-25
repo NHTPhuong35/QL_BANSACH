@@ -397,6 +397,28 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                 t.initEdit();
             }
         }
+        if (btn == btnXoa) {
+            if (selectedSP == null || selectedSP.getMaSach() == null) {
+                JOptionPane.showMessageDialog(null,
+                        "Hãy chọn sách cần xoá!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+            } else {
+                Object[] options = {"Có", "Không"};
+                int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn khoá user này không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (result == JOptionPane.YES_OPTION) {
+                    dsSP.remove(selectedSP);
+                    pnContent.remove(jpSanPham); 
+                    tbSanPham = initContent(dsSP); 
+                    jpSanPham = new JScrollPane(tbSanPham); 
+                    pnContent.add(jpSanPham, BorderLayout.CENTER);
+                    
+                    JOptionPane.showMessageDialog(null,
+                        "Đã xoá thành công", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                    pnContent.revalidate();
+                    pnContent.repaint();
+                }
+
+            }
+        }
     }
 
     @Override
