@@ -8,7 +8,6 @@ package GUI;
  *
  * @author nhatm
  */
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -16,6 +15,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 public class HomeGUI extends JFrame {
+
     private JButton SanPhamButton;
     private JButton HoaDonButton;
     private JButton KhachHangButton;
@@ -39,26 +39,27 @@ public class HomeGUI extends JFrame {
     private JLabel HeadAppName;
     private JLabel LogoApp;
     private JPanel ShowPanel;
-    
-    public HomeGUI(){
-        
+
+    int width, height;
+
+    public HomeGUI() {
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Trang chủ");
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        
+
         //**MENU**
-        
         MenuPanel = new JPanel();
         MenuPanel.setLayout(new GridLayout(0, 1, 0, 0));
         MenuPanel.setBackground(Color.decode("#98DCE2"));
-        
+
         AppName = new JLabel("Cửa hàng bán sách nhóm 2");
         Font AppNamefont = new Font("Arial", Font.BOLD, 13);
         AppName.setFont(AppNamefont);
-        AppName.setHorizontalAlignment(SwingConstants.CENTER); 
+        AppName.setHorizontalAlignment(SwingConstants.CENTER);
         AppName.setVerticalAlignment(SwingConstants.CENTER);
-        
+
         SanPhamButton = new JButton("Sản phẩm");
         SanPhamButton.setIcon(new ImageIcon(getClass().getResource("/Image/product.png")));
         SanPhamButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -76,7 +77,7 @@ public class HomeGUI extends JFrame {
                 SanPhamButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         HoaDonButton = new JButton("Hóa đơn");
         HoaDonButton.setIcon(new ImageIcon(getClass().getResource("/Image/bill.png")));
         HoaDonButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -94,7 +95,7 @@ public class HomeGUI extends JFrame {
                 HoaDonButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         KhachHangButton = new JButton("Khách hàng");
         KhachHangButton.setIcon(new ImageIcon(getClass().getResource("/Image/customer.png")));
         KhachHangButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -112,8 +113,8 @@ public class HomeGUI extends JFrame {
                 KhachHangButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
-        NhanVienButton = new JButton("Nhân viên");               
+
+        NhanVienButton = new JButton("Nhân viên");
         NhanVienButton.setIcon(new ImageIcon(getClass().getResource("/Image/staff.png")));
         NhanVienButton.setHorizontalAlignment(SwingConstants.LEFT);
         NhanVienButton.setVerticalAlignment(SwingConstants.CENTER);
@@ -130,7 +131,7 @@ public class HomeGUI extends JFrame {
                 NhanVienButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         ThongKeButton = new JButton("Thống kê");
         ThongKeButton.setIcon(new ImageIcon(getClass().getResource("/Image/statistical.png")));
         ThongKeButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -148,7 +149,7 @@ public class HomeGUI extends JFrame {
                 ThongKeButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         TacGiaButton = new JButton("Tác giả");
         TacGiaButton.setIcon(new ImageIcon(getClass().getResource("/Image/author.png")));
         TacGiaButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -166,8 +167,8 @@ public class HomeGUI extends JFrame {
                 TacGiaButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
-        PhanQuyenButton = new JButton("Phân quyền");              
+
+        PhanQuyenButton = new JButton("Phân quyền");
         PhanQuyenButton.setIcon(new ImageIcon(getClass().getResource("/Image/Decentralization.png")));
         PhanQuyenButton.setHorizontalAlignment(SwingConstants.LEFT);
         PhanQuyenButton.setVerticalAlignment(SwingConstants.CENTER);
@@ -184,7 +185,7 @@ public class HomeGUI extends JFrame {
                 PhanQuyenButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         TheLoaiButton = new JButton("Thể loại");
         TheLoaiButton.setIcon(new ImageIcon(getClass().getResource("/Image/category.png")));
         TheLoaiButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -202,7 +203,7 @@ public class HomeGUI extends JFrame {
                 TheLoaiButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         NhaCungCapButton = new JButton("Nhà cung cấp");
         NhaCungCapButton.setIcon(new ImageIcon(getClass().getResource("/Image/supplier.png")));
         NhaCungCapButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -220,7 +221,7 @@ public class HomeGUI extends JFrame {
                 NhaCungCapButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         TaiKhoanButton = new JButton("Tài khoản");
         TaiKhoanButton.setIcon(new ImageIcon(getClass().getResource("/Image/account.png")));
         TaiKhoanButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -237,7 +238,7 @@ public class HomeGUI extends JFrame {
                 TaiKhoanButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         PhieuNhapButton = new JButton("Phiếu nhập");
         PhieuNhapButton.setIcon(new ImageIcon(getClass().getResource("/Image/goods-receipt.png")));
         PhieuNhapButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -255,7 +256,7 @@ public class HomeGUI extends JFrame {
                 PhieuNhapButton.setBackground(Color.decode("#98DCE2"));
             }
         });
-        
+
         //add into Menupanel
         MenuPanel.add(AppName);
         MenuPanel.add(SanPhamButton);
@@ -269,90 +270,89 @@ public class HomeGUI extends JFrame {
         MenuPanel.add(NhaCungCapButton);
         MenuPanel.add(TaiKhoanButton);
         MenuPanel.add(PhieuNhapButton);
-        
+
         gbc.gridx = 0;
         gbc.gridy = 1;
 //        gbc.gridwidth = 0; 
 //        gbc.gridheight = 1; 
         gbc.fill = GridBagConstraints.BOTH; // Full fill space
-        gbc.weightx = 0.10 ;
+        gbc.weightx = 0.10;
         gbc.weighty = 0.90;
         add(MenuPanel, gbc);
-        
+
         //***
-      
         //**HEADER**
         HeadPanel = new JPanel();
         LogoPanel = new JPanel();
-        
+
         HeadPanel.setLayout(new GridBagLayout());
         HeadPanel.setBackground(Color.decode("#98DCE2"));
         GridBagConstraints HeadPanelgbc = new GridBagConstraints();
-        
-        HeadAppName = new JLabel("Cửa hàng bán sách nhóm 2");     
-        
+
+        HeadAppName = new JLabel("Cửa hàng bán sách nhóm 2");
+
         IntroductionAndExitPanel = new JPanel();
         IntroductionAndExitPanel.setBackground(Color.white);
         IntroductionAndExitPanel.setLayout(new GridBagLayout());
         GridBagConstraints IntroductionAndExitPanelgbc = new GridBagConstraints();
-        
+
         //Logout Button
         LogoutButton = new JButton();
         LogoutButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
         LogoutButton.setBackground(Color.white);
         LogoutButton.setBorderPainted(false);
-        LogoutButton.setSize(30,30);
-        
+        LogoutButton.setSize(30, 30);
+
         IntroductionAndExitPanelgbc.gridx = 0;
         IntroductionAndExitPanelgbc.gridy = 0;
         IntroductionAndExitPanelgbc.weightx = 0.2;
         IntroductionAndExitPanelgbc.anchor = GridBagConstraints.WEST;
         IntroductionAndExitPanelgbc.insets = new Insets(0, 10, 0, 0); // Margin top left bottom right
         IntroductionAndExitPanel.add(HeadAppName, IntroductionAndExitPanelgbc);
-        
+
         IntroductionAndExitPanelgbc.gridx = 1;
         IntroductionAndExitPanelgbc.gridy = 0;
         IntroductionAndExitPanelgbc.weightx = 0.05;
         IntroductionAndExitPanelgbc.anchor = GridBagConstraints.EAST;
         IntroductionAndExitPanel.add(LogoutButton, IntroductionAndExitPanelgbc);
-        
+
         IntroduceUser = new JLabel("Xin chào: Admin12345");
         IntroduceUserRole = new JLabel("Vai trò: Admin");
-             
+
         LogoApp = new JLabel();
         LogoApp.setIcon(new ImageIcon(getClass().getResource("/Image/icon-main.png")));
         LogoPanel.setBackground(Color.decode("#98DCE2"));
         LogoPanel.add(LogoApp);
-       
+
         HeadPanelgbc.gridx = 0;
         HeadPanelgbc.gridy = 0;
         HeadPanelgbc.weightx = 0.2;
         HeadPanelgbc.fill = GridBagConstraints.BOTH;
-        HeadPanel.add(IntroductionAndExitPanel,HeadPanelgbc);
-        
+        HeadPanel.add(IntroductionAndExitPanel, HeadPanelgbc);
+
         HeadPanelgbc.gridx = 0;
         HeadPanelgbc.gridy = 1;
         HeadPanelgbc.weightx = 0.2;
         HeadPanelgbc.fill = GridBagConstraints.BOTH;
         HeadPanelgbc.insets = new Insets(20, 40, 0, 0);
-        HeadPanel.add(IntroduceUser,HeadPanelgbc);
-        
+        HeadPanel.add(IntroduceUser, HeadPanelgbc);
+
         HeadPanelgbc.gridx = 0;
         HeadPanelgbc.gridy = 2;
         HeadPanelgbc.weighty = 1;
         HeadPanelgbc.fill = GridBagConstraints.BOTH;
         HeadPanelgbc.insets = new Insets(0, 40, 0, 0); // Margin top left bottom right
-        HeadPanel.add(IntroduceUserRole,HeadPanelgbc);
-          
+        HeadPanel.add(IntroduceUserRole, HeadPanelgbc);
+
         gbc.gridx = 0;
-        gbc.gridy = 0;  
+        gbc.gridy = 0;
 //        gbc.gridwidth = 1;
 //        gbc.gridheight = 1;
         gbc.weightx = 0.10;
         gbc.weighty = 0.10;
         gbc.fill = GridBagConstraints.BOTH;
         add(LogoPanel, gbc);
-        
+
         gbc.gridx = 1;  // Column 0
         gbc.gridy = 0;  // Row 0
 //        gbc.gridwidth = 1; // Take 1 Column
@@ -361,11 +361,9 @@ public class HomeGUI extends JFrame {
         gbc.weighty = 0.15; //Width of component in a row
         gbc.fill = GridBagConstraints.BOTH; //Full fill empty space
         add(HeadPanel, gbc);
-     
+
         //***
-        
         //**SHOW PANEL**
-        
         ShowPanel = new JPanel();
         ShowPanel.setBackground(Color.WHITE);
         gbc.gridx = 1;
@@ -375,27 +373,35 @@ public class HomeGUI extends JFrame {
         gbc.weightx = 0.90;
         gbc.weighty = 0.85;
         add(ShowPanel, gbc);
-        
+
         ShowPanel.revalidate();
         ShowPanel.repaint();
         //******//
-        
-        
+
         //Settings
         ButtonSettings(MenuPanel, new Font("Arial", Font.BOLD, 13), 15, false);
         LabelSettings(HeadPanel, new Font("Arial", Font.BOLD, 13));
-        
+
         setSize(1100, 700);
-        setMinimumSize(new Dimension(1100, 800));       
+        setMinimumSize(new Dimension(1100, 800));
         setVisible(true);
         setLocationRelativeTo(null);
-        
+
+        // Lấy kích thước hiển thị sau khi hiển thị JFrame
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                width = ShowPanel.getWidth();
+                height = ShowPanel.getHeight();
+                System.out.println("Chiều rộng: " + width + ", Chiều cao: " + height);
+            }
+        });
+
 //        GridBagConstraints Menuconstraints = new GridBagConstraints();
 //        constraints.gridwidth = 2;
 //        constraints.fill = GridBagConstraints.HORIZONTAL; //
 //        add(jPanel, constraints);
-
     }
+
     //*****Setting for JButton Function*****
     public void ButtonSettings(Container container, Font font, int IconTextGap, boolean UntextBordered) {
         for (Component component : container.getComponents()) {
@@ -407,10 +413,10 @@ public class HomeGUI extends JFrame {
             }
             if (component instanceof Container) {
                 ButtonSettings((Container) component, font, IconTextGap, UntextBordered);
-            }   
+            }
         }
     }
-    
+
     //*****Setting for JButton Function*****
     public void LabelSettings(Container container, Font font) {
         for (Component component : container.getComponents()) {
@@ -420,11 +426,11 @@ public class HomeGUI extends JFrame {
             }
             if (component instanceof Container) {
                 LabelSettings((Container) component, font);
-            }   
+            }
         }
     }
-     
-     public static void main(String[] args) {
+
+    public static void main(String[] args) {
         new HomeGUI();
     }
 
