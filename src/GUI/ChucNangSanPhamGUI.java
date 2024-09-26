@@ -77,7 +77,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         lblHeader.setPreferredSize(new Dimension(width, 36));
         lblHeader.setMaximumSize(new Dimension(width, 36));
         lblHeader.setFont(bh1);
-        lblHeader.setBackground(format.colorThaoTac);
+        lblHeader.setBackground(BASE.color_heaer);
         lblHeader.setOpaque(true);
         lblHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -198,21 +198,21 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
 
         //-------------------- các nút xác nhận, lưu, huỷ --------------------------
         btnXacNhan = new JButton("Xác nhận");
-        btnXacNhan.setBackground(format.colorThaoTac);
+        btnXacNhan.setBackground(BASE.color_heaer);
         btnXacNhan.setOpaque(true);
         btnXacNhan.setFocusPainted(false);
         btnXacNhan.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXacNhan.addMouseListener(this);
 
         btnHuy = new JButton("Huỷ");
-        btnHuy.setBackground(format.colorThaoTac);
+        btnHuy.setBackground(BASE.color_heaer);
         btnHuy.setOpaque(true);
         btnHuy.setFocusPainted(false);
         btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnHuy.addMouseListener(this);
 
         btnLuu = new JButton("Lưu");
-        btnLuu.setBackground(format.colorThaoTac);
+        btnLuu.setBackground(BASE.color_heaer);
         btnLuu.setOpaque(true);
         btnLuu.setFocusPainted(false);
         btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));

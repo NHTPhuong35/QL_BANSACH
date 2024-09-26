@@ -99,7 +99,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnThem = new JButton("+ Thêm sách");
         btnThem.setPreferredSize(new Dimension(130, 30));
         btnThem.setMaximumSize(new Dimension(130, 30));
-        btnThem.setBackground(format.btnThem);
+        btnThem.setBackground(BASE.btnThem);
         btnThem.setFont(bh3);
         btnThem.setOpaque(true);
         btnThem.setBorderPainted(false);
@@ -110,7 +110,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnSua = new JButton("+ Sửa sách");
         btnSua.setPreferredSize(new Dimension(130, 30));
         btnSua.setMaximumSize(new Dimension(130, 30));
-        btnSua.setBackground(format.btnSua);
+        btnSua.setBackground(BASE.btnSua);
         btnSua.setFont(bh3);
         btnSua.setOpaque(true);
         btnSua.setBorderPainted(false);
@@ -121,7 +121,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnXoa = new JButton("+ Xoá sách");
         btnXoa.setPreferredSize(new Dimension(130, 30));
         btnXoa.setMaximumSize(new Dimension(130, 30));
-        btnXoa.setBackground(format.btnXoa);
+        btnXoa.setBackground(BASE.btnXoa);
         btnXoa.setFont(bh3);
         btnXoa.setOpaque(true);
         btnXoa.setBorderPainted(false);
@@ -158,7 +158,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
             cbxLoai.addItem(loai.get(i));
         }
         btnTim = new JButton("Tìm");
-        btnTim.setBackground(format.colorThaoTac);
+        btnTim.setBackground(BASE.color_heaer);
         btnTim.setFont(bh3);
         btnTim.setOpaque(true);
         btnTim.setBorderPainted(false);
@@ -168,7 +168,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnTim.addMouseListener(this);
 
         btnLamMoi = new JButton("Làm mới");
-        btnLamMoi.setBackground(format.colorThaoTac);
+        btnLamMoi.setBackground(BASE.color_heaer);
         btnLamMoi.setFont(bh3);
         btnLamMoi.setOpaque(true);
         btnLamMoi.setBorderPainted(false);
@@ -232,7 +232,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         table.setShowVerticalLines(false);
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setPreferredSize(new Dimension(tableHeader.getPreferredSize().width, 30));
-        tableHeader.setBackground(format.colorTable);  // Đặt màu nền cho tiêu đề là màu xám nhạt
+        tableHeader.setBackground(BASE.color_table_heaer);  // Đặt màu nền cho tiêu đề là màu xám nhạt
         tableHeader.setFont(bh2);
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
