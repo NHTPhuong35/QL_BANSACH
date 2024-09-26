@@ -14,31 +14,31 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-public class HomeGUI extends JFrame {
-    private JButton SanPhamButton;
-    private JButton HoaDonButton;
-    private JButton KhachHangButton;
-    private JButton NhanVienButton;
-    private JButton ThongKeButton;
-    private JButton TacGiaButton;
-    private JButton PhanQuyenButton;
-    private JButton TheLoaiButton;
-    private JButton NhaCungCapButton;
-    private JButton TaiKhoanButton;
-    private JButton PhieuNhapButton;
-    private JButton LogoutButton;
-    private JPanel MenuPanel;
-    private JPanel HeadPanel;
-    private JPanel LogoPanel;
-    private JPanel IntroductionAndExitPanel;
-    private JLabel IntroduceAppName;
-    private JLabel IntroduceUser;
-    private JLabel IntroduceUserRole;
-    private JLabel AppName;
-    private JLabel HeadAppName;
-    private JLabel LogoApp;
-    private JPanel ShowPanel;
+        
+public class HomeGUI extends JFrame implements MouseListener{
+    private JButton sanphamButton;
+    private JButton hoadonButton;
+    private JButton khachhangButton;
+    private JButton nhanvienButton;
+    private JButton thongkeButton;
+    private JButton tacgiaButton;
+    private JButton phanquyenButton;
+    private JButton theloaiButton;
+    private JButton nhacungcapButton;
+    private JButton taikhoanButton;
+    private JButton phieunhapButton;
+    private JButton logoutButton;
+    private JPanel menuPanel;
+    private JPanel headPanel;
+    private JPanel logoPanel;
+    private JPanel introductionAndexitPanel;
+    private JLabel introduceAppName;
+    private JLabel introduceUser;
+    private JLabel introduceUserRole;
+    private JLabel appName;
+    private JLabel headAppName;
+    private JLabel logoApp;
+    private JPanel showPanel;
     
     public HomeGUI(){
         
@@ -49,226 +49,237 @@ public class HomeGUI extends JFrame {
         
         //**MENU**
         
-        MenuPanel = new JPanel();
-        MenuPanel.setLayout(new GridLayout(0, 1, 0, 0));
-        MenuPanel.setBackground(Color.decode("#98DCE2"));
+        menuPanel = new JPanel();
+        menuPanel.setLayout(new GridLayout(0, 1, 0, 0));
+        menuPanel.setBackground(Color.decode("#98DCE2"));
         
-        AppName = new JLabel("Cửa hàng bán sách nhóm 2");
+        appName = new JLabel("Cửa hàng bán sách nhóm 2");
         Font AppNamefont = new Font("Arial", Font.BOLD, 13);
-        AppName.setFont(AppNamefont);
-        AppName.setHorizontalAlignment(SwingConstants.CENTER); 
-        AppName.setVerticalAlignment(SwingConstants.CENTER);
+        appName.setFont(AppNamefont);
+        appName.setHorizontalAlignment(SwingConstants.CENTER); 
+        appName.setVerticalAlignment(SwingConstants.CENTER);
         
-        SanPhamButton = new JButton("Sản phẩm");
-        SanPhamButton.setIcon(new ImageIcon(getClass().getResource("/Image/product.png")));
-        SanPhamButton.setHorizontalAlignment(SwingConstants.LEFT);
-        SanPhamButton.setVerticalAlignment(SwingConstants.CENTER);
-        SanPhamButton.setBorderPainted(false);
-        SanPhamButton.setBackground(Color.decode("#98DCE2"));
-        SanPhamButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        sanphamButton = new JButton("Sản phẩm");
+        sanphamButton.setIcon(new ImageIcon(getClass().getResource("/Image/product.png")));
+        sanphamButton.setHorizontalAlignment(SwingConstants.LEFT);
+        sanphamButton.setVerticalAlignment(SwingConstants.CENTER);
+        sanphamButton.setBorderPainted(false);
+        sanphamButton.setBackground(Color.decode("#98DCE2"));
+        sanphamButton.addMouseListener(this);
+        sanphamButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                SanPhamButton.setBackground(Color.WHITE);
+                sanphamButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                SanPhamButton.setBackground(Color.decode("#98DCE2"));
+                sanphamButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        HoaDonButton = new JButton("Hóa đơn");
-        HoaDonButton.setIcon(new ImageIcon(getClass().getResource("/Image/bill.png")));
-        HoaDonButton.setHorizontalAlignment(SwingConstants.LEFT);
-        HoaDonButton.setVerticalAlignment(SwingConstants.CENTER);
-        HoaDonButton.setBorderPainted(false);
-        HoaDonButton.setBackground(Color.decode("#98DCE2"));
-        HoaDonButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        hoadonButton = new JButton("Hóa đơn");
+        hoadonButton.setIcon(new ImageIcon(getClass().getResource("/Image/bill.png")));
+        hoadonButton.setHorizontalAlignment(SwingConstants.LEFT);
+        hoadonButton.setVerticalAlignment(SwingConstants.CENTER);
+        hoadonButton.setBorderPainted(false);
+        hoadonButton.setBackground(Color.decode("#98DCE2"));
+        hoadonButton.addMouseListener(this);
+        hoadonButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                HoaDonButton.setBackground(Color.WHITE);
+                hoadonButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                HoaDonButton.setBackground(Color.decode("#98DCE2"));
+                hoadonButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        KhachHangButton = new JButton("Khách hàng");
-        KhachHangButton.setIcon(new ImageIcon(getClass().getResource("/Image/customer.png")));
-        KhachHangButton.setHorizontalAlignment(SwingConstants.LEFT);
-        KhachHangButton.setVerticalAlignment(SwingConstants.CENTER);
-        KhachHangButton.setBorderPainted(false);
-        KhachHangButton.setBackground(Color.decode("#98DCE2"));
-        KhachHangButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        khachhangButton = new JButton("Khách hàng");
+        khachhangButton.setIcon(new ImageIcon(getClass().getResource("/Image/customer.png")));
+        khachhangButton.setHorizontalAlignment(SwingConstants.LEFT);
+        khachhangButton.setVerticalAlignment(SwingConstants.CENTER);
+        khachhangButton.setBorderPainted(false);
+        khachhangButton.setBackground(Color.decode("#98DCE2"));
+        khachhangButton.addMouseListener(this);
+        khachhangButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                KhachHangButton.setBackground(Color.WHITE);
+                khachhangButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                KhachHangButton.setBackground(Color.decode("#98DCE2"));
+                khachhangButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        NhanVienButton = new JButton("Nhân viên");               
-        NhanVienButton.setIcon(new ImageIcon(getClass().getResource("/Image/staff.png")));
-        NhanVienButton.setHorizontalAlignment(SwingConstants.LEFT);
-        NhanVienButton.setVerticalAlignment(SwingConstants.CENTER);
-        NhanVienButton.setBorderPainted(false);
-        NhanVienButton.setBackground(Color.decode("#98DCE2"));
-        NhanVienButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        nhanvienButton = new JButton("Nhân viên");               
+        nhanvienButton.setIcon(new ImageIcon(getClass().getResource("/Image/staff.png")));
+        nhanvienButton.setHorizontalAlignment(SwingConstants.LEFT);
+        nhanvienButton.setVerticalAlignment(SwingConstants.CENTER);
+        nhanvienButton.setBorderPainted(false);
+        nhanvienButton.setBackground(Color.decode("#98DCE2"));
+        nhanvienButton.addMouseListener(this);
+        nhanvienButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                NhanVienButton.setBackground(Color.WHITE);
+                nhanvienButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                NhanVienButton.setBackground(Color.decode("#98DCE2"));
+                nhanvienButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        ThongKeButton = new JButton("Thống kê");
-        ThongKeButton.setIcon(new ImageIcon(getClass().getResource("/Image/statistical.png")));
-        ThongKeButton.setHorizontalAlignment(SwingConstants.LEFT);
-        ThongKeButton.setVerticalAlignment(SwingConstants.CENTER);
-        ThongKeButton.setBorderPainted(false);
-        ThongKeButton.setBackground(Color.decode("#98DCE2"));
-        ThongKeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        thongkeButton = new JButton("Thống kê");
+        thongkeButton.setIcon(new ImageIcon(getClass().getResource("/Image/statistical.png")));
+        thongkeButton.setHorizontalAlignment(SwingConstants.LEFT);
+        thongkeButton.setVerticalAlignment(SwingConstants.CENTER);
+        thongkeButton.setBorderPainted(false);
+        thongkeButton.setBackground(Color.decode("#98DCE2"));
+        thongkeButton.addMouseListener(this);
+        thongkeButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                ThongKeButton.setBackground(Color.WHITE);
+                thongkeButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                ThongKeButton.setBackground(Color.decode("#98DCE2"));
+                thongkeButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        TacGiaButton = new JButton("Tác giả");
-        TacGiaButton.setIcon(new ImageIcon(getClass().getResource("/Image/author.png")));
-        TacGiaButton.setHorizontalAlignment(SwingConstants.LEFT);
-        TacGiaButton.setVerticalAlignment(SwingConstants.CENTER);
-        TacGiaButton.setBorderPainted(false);
-        TacGiaButton.setBackground(Color.decode("#98DCE2"));
-        TacGiaButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        tacgiaButton = new JButton("Tác giả");
+        tacgiaButton.setIcon(new ImageIcon(getClass().getResource("/Image/author.png")));
+        tacgiaButton.setHorizontalAlignment(SwingConstants.LEFT);
+        tacgiaButton.setVerticalAlignment(SwingConstants.CENTER);
+        tacgiaButton.setBorderPainted(false);
+        tacgiaButton.setBackground(Color.decode("#98DCE2"));
+        tacgiaButton.addMouseListener(this);
+        tacgiaButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                TacGiaButton.setBackground(Color.WHITE);
+                tacgiaButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                TacGiaButton.setBackground(Color.decode("#98DCE2"));
+                tacgiaButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        PhanQuyenButton = new JButton("Phân quyền");              
-        PhanQuyenButton.setIcon(new ImageIcon(getClass().getResource("/Image/Decentralization.png")));
-        PhanQuyenButton.setHorizontalAlignment(SwingConstants.LEFT);
-        PhanQuyenButton.setVerticalAlignment(SwingConstants.CENTER);
-        PhanQuyenButton.setBorderPainted(false);
-        PhanQuyenButton.setBackground(Color.decode("#98DCE2"));
-        PhanQuyenButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        phanquyenButton = new JButton("Phân quyền");              
+        phanquyenButton.setIcon(new ImageIcon(getClass().getResource("/Image/Decentralization.png")));
+        phanquyenButton.setHorizontalAlignment(SwingConstants.LEFT);
+        phanquyenButton.setVerticalAlignment(SwingConstants.CENTER);
+        phanquyenButton.setBorderPainted(false);
+        phanquyenButton.setBackground(Color.decode("#98DCE2"));
+        phanquyenButton.addMouseListener(this);
+        phanquyenButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                PhanQuyenButton.setBackground(Color.WHITE);
+                phanquyenButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                PhanQuyenButton.setBackground(Color.decode("#98DCE2"));
+                phanquyenButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        TheLoaiButton = new JButton("Thể loại");
-        TheLoaiButton.setIcon(new ImageIcon(getClass().getResource("/Image/category.png")));
-        TheLoaiButton.setHorizontalAlignment(SwingConstants.LEFT);
-        TheLoaiButton.setVerticalAlignment(SwingConstants.CENTER);
-        TheLoaiButton.setBorderPainted(false);
-        TheLoaiButton.setBackground(Color.decode("#98DCE2"));
-        TheLoaiButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        theloaiButton = new JButton("Thể loại");
+        theloaiButton.setIcon(new ImageIcon(getClass().getResource("/Image/category.png")));
+        theloaiButton.setHorizontalAlignment(SwingConstants.LEFT);
+        theloaiButton.setVerticalAlignment(SwingConstants.CENTER);
+        theloaiButton.setBorderPainted(false);
+        theloaiButton.setBackground(Color.decode("#98DCE2"));
+        theloaiButton.addMouseListener(this);
+        theloaiButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                TheLoaiButton.setBackground(Color.WHITE);
+                theloaiButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                TheLoaiButton.setBackground(Color.decode("#98DCE2"));
+                theloaiButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        NhaCungCapButton = new JButton("Nhà cung cấp");
-        NhaCungCapButton.setIcon(new ImageIcon(getClass().getResource("/Image/supplier.png")));
-        NhaCungCapButton.setHorizontalAlignment(SwingConstants.LEFT);
-        NhaCungCapButton.setVerticalAlignment(SwingConstants.CENTER);
-        NhaCungCapButton.setBorderPainted(false);
-        NhaCungCapButton.setBackground(Color.decode("#98DCE2"));
-        NhaCungCapButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        nhacungcapButton = new JButton("Nhà cung cấp");
+        nhacungcapButton.setIcon(new ImageIcon(getClass().getResource("/Image/supplier.png")));
+        nhacungcapButton.setHorizontalAlignment(SwingConstants.LEFT);
+        nhacungcapButton.setVerticalAlignment(SwingConstants.CENTER);
+        nhacungcapButton.setBorderPainted(false);
+        nhacungcapButton.setBackground(Color.decode("#98DCE2"));
+        nhacungcapButton.addMouseListener(this);
+        nhacungcapButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                NhaCungCapButton.setBackground(Color.WHITE);
+                nhacungcapButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                NhaCungCapButton.setBackground(Color.decode("#98DCE2"));
+                nhacungcapButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        TaiKhoanButton = new JButton("Tài khoản");
-        TaiKhoanButton.setIcon(new ImageIcon(getClass().getResource("/Image/account.png")));
-        TaiKhoanButton.setHorizontalAlignment(SwingConstants.LEFT);
-        TaiKhoanButton.setVerticalAlignment(SwingConstants.CENTER);
-        TaiKhoanButton.setBorderPainted(false);
-        TaiKhoanButton.setBackground(Color.decode("#98DCE2"));
-        TaiKhoanButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        taikhoanButton = new JButton("Tài khoản");
+        taikhoanButton.setIcon(new ImageIcon(getClass().getResource("/Image/account.png")));
+        taikhoanButton.setHorizontalAlignment(SwingConstants.LEFT);
+        taikhoanButton.setVerticalAlignment(SwingConstants.CENTER);
+        taikhoanButton.setBorderPainted(false);
+        taikhoanButton.setBackground(Color.decode("#98DCE2"));
+        taikhoanButton.addMouseListener(this);
+        taikhoanButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                TaiKhoanButton.setBackground(Color.WHITE);
+                taikhoanButton.setBackground(Color.WHITE);
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                TaiKhoanButton.setBackground(Color.decode("#98DCE2"));
+                taikhoanButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        PhieuNhapButton = new JButton("Phiếu nhập");
-        PhieuNhapButton.setIcon(new ImageIcon(getClass().getResource("/Image/goods-receipt.png")));
-        PhieuNhapButton.setHorizontalAlignment(SwingConstants.LEFT);
-        PhieuNhapButton.setVerticalAlignment(SwingConstants.CENTER);
-        PhieuNhapButton.setBorderPainted(false);
-        PhieuNhapButton.setBackground(Color.decode("#98DCE2"));
-        PhieuNhapButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        phieunhapButton = new JButton("Phiếu nhập");
+        phieunhapButton.setIcon(new ImageIcon(getClass().getResource("/Image/goods-receipt.png")));
+        phieunhapButton.setHorizontalAlignment(SwingConstants.LEFT);
+        phieunhapButton.setVerticalAlignment(SwingConstants.CENTER);
+        phieunhapButton.setBorderPainted(false);
+        phieunhapButton.setBackground(Color.decode("#98DCE2"));
+        phieunhapButton.addMouseListener(this);
+        phieunhapButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                PhieuNhapButton.setBackground(Color.WHITE);
+                phieunhapButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                PhieuNhapButton.setBackground(Color.decode("#98DCE2"));
+                phieunhapButton.setBackground(Color.decode("#98DCE2"));
             }
         });
         
-        //add into Menupanel
-        MenuPanel.add(AppName);
-        MenuPanel.add(SanPhamButton);
-        MenuPanel.add(HoaDonButton);
-        MenuPanel.add(KhachHangButton);
-        MenuPanel.add(NhanVienButton);
-        MenuPanel.add(ThongKeButton);
-        MenuPanel.add(TacGiaButton);
-        MenuPanel.add(PhanQuyenButton);
-        MenuPanel.add(TheLoaiButton);
-        MenuPanel.add(NhaCungCapButton);
-        MenuPanel.add(TaiKhoanButton);
-        MenuPanel.add(PhieuNhapButton);
+        //add into menuPanel
+        menuPanel.add(appName);
+        menuPanel.add(sanphamButton);
+        menuPanel.add(hoadonButton);
+        menuPanel.add(khachhangButton);
+        menuPanel.add(nhanvienButton);
+        menuPanel.add(thongkeButton);
+        menuPanel.add(tacgiaButton);
+        menuPanel.add(phanquyenButton);
+        menuPanel.add(theloaiButton);
+        menuPanel.add(nhacungcapButton);
+        menuPanel.add(taikhoanButton);
+        menuPanel.add(phieunhapButton);
         
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -277,72 +288,72 @@ public class HomeGUI extends JFrame {
         gbc.fill = GridBagConstraints.BOTH; // Full fill space
         gbc.weightx = 0.10 ;
         gbc.weighty = 0.90;
-        add(MenuPanel, gbc);
+        add(menuPanel, gbc);
         
         //***
       
         //**HEADER**
-        HeadPanel = new JPanel();
-        LogoPanel = new JPanel();
+        headPanel = new JPanel();
+        logoPanel = new JPanel();
         
-        HeadPanel.setLayout(new GridBagLayout());
-        HeadPanel.setBackground(Color.decode("#98DCE2"));
-        GridBagConstraints HeadPanelgbc = new GridBagConstraints();
+        headPanel.setLayout(new GridBagLayout());
+        headPanel.setBackground(Color.decode("#98DCE2"));
+        GridBagConstraints headPanelgbc = new GridBagConstraints();
         
-        HeadAppName = new JLabel("Cửa hàng bán sách nhóm 2");     
+        headAppName = new JLabel("Cửa hàng bán sách nhóm 2");     
         
-        IntroductionAndExitPanel = new JPanel();
-        IntroductionAndExitPanel.setBackground(Color.white);
-        IntroductionAndExitPanel.setLayout(new GridBagLayout());
-        GridBagConstraints IntroductionAndExitPanelgbc = new GridBagConstraints();
+        introductionAndexitPanel = new JPanel();
+        introductionAndexitPanel.setBackground(Color.white);
+        introductionAndexitPanel.setLayout(new GridBagLayout());
+        GridBagConstraints introductionAndexitPanelgbc = new GridBagConstraints();
         
         //Logout Button
-        LogoutButton = new JButton();
-        LogoutButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
-        LogoutButton.setBackground(Color.white);
-        LogoutButton.setBorderPainted(false);
-        LogoutButton.setSize(30,30);
+        logoutButton = new JButton();
+        logoutButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
+        logoutButton.setBackground(Color.white);
+        logoutButton.setBorderPainted(false);
+        logoutButton.setSize(30,30);
         
-        IntroductionAndExitPanelgbc.gridx = 0;
-        IntroductionAndExitPanelgbc.gridy = 0;
-        IntroductionAndExitPanelgbc.weightx = 0.2;
-        IntroductionAndExitPanelgbc.anchor = GridBagConstraints.WEST;
-        IntroductionAndExitPanelgbc.insets = new Insets(0, 10, 0, 0); // Margin top left bottom right
-        IntroductionAndExitPanel.add(HeadAppName, IntroductionAndExitPanelgbc);
+        introductionAndexitPanelgbc.gridx = 0;
+        introductionAndexitPanelgbc.gridy = 0;
+        introductionAndexitPanelgbc.weightx = 0.2;
+        introductionAndexitPanelgbc.anchor = GridBagConstraints.WEST;
+        introductionAndexitPanelgbc.insets = new Insets(0, 10, 0, 0); // Margin top left bottom right
+        introductionAndexitPanel.add(headAppName, introductionAndexitPanelgbc);
         
-        IntroductionAndExitPanelgbc.gridx = 1;
-        IntroductionAndExitPanelgbc.gridy = 0;
-        IntroductionAndExitPanelgbc.weightx = 0.05;
-        IntroductionAndExitPanelgbc.anchor = GridBagConstraints.EAST;
-        IntroductionAndExitPanel.add(LogoutButton, IntroductionAndExitPanelgbc);
+        introductionAndexitPanelgbc.gridx = 1;
+        introductionAndexitPanelgbc.gridy = 0;
+        introductionAndexitPanelgbc.weightx = 0.05;
+        introductionAndexitPanelgbc.anchor = GridBagConstraints.EAST;
+        introductionAndexitPanel.add(logoutButton, introductionAndexitPanelgbc);
         
-        IntroduceUser = new JLabel("Xin chào: Admin12345");
-        IntroduceUserRole = new JLabel("Vai trò: Admin");
+        introduceUser = new JLabel("Xin chào: Admin12345");
+        introduceUserRole = new JLabel("Vai trò: Admin");
              
-        LogoApp = new JLabel();
-        LogoApp.setIcon(new ImageIcon(getClass().getResource("/Image/icon-main.png")));
-        LogoPanel.setBackground(Color.decode("#98DCE2"));
-        LogoPanel.add(LogoApp);
+        logoApp = new JLabel();
+        logoApp.setIcon(new ImageIcon(getClass().getResource("/Image/icon-main.png")));
+        logoPanel.setBackground(Color.decode("#98DCE2"));
+        logoPanel.add(logoApp);
        
-        HeadPanelgbc.gridx = 0;
-        HeadPanelgbc.gridy = 0;
-        HeadPanelgbc.weightx = 0.2;
-        HeadPanelgbc.fill = GridBagConstraints.BOTH;
-        HeadPanel.add(IntroductionAndExitPanel,HeadPanelgbc);
+        headPanelgbc.gridx = 0;
+        headPanelgbc.gridy = 0;
+        headPanelgbc.weightx = 0.2;
+        headPanelgbc.fill = GridBagConstraints.BOTH;
+        headPanel.add(introductionAndexitPanel,headPanelgbc);
         
-        HeadPanelgbc.gridx = 0;
-        HeadPanelgbc.gridy = 1;
-        HeadPanelgbc.weightx = 0.2;
-        HeadPanelgbc.fill = GridBagConstraints.BOTH;
-        HeadPanelgbc.insets = new Insets(20, 40, 0, 0);
-        HeadPanel.add(IntroduceUser,HeadPanelgbc);
+        headPanelgbc.gridx = 0;
+        headPanelgbc.gridy = 1;
+        headPanelgbc.weightx = 0.2;
+        headPanelgbc.fill = GridBagConstraints.BOTH;
+        headPanelgbc.insets = new Insets(20, 40, 0, 0);
+        headPanel.add(introduceUser,headPanelgbc);
         
-        HeadPanelgbc.gridx = 0;
-        HeadPanelgbc.gridy = 2;
-        HeadPanelgbc.weighty = 1;
-        HeadPanelgbc.fill = GridBagConstraints.BOTH;
-        HeadPanelgbc.insets = new Insets(0, 40, 0, 0); // Margin top left bottom right
-        HeadPanel.add(IntroduceUserRole,HeadPanelgbc);
+        headPanelgbc.gridx = 0;
+        headPanelgbc.gridy = 2;
+        headPanelgbc.weighty = 1;
+        headPanelgbc.fill = GridBagConstraints.BOTH;
+        headPanelgbc.insets = new Insets(0, 40, 0, 0); // Margin top left bottom right
+        headPanel.add(introduceUserRole,headPanelgbc);
           
         gbc.gridx = 0;
         gbc.gridy = 0;  
@@ -351,45 +362,47 @@ public class HomeGUI extends JFrame {
         gbc.weightx = 0.10;
         gbc.weighty = 0.10;
         gbc.fill = GridBagConstraints.BOTH;
-        add(LogoPanel, gbc);
+        add(logoPanel, gbc);
         
-        gbc.gridx = 1;  // Column 0
+        gbc.gridx = 1;  // Column 1
         gbc.gridy = 0;  // Row 0
 //        gbc.gridwidth = 1; // Take 1 Column
 //        gbc.gridheight = 1; // Take 1 Row
         gbc.weightx = 0.90; //Length of component in a column
         gbc.weighty = 0.15; //Width of component in a row
         gbc.fill = GridBagConstraints.BOTH; //Full fill empty space
-        add(HeadPanel, gbc);
+        add(headPanel, gbc);
      
         //***
         
         //**SHOW PANEL**
         
-        ShowPanel = new JPanel();
-        ShowPanel.setBackground(Color.WHITE);
+        showPanel = new JPanel();
+        showPanel.setBackground(Color.WHITE);
+        showPanel.setLayout(new BorderLayout());
+
         gbc.gridx = 1;
         gbc.gridy = 1;
 //        gbc.gridwidth = 1;
 //        gbc.gridheight = 1;
         gbc.weightx = 0.90;
         gbc.weighty = 0.85;
-        add(ShowPanel, gbc);
+        add(showPanel, gbc);
         
-        ShowPanel.revalidate();
-        ShowPanel.repaint();
+        showPanel.revalidate();
+        showPanel.repaint();
         //******//
         
         
         //Settings
-        ButtonSettings(MenuPanel, new Font("Arial", Font.BOLD, 13), 15, false);
-        LabelSettings(HeadPanel, new Font("Arial", Font.BOLD, 13));
+        ButtonSettings(menuPanel, new Font("Arial", Font.BOLD, 13), 15, false);
+        LabelSettings(headPanel, new Font("Arial", Font.BOLD, 13));
         
-        setSize(1100, 700);
-        setMinimumSize(new Dimension(1100, 800));       
+        setSize(1200, 700);
+        setMinimumSize(new Dimension(1100, 500));       
         setVisible(true);
         setLocationRelativeTo(null);
-        
+
 //        GridBagConstraints Menuconstraints = new GridBagConstraints();
 //        constraints.gridwidth = 2;
 //        constraints.fill = GridBagConstraints.HORIZONTAL; //
@@ -424,11 +437,77 @@ public class HomeGUI extends JFrame {
         }
     }
      
-     public static void main(String[] args) {
+    public static void main(String[] args) {
         new HomeGUI();
     }
 
     private Icon setIcon(ImageIcon imageIcon) {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        JButton btn = (JButton) e.getSource();
+        if (btn == sanphamButton) {
+            int panelWidth = showPanel.getWidth();
+            int panelHeight = showPanel.getHeight();
+            SanPhamGUI spGUI = new SanPhamGUI(panelWidth, panelHeight);
+            showPanel.removeAll();
+            showPanel.add(spGUI, BorderLayout.CENTER);
+            spGUI.setVisible(true);
+
+            showPanel.revalidate(); 
+            showPanel.repaint(); 
+        }
+        if(btn == hoadonButton){
+            //Hoá đơn
+        }
+        if(btn == khachhangButton){
+            //Khách hàng
+        }
+        if(btn == nhanvienButton){
+            //Nhân viên
+        }
+        if(btn == thongkeButton){
+            //Thống kê
+        }
+        if(btn == tacgiaButton){
+            //Tác giả
+        }
+        if(btn == phanquyenButton){
+            PhanQuyenGUI phanquyenGUI = new PhanQuyenGUI();
+            showPanel.removeAll();
+            showPanel.add(phanquyenGUI,BorderLayout.CENTER);
+            showPanel.revalidate(); 
+            showPanel.repaint(); 
+        }
+        if(btn == theloaiButton){
+            //Thể loại
+        }
+        if(btn == nhacungcapButton){
+            //Nhà cung cấp
+        }
+        if(btn == taikhoanButton){
+            //Tài khoản
+        }
+        if(btn == phieunhapButton){
+            //Phiếu nhập
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
     }
 }
