@@ -93,7 +93,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         imageName = new ArrayList<>();
-        ImageIcon icon = new ImageIcon("./src/images/t-shirt.png");
+        ImageIcon icon = new ImageIcon("./src/image/iconBook.png");
         Image scaledImage = icon.getImage().getScaledInstance(174, 200, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(scaledImage);
         JLabel label = new JLabel(resizedIcon, JLabel.CENTER);
