@@ -1,6 +1,8 @@
 package GUI;
 
+import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
+import DTO.TacGiaDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,14 +40,14 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     private JPanel pnContent, pnThaoTac, pnDsAnh;
     private JTextField txtTenSach, txtNamXB, txtNhaXB, txtGiaBia;
     private JButton btnXacNhan, btnLuu, btnHuy, btnChonLoai, btnChonTacGia;
-//    private JComboBox<String> cbxLoai;
-    private SanPhamDTO spDTO;
+    SanPhamGUI spGUI;
     private JPanel[] pnThuocTinh = new JPanel[10];
     private ArrayList<String> imageName; // tên ảnh đã chọn
     private JLabel imageNameLabel; //hien thi ten anh chon
     JPanel imagePanelDefault; //khi chưa chọn ảnh
 
-    private ArrayList<String> dsLoai = new ArrayList<>();
+    private ArrayList<LoaiDTO> dsLoai = new ArrayList<>();
+    private ArrayList<TacGiaDTO> dsTG = new ArrayList<>();
     private int width = 450, height = 710;
     private int width_row = 200, height_row = 30;
 
@@ -53,17 +55,11 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     Font h3 = new Font("Tahoma", Font.PLAIN, 14);
 
     public ChucNangSanPhamGUI() {
-        dsLoai = new ArrayList<>();
-        dsLoai.add("văn học");
-        dsLoai.add("truyện");
         init();
     }
 
-    public ChucNangSanPhamGUI(SanPhamDTO spDTO) {
-        dsLoai = new ArrayList<>();
-        dsLoai.add("văn học");
-        dsLoai.add("truyện");
-        this.spDTO = spDTO;
+    public ChucNangSanPhamGUI(SanPhamGUI spGUI) {
+        this.spGUI = spGUI;
         init();
     }
 
@@ -93,7 +89,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         imageName = new ArrayList<>();
-        ImageIcon icon = new ImageIcon("./src/image/iconBook.png");
+        ImageIcon icon = new ImageIcon("./src/image/iconBook.jpg");
         Image scaledImage = icon.getImage().getScaledInstance(174, 200, Image.SCALE_SMOOTH);
         ImageIcon resizedIcon = new ImageIcon(scaledImage);
         JLabel label = new JLabel(resizedIcon, JLabel.CENTER);
@@ -161,11 +157,6 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         txtTenSach.setPreferredSize(new Dimension(width_row, height_row));
         txtTenSach.setMaximumSize(new Dimension(width_row, height_row));
 
-//        cbxLoai = new JComboBox();
-//        for (int i = 0; i < dsLoai.size(); i++) {
-//            cbxLoai.addItem(dsLoai.get(i));
-//        }
-
         txtNhaXB = new JTextField();
         txtNhaXB.setPreferredSize(new Dimension(width_row, height_row));
         txtNhaXB.setMaximumSize(new Dimension(width_row, height_row));
@@ -177,7 +168,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         txtGiaBia = new JTextField();
         txtGiaBia.setPreferredSize(new Dimension(width_row, height_row));
         txtGiaBia.setMaximumSize(new Dimension(width_row, height_row));
-        
+
         btnChonLoai = new JButton("Chọn loại");
         btnChonLoai.setBackground(Color.decode("#FFFFFF"));
         btnChonLoai.setPreferredSize(new Dimension(100, height_row));
@@ -219,13 +210,13 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         btnLuu.addMouseListener(this);
 
         pnThuocTinh[0].add(txtTenSach); //Tên sách
-        
+
         pnThuocTinh[1].add(txtNhaXB);
         pnThuocTinh[2].add(txtNamXB);
         pnThuocTinh[3].add(txtGiaBia);
         pnThuocTinh[4].setLayout(new BoxLayout(pnThuocTinh[4], BoxLayout.X_AXIS));
         pnThuocTinh[4].add(Box.createRigidArea(new Dimension(160, 0)));
-        pnThuocTinh[4].add(btnChonLoai); 
+        pnThuocTinh[4].add(btnChonLoai);
         pnThuocTinh[5].setLayout(new BoxLayout(pnThuocTinh[5], BoxLayout.X_AXIS));
         pnThuocTinh[5].add(Box.createRigidArea(new Dimension(150, 0)));
         pnThuocTinh[5].add(btnChonTacGia);
@@ -325,29 +316,86 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnThaoTac.add(btnHuy);
         this.add(pnThaoTac);
         this.add(Box.createVerticalStrut(20));
-        
-        txtTenSach.setText(spDTO.getTenSach());
-        txtNhaXB.setText(spDTO.getNxb());
-        txtNamXB.setText(spDTO.getNamXB()+"");
-        txtGiaBia.setText(spDTO.getGiaBia()+"");
+
+        txtTenSach.setText(spGUI.selectedSP.getTenSach());
+        txtNhaXB.setText(spGUI.selectedSP.getNxb());
+        txtNamXB.setText(spGUI.selectedSP.getNamXB() + "");
+        txtGiaBia.setText(spGUI.selectedSP.getGiaBia() + "");
         setVisible(true);
+    }
+
+    public void AddSP() {
+        // Kiểm tra xem các trường nhập liệu cần thiết có hợp lệ không
+        try {
+            // Xử lý maLoai
+            String maLoai = "";
+            if (!dsLoai.isEmpty()) {
+                for (int i = 0; i < dsLoai.size() - 1; i++) {
+                    maLoai += dsLoai.get(i).getMaLoai() + ", ";
+                }
+                maLoai += dsLoai.get(dsLoai.size() - 1).getMaLoai();
+            } else {
+                System.out.println("Không có danh mục nào được chọn");
+                return; // Dừng nếu không có danh mục nào được chọn
+            }
+
+            // Xử lý maTG
+            String maTG = "";
+            if (!dsTG.isEmpty()) {
+                for (int i = 0; i < dsTG.size() - 1; i++) {
+                    maTG += dsTG.get(i).getMaTG() + ", ";
+                }
+                maTG += dsTG.get(dsTG.size() - 1).getMaTG();
+            } else {
+                System.out.println("Không có tác giả nào được chọn");
+                return; // Dừng nếu không có tác giả nào được chọn
+            }
+
+            String anh[] = imageName.toArray(new String[0]);
+            int namXB = Integer.parseInt(txtNamXB.getText());
+            double giaBia = Double.parseDouble(txtGiaBia.getText());
+            SanPhamDTO m = new SanPhamDTO("1", txtTenSach.getText(),
+                    maLoai, txtNhaXB.getText(), namXB,
+                    0, 1, giaBia,
+                    0, anh, maTG);
+
+            spGUI.AddSPA(m);
+            this.dispose();
+
+        } catch (NumberFormatException e) {
+            System.out.println("Định dạng số không hợp lệ: " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Đã xảy ra lỗi: " + e.getMessage());
+        }
+
     }
 
     public static void main(String[] args) {
 
         ChucNangSanPhamGUI t = new ChucNangSanPhamGUI();
-//        t.initAdd();
-            t.initEdit();
+        t.initAdd();
+//            t.initEdit();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JButton btn = (JButton)e.getSource();
-        if(btn == btnHuy){
+        JButton btn = (JButton) e.getSource();
+        if (btn == btnHuy) {
             this.dispose();
-            spDTO = new SanPhamDTO();
+            spGUI.selectedSP = new SanPhamDTO();
         }
-        
+        if (btn == btnChonLoai) {
+            ChonLoaiGUI loai = new ChonLoaiGUI();
+            dsLoai = loai.selectedListLoai;
+        }
+
+        if (btn == btnChonTacGia) {
+            ChonTacGiaGUI tg = new ChonTacGiaGUI();
+            dsTG = tg.selectedListTG;
+        }
+        if (btn == btnXacNhan) {
+            AddSP();
+        }
     }
 
     @Override

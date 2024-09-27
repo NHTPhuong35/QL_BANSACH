@@ -6,6 +6,9 @@ package GUI;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
+import java.net.URL;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -22,4 +25,15 @@ public class BASE {
     public static Font font_header = new Font("typeface", Font.BOLD, 16);
     public static Font font_title = new Font("typeface", Font.BOLD, 20);
     public static Font font = new Font("typeface", Font.PLAIN, 15);
+    
+    public static ImageIcon createResizedIcon(Class<?> clazz, String imagePath, int width, int height) {
+        URL imageURL = clazz.getResource(imagePath);
+        if (imageURL == null) {
+            System.err.println("Resource not found: " + imagePath);
+            return null;
+        }
+        ImageIcon originalIcon = new ImageIcon(imageURL);
+        Image scaledImage = originalIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaledImage);
+    }
 }

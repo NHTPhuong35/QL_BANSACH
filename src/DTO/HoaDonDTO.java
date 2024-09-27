@@ -12,8 +12,9 @@ public class HoaDonDTO {
     private String NgayHD;
     private double TienGiamGia;
     private double TongTien;
+    private int TrangThai;
 
-    public HoaDonDTO(String SoHD, String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien) {
+    public HoaDonDTO(String SoHD, String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien, int TrangThai) {
         this.SoHD = SoHD;
         this.MaKH = MaKH;
         this.TenDN = TenDN;
@@ -21,6 +22,15 @@ public class HoaDonDTO {
         this.NgayHD = NgayHD;
         this.TienGiamGia = TienGiamGia;
         this.TongTien = TongTien;
+        this.TrangThai = TrangThai;
+    }
+
+    public void setTrangThai(int TrangThai) {
+        this.TrangThai = TrangThai;
+    }
+
+    public int getTrangThai() {
+        return TrangThai;
     }
 
     public String getSoHD() {
