@@ -478,7 +478,12 @@ public class HomeGUI extends JFrame implements MouseListener{
             //Thống kê
         }
         if(btn == tacgiaButton){
-            //Tác giả
+            TacGiaGUI tgGUI = new TacGiaGUI();
+            showPanel.removeAll();
+            showPanel.add(tgGUI, BorderLayout.CENTER);
+            tgGUI.setVisible(true);
+            showPanel.revalidate(); 
+            showPanel.repaint(); 
         }
         if(btn == phanquyenButton){
             PhanQuyenGUI phanquyenGUI = new PhanQuyenGUI();

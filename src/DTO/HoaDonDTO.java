@@ -16,6 +16,7 @@ public class HoaDonDTO {
     private TaiKhoanDTO tk;
     private KhachHangDTO kh;
 
+
     public HoaDonDTO(String SoHD, String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien, int TrangThai) {
         this.SoHD = SoHD;
         this.MaKH = MaKH;
@@ -36,6 +37,7 @@ public class HoaDonDTO {
         this.TienGiamGia = TienGiamGia;
         this.TongTien = TongTien;
     }
+
 
     public HoaDonDTO(String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien, TaiKhoanDTO tk, KhachHangDTO kh) {
         this.MaKH = MaKH;

@@ -4,7 +4,7 @@ public class SanPhamDTO {
     private String maSach, tenSach, maLoai, nxb;
     private int namXB, soLuong, trangthai;
     private double giaBia, giaBan;
-    private String[] tenHinh;
+    public String[] tenHinh;
     private String tacGia;
     private LoaiDTO loai;
 

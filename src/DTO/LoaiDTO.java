@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -5,8 +6,10 @@
 package DTO;
 
 public class LoaiDTO {
+
     private String MaLoai, TenLoai;
     private int TrangThai;
+
 
     public LoaiDTO() {
     }
@@ -39,5 +42,5 @@ public class LoaiDTO {
     public void setTrangThai(int TrangThai) {
         this.TrangThai = TrangThai;
     }
-    
+
 }

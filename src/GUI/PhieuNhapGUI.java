@@ -12,13 +12,13 @@ public class PhieuNhapGUI extends JFrame {
     public PhieuNhapGUI() {
         // Tạo các nút chức năng với màu sắc như trong hình
         JButton addButton = new JButton("+ Thêm phiếu nhập");
-        addButton.setBackground(Color.decode("#A6E3A1")); // Màu xanh lá
+        addButton.setBackground(BASE.btnThem); // Màu xanh lá
 
         JButton editButton = new JButton("+ Sửa phiếu nhập");
-        editButton.setBackground(Color.decode("#B4BEFE")); // Màu tím
+        editButton.setBackground(BASE.btnSua); // Màu tím
 
         JButton deleteButton = new JButton("+ Xóa phiếu nhập");
-        deleteButton.setBackground(Color.decode("#EBA0AC")); // Màu đỏ
+        deleteButton.setBackground(BASE.btnXoa); // Màu đỏ
 
         // Bố trí các nút theo dạng FlowLayout (căn ngang)
         JPanel toolBar = new JPanel();
@@ -68,7 +68,7 @@ public class PhieuNhapGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(table);
 
         // Đặt màu nền cho bảng và tiêu đề
-        table.getTableHeader().setBackground(Color.decode("#6BD7E1")); // Màu xanh tiêu đề bảng
+        table.getTableHeader().setBackground(BASE.color_table_heaer); // Màu xanh tiêu đề bảng
         table.setBackground(Color.WHITE);
 
         // Bố cục tổng thể
