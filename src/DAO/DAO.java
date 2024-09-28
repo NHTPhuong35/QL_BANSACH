@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author nhatm
  */
 public abstract class DAO<T> {
-    Connection conn = DatabaseConnection.getInstance().getConnection();
+//    Connection conn = connectDatabase.getInstance().getConnection();
 
     public abstract ArrayList<T> getAll() throws SQLException;
 

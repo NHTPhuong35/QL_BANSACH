@@ -6,6 +6,7 @@ public class SanPhamDTO {
     private double giaBia, giaBan;
     private String[] tenHinh;
     private String tacGia;
+    private LoaiDTO loai;
 
     public SanPhamDTO() {
     }
@@ -22,6 +23,20 @@ public class SanPhamDTO {
         this.giaBan = giaBan;
         this.tenHinh = tenHinh;
         this.tacGia = tacGia;
+    }
+    
+    public SanPhamDTO(String maSach, String tenSach, LoaiDTO loai) {
+        this.maSach = maSach;
+        this.tenSach = tenSach;
+        this.loai = loai;
+    }
+
+    public LoaiDTO getLoai() {
+        return loai;
+    }
+
+    public void setLoai(LoaiDTO loai) {
+        this.loai = loai;
     }
 
     public String[] getTenHinh() {

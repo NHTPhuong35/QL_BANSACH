@@ -12,6 +12,20 @@ public class HoaDonDTO {
     private String NgayHD;
     private double TienGiamGia;
     private double TongTien;
+    private int TrangThai;
+    private TaiKhoanDTO tk;
+    private KhachHangDTO kh;
+
+    public HoaDonDTO(String SoHD, String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien, int TrangThai) {
+        this.SoHD = SoHD;
+        this.MaKH = MaKH;
+        this.TenDN = TenDN;
+        this.TGian = TGian;
+        this.NgayHD = NgayHD;
+        this.TienGiamGia = TienGiamGia;
+        this.TongTien = TongTien;
+        this.TrangThai = TrangThai;
+    }
 
     public HoaDonDTO(String SoHD, String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien) {
         this.SoHD = SoHD;
@@ -21,6 +35,42 @@ public class HoaDonDTO {
         this.NgayHD = NgayHD;
         this.TienGiamGia = TienGiamGia;
         this.TongTien = TongTien;
+    }
+
+    public HoaDonDTO(String MaKH, String TenDN, String TGian, String NgayHD, double TienGiamGia, double TongTien, TaiKhoanDTO tk, KhachHangDTO kh) {
+        this.MaKH = MaKH;
+        this.TenDN = TenDN;
+        this.TGian = TGian;
+        this.NgayHD = NgayHD;
+        this.TienGiamGia = TienGiamGia;
+        this.TongTien = TongTien;
+        this.tk = tk;
+        this.kh = kh;
+    }
+    
+
+    public TaiKhoanDTO getTk() {
+        return tk;
+    }
+
+    public KhachHangDTO getKh() {
+        return kh;
+    }
+
+    public void setTk(TaiKhoanDTO tk) {
+        this.tk = tk;
+    }
+
+    public void setKh(KhachHangDTO kh) {
+        this.kh = kh;
+    }
+
+    public void setTrangThai(int TrangThai) {
+        this.TrangThai = TrangThai;
+    }
+
+    public int getTrangThai() {
+        return TrangThai;
     }
 
     public String getSoHD() {
