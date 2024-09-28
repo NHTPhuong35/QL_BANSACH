@@ -206,7 +206,7 @@ public class BanHangGUI extends JPanel {
         dtmSP = new DefaultTableModel(columnNames, 0);
         tableSP = new JTable(dtmSP) {
             public boolean isCellEditable(int row, int column) {
-                return false;
+                return column == 1;
             }
         };
         styleTable(tableSP);
@@ -215,9 +215,7 @@ public class BanHangGUI extends JPanel {
         JScrollPane scrollPane = new JScrollPane(tableSP);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        tableSP.getColumnModel().getColumn(3).setCellRenderer(new DeleteButtonRenderer());
 
-        // Thêm dữ liệu mẫu
         addSampleData();
 
         return panel;
@@ -230,21 +228,8 @@ public class BanHangGUI extends JPanel {
     }
 
     private void addProduct(String name, int quantity, double price) {
-        Object[] rowData = {name, quantity, price, createDeleteButton()}; // Thêm nút xóa
+        Object[] rowData = {name, quantity, price, "Xóa"}; // Thêm nút xóa
         dtmSP.addRow(rowData);
-    }
-
-    private JButton createDeleteButton() {
-        JButton deleteButton = new JButton("Xóa");
-        deleteButton.addActionListener(e -> {
-            int row = tableSP.getSelectedRow();
-            if (row != -1) {
-                dtmSP.removeRow(row);
-            } else {
-                JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm để xóa.");
-            }
-        });
-        return deleteButton;
     }
 
     private void styleTable(JTable table) {

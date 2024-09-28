@@ -4,6 +4,8 @@
  */
 package GUI;
 
+import BUS.HoaDonBUS;
+import DTO.HoaDonDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -12,6 +14,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -19,6 +29,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -30,6 +41,10 @@ import javax.swing.table.JTableHeader;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 public class ThongTinHDGUI extends JPanel {
 
@@ -39,10 +54,15 @@ public class ThongTinHDGUI extends JPanel {
     private JTable table;
     private JButton btnHuy, btnLamMoi, btnBDF, btnTim;
     private JSpinner begin, end;
+    private JTextField tfCode;
+    private ArrayList<HoaDonDTO> DsHoaDon;
 
     public ThongTinHDGUI() {
         init();
         initComponents();
+        HoaDonBUS bus = new HoaDonBUS();
+        DsHoaDon = bus.getDsHD();
+        Reload(DsHoaDon);
     }
 
     public void init() {
@@ -53,7 +73,6 @@ public class ThongTinHDGUI extends JPanel {
         pnControl.setBackground(Color.WHITE);
 
         pnHD = new JPanel(new BorderLayout());
-//        pnHD.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
 
         this.add(pnControl, BorderLayout.NORTH);
         this.add(pnHD, BorderLayout.CENTER);
@@ -61,7 +80,17 @@ public class ThongTinHDGUI extends JPanel {
 
     public void initComponents() {
 
-        JPanel pnSreach = createPn("mã HD, mã NV, mã KH");
+        JLabel lblCode = new JLabel("mã HD, mã NV, mã KH");
+        lblCode.setFont(BASE.font_header);
+        tfCode = new JTextField();
+        tfCode.setPreferredSize(new Dimension(150, 25));
+        tfCode.setMaximumSize(new Dimension(350, 25));
+        JPanel pnCode = new JPanel();
+        pnCode.setBackground(Color.WHITE);
+        pnCode.setLayout(new BoxLayout(pnCode, BoxLayout.Y_AXIS));
+        pnCode.add(lblCode);
+        pnCode.add(Box.createRigidArea(new Dimension(0, 10)));
+        pnCode.add(tfCode);
 
         JLabel lblbegin = new JLabel("Ngày bắt đầu");
         lblbegin.setFont(BASE.font_header);
@@ -140,7 +169,7 @@ public class ThongTinHDGUI extends JPanel {
                 BASE.color_text
         ));
 
-        pnTimkiem.add(pnSreach);
+        pnTimkiem.add(pnCode);
         pnTimkiem.add(Box.createRigidArea(new Dimension(20, 0)));
         pnTimkiem.add(pnBatdau);
         pnTimkiem.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -165,7 +194,7 @@ public class ThongTinHDGUI extends JPanel {
                 BASE.color_text
         ));
         btnHuy = createBtnTT("Huỷ HD", "btnHuy", "/Image/cancel.png");
-        btnBDF = createBtnTT("In BDF", "btnBDF","/Image/bdf.png");
+        btnBDF = createBtnTT("In BDF", "btnBDF", "/Image/bdf.png");
 
         pnThaoTac.add(btnHuy);
         pnThaoTac.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -177,7 +206,7 @@ public class ThongTinHDGUI extends JPanel {
 
         pnControl.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
 
-        Object[] colSP = {"Mã HD", "Mã nhân viên", "Mã khách hàng", "Thời gian", "Ngày", "Giảm giá", "Tổng tiền"};
+        Object[] colSP = {"Mã HD", "Mã nhân viên", "Mã khách hàng", "Thời gian", "Ngày", "Giảm giá", "Tổng tiền", "Trạng Thái"};
         dtm = new DefaultTableModel(colSP, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -185,16 +214,241 @@ public class ThongTinHDGUI extends JPanel {
             }
         };
 
-        dtm.addRow(new Object[]{"HD01", "NV01", "KH01", "10:10:2", "25/09/2024", "0", "990.999"});
-        dtm.addRow(new Object[]{"HD02", "NV01", "KH01", "10:10:2", "25/09/2024", "0", "990.999"});
-        dtm.addRow(new Object[]{"HD03", "NV01", "KH01", "10:10:2", "25/09/2024", "0", "990.999"});
-        dtm.addRow(new Object[]{"HD04", "NV01", "KH01", "10:10:2", "25/09/2024", "0", "990.999"});
-
         table = new JTable(dtm);
         JScrollPane tableSPScr = new JScrollPane(table);
         styleTable(table);
 
         pnHD.add(tableSPScr, BorderLayout.CENTER);
+
+        tfCode.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterTable();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterTable();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+
+        btnTim.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                searchByDate();
+            }
+        });
+
+        begin.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Date startDate = (Date) begin.getValue();
+                Date endDate = (Date) end.getValue();
+                if (startDate.after(endDate)) {
+                    // Nếu ngày bắt đầu lớn hơn ngày kết thúc, thiết lập lại ngày kết thúc bằng ngày bắt đầu
+                    end.setValue(startDate);
+                }
+            }
+        });
+
+        end.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                Date startDate = (Date) begin.getValue();
+                Date endDate = (Date) end.getValue();
+                if (endDate.before(startDate)) {
+                    end.setValue(startDate);
+                }
+            }
+        });
+
+        btnLamMoi.addActionListener(e -> {
+            Date currentDate = new Date();
+            begin.setValue(currentDate);
+            end.setValue(currentDate);
+
+            tfCode.setText("");
+            HoaDonBUS bus = new HoaDonBUS();
+            Reload(bus.getDsHD());
+        });
+
+        btnHuy.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Lấy ngày hiện tại
+                Date currentDate = new Date();
+                // Lấy hàng được chọn trong bảng
+                int selectedRow = table.getSelectedRow();
+
+                // Kiểm tra xem có hàng nào được chọn không
+                if (selectedRow != -1) {
+                    // Lấy thông tin ngày hóa đơn từ bảng
+                    String ngayHDStr = dtm.getValueAt(selectedRow, 4).toString();
+                    Date invoiceDate = convertStringToDate(ngayHDStr);
+                    if (isSameDay(currentDate, ngayHDStr)) {
+                        HoaDonBUS bus = new HoaDonBUS();
+                        String soHD = dtm.getValueAt(selectedRow, 0).toString();
+                        bus.CapNhatTrangThaiHD(soHD);
+                        Reload(bus.getDsHD());
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Chỉ được phép hủy hóa đơn trong Ngày");
+                    }
+                }
+            }
+        });
+
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    int row = table.rowAtPoint(e.getPoint());
+
+                    if (row != -1) { // Kiểm tra dòng có tồn tại
+                        String soHD = table.getValueAt(row, 0) + "";
+                        String maKH = table.getValueAt(row, 1) + "";
+                        String tenDN = table.getValueAt(row, 2) + "";
+                        String tGian = table.getValueAt(row, 3) + "";
+                        String ngayHD = table.getValueAt(row, 4) + "";
+                        double tienGiamGia = Double.parseDouble(table.getValueAt(row, 5) + "");
+                        double tongTien = Double.parseDouble(table.getValueAt(row, 6) + "");
+
+                        HoaDonDTO hd = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
+                        new CTHD(hd);
+                    }
+                }
+            }
+        });
+
+    }
+
+    private void Reload(ArrayList<HoaDonDTO> ds) {
+
+        dtm.setRowCount(0);
+        for (HoaDonDTO hd : ds) {
+            String TrangThai = hd.getTrangThai() == 1 ? "Đã xác nhận" : "Hủy";
+            String NgayHD = convertDate(hd.getNgayHD());
+            dtm.addRow(new Object[]{hd.getSoHD(), hd.getTenDN(), hd.getMaKH(), hd.getTGian(), NgayHD, hd.getTienGiamGia(), hd.getTongTien(), TrangThai});
+        }
+    }
+
+    private void filterTable() {
+        String key = tfCode.getText().toLowerCase();
+        HoaDonBUS bus = new HoaDonBUS();
+        ArrayList<HoaDonDTO> ds = new ArrayList<>();
+        for (HoaDonDTO hd : DsHoaDon) {
+            if (hd.getSoHD().toLowerCase().contains(key) || hd.getMaKH().toLowerCase().contains(key) || hd.getTenDN().toLowerCase().contains(key)) {
+                ds.add(hd);
+            }
+        }
+        Reload(ds);
+    }
+
+    private void searchByDate() {
+        Date startDate = (Date) begin.getValue();
+        Date endDate = (Date) end.getValue();
+        String key = tfCode.getText().toLowerCase();
+
+        // Đảm bảo rằng thời gian của ngày bắt đầu và ngày kết thúc được đặt về đầu ngày và cuối ngày
+        startDate = resetTimeToStartOfDay(startDate);
+        endDate = resetTimeToEndOfDay(endDate);
+
+        ArrayList<HoaDonDTO> filteredList = new ArrayList<>();
+
+        for (HoaDonDTO hd : DsHoaDon) {
+            Date invoiceDate = convertStringToDate(hd.getNgayHD());
+
+            // Kiểm tra xem ngày hóa đơn có nằm trong khoảng không
+            boolean dateInRange = (invoiceDate.compareTo(startDate) >= 0) && (invoiceDate.compareTo(endDate) <= 0);
+            boolean matchesKey = hd.getSoHD().toLowerCase().contains(key)
+                    || hd.getMaKH().toLowerCase().contains(key)
+                    || hd.getTenDN().toLowerCase().contains(key);
+
+            // Kiểm tra nếu ngày hóa đơn nằm trong khoảng và từ khóa tìm kiếm có khớp
+            if (dateInRange && (key.isEmpty() || matchesKey)) {
+                filteredList.add(hd);
+            }
+        }
+
+        Reload(filteredList);
+    }
+
+    private Date resetTimeToStartOfDay(Date date) {
+        if (date == null) {
+            return null;
+        }
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        calendar.set(java.util.Calendar.MINUTE, 0);
+        calendar.set(java.util.Calendar.SECOND, 0);
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+        return calendar.getTime();
+    }
+
+    private Date resetTimeToEndOfDay(Date date) {
+        if (date == null) {
+            return null;
+        }
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 23);
+        calendar.set(java.util.Calendar.MINUTE, 59);
+        calendar.set(java.util.Calendar.SECOND, 59);
+        calendar.set(java.util.Calendar.MILLISECOND, 999);
+        return calendar.getTime();
+    }
+
+    public String convertDate(String date) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd-MM-yyyy");
+        inputFormat.setLenient(false); // Đặt chế độ không khoan nhượng để kiểm tra ngày hợp lệ
+        outputFormat.setLenient(false);
+
+        try {
+            // Kiểm tra định dạng đầu vào
+            if (date.matches("\\d{4}-\\d{2}-\\d{2}")) { // yyyy/MM/dd
+                Date parsedDate = inputFormat.parse(date);
+                return outputFormat.format(parsedDate); // Chuyển sang dd/MM/yyyy
+            } else if (date.matches("\\d{2}-\\d{2}-\\d{4}")) { // dd/MM/yyyy
+                Date parsedDate = outputFormat.parse(date);
+                return inputFormat.format(parsedDate); // Chuyển sang yyyy/MM/dd
+            } else {
+                throw new IllegalArgumentException("Ngày không hợp lệ! Vui lòng nhập đúng định dạng.");
+            }
+        } catch (ParseException e) {
+            // Thông báo lỗi cho người dùng
+            System.err.println("Ngày không hợp lệ: " + date + ". Vui lòng kiểm tra lại.");
+            return null; // Trả về null nếu có lỗi
+        } catch (IllegalArgumentException e) {
+            // Thông báo lỗi cho người dùng
+            System.err.println(e.getMessage());
+            return null; // Trả về null nếu có lỗi
+        }
+    }
+
+    private Date convertStringToDate(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return dateFormat.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private boolean isSameDay(Date date1, String date2Str) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy"); // Định dạng ngày theo dạng dd-MM-yyyy
+        try {
+            Date date2 = sdf.parse(date2Str); // Chuyển đổi chuỗi thành đối tượng Date
+            return sdf.format(date1).equals(sdf.format(date2)); // So sánh hai ngày đã định dạng
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false; // Nếu có lỗi khi chuyển đổi, trả về false
+        }
     }
 
     private void styleTable(JTable table) {
@@ -207,26 +461,9 @@ public class ThongTinHDGUI extends JPanel {
         table.setRowHeight(35);
         table.setFont(BASE.font);
 
-//        table.setCellSelectionEnabled(true);
-//        table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
-    }
-
-    private JPanel createPn(String txt) {
-        JLabel lbl = new JLabel(txt);
-        lbl.setFont(BASE.font_header);
-        JTextField tf = new JTextField();
-        tf.setPreferredSize(new Dimension(150, 25));
-        tf.setMaximumSize(new Dimension(350, 25));
-        JPanel pn = new JPanel();
-        pn.setBackground(Color.WHITE);
-        pn.setLayout(new BoxLayout(pn, BoxLayout.Y_AXIS));
-        pn.add(lbl);
-        pn.add(Box.createRigidArea(new Dimension(0, 10)));
-        pn.add(tf);
-        return pn;
     }
 
     private JButton createBtn(String txt, String name) {
@@ -245,7 +482,6 @@ public class ThongTinHDGUI extends JPanel {
 
     private JButton createBtnTT(String txt, String name, String iconPath) {
         JButton btn = new JButton(txt);
-//        btn.setFont();
         btn.setPreferredSize(new Dimension(90, 60));
         btn.setMaximumSize(new Dimension(90, 60));
         btn.setForeground(Color.BLACK);
@@ -254,23 +490,23 @@ public class ThongTinHDGUI extends JPanel {
         btn.setOpaque(true);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Tải icon và điều chỉnh kích thước
         ImageIcon icon = new ImageIcon(getClass().getResource(iconPath));
         Image image = icon.getImage(); // Chuyển đổi ImageIcon thành Image
         Image scaledImage = image.getScaledInstance(20, 20, Image.SCALE_DEFAULT); // Điều chỉnh kích thước
         btn.setIcon(new ImageIcon(scaledImage)); // Đặt icon mới vào nút
 
         // Đặt vị trí cho văn bản và icon
-        btn.setHorizontalTextPosition(SwingConstants.CENTER); 
+        btn.setHorizontalTextPosition(SwingConstants.CENTER);
         btn.setVerticalTextPosition(SwingConstants.BOTTOM); // Icon nằm trên văn bản
         return btn;
     }
 
     public static void main(String[] args) {
         JFrame f = new JFrame();
-        f.setSize(600, 600);
+        f.setSize(1000, 600);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(new ThongTinHDGUI());
+        f.setLocationRelativeTo(null);
         f.setVisible(true);
     }
 }

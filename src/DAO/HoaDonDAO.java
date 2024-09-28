@@ -106,6 +106,30 @@ public class HoaDonDAO {
         return success;
     }
 
+    public boolean CapNhatTrangThaiHD(String MaHD) {
+        boolean success = false;
+        try {
+            conn.connect();
+
+            // Sửa cú pháp SQL: thêm dấu phẩy trước 'TRANGTHAI'
+            String sql = "UPDATE HOADON SET TRANGTHAI = 0 WHERE SOHD = ?";
+
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1, MaHD);
+
+            // Kiểm tra số hàng bị ảnh hưởng
+            success = pre.executeUpdate() > 0;
+
+            // Đảm bảo đóng PreparedStatement
+            pre.close();
+            conn.disconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return success;
+    }
     public static void main(String[] agrs) {
         HoaDonDAO dao = new HoaDonDAO();
         ArrayList<HoaDonDTO> list = dao.DanhSachHoaDon();
