@@ -33,15 +33,15 @@ public class ChonTacGiaGUI extends JFrame {
     private JButton btnThem, btnTroVe;
     private JTextField txtTimKiem;
     ArrayList<TacGiaDTO> dsTG;
-    ArrayList<TacGiaDTO> selectedListTG = new ArrayList<>();
+    ArrayList<TacGiaDTO> selectedListTG;
 
-    public ChonTacGiaGUI() {
+    public ChonTacGiaGUI(ArrayList<TacGiaDTO> selectedListTG) {
+        this.selectedListTG = selectedListTG;
         dsTG = new ArrayList<>();
-        dsTG.add(new TacGiaDTO("TG1", "Tác giả 1"));
-        dsTG.add(new TacGiaDTO("TG2", "Tác giả 2"));
-        dsTG.add(new TacGiaDTO("TG3", "Tác giả 3"));
-        dsTG.add(new TacGiaDTO("TG4", "Tác giả 4"));
-        dsTG.add(new TacGiaDTO("TG5", "Tác giả 5"));
+        dsTG.add(new TacGiaDTO("TG01", "Nguyễn Anh Dũng"));
+        dsTG.add(new TacGiaDTO("TG02", "Morgan Housel"));
+        dsTG.add(new TacGiaDTO("TG03", "Diệp Hồng Vũ"));
+        dsTG.add(new TacGiaDTO("TG04", "Phan Văn Trường"));
         init();
     }
 
@@ -109,7 +109,8 @@ public class ChonTacGiaGUI extends JFrame {
         tbTacGia.setRowHeight(30);
 
         for (TacGiaDTO tg : dsTG) {
-            df.addRow(new Object[]{false, tg.getMaTG(), tg.getTenTG()});
+            boolean isSelected = isLoaiSelected(tg); // Kiểm tra tác giả đã được chọn trước đó
+            df.addRow(new Object[]{isSelected, tg.getMaTG(), tg.getTenTG()});
         }
         tbTacGia.setModel(df);
 
@@ -165,6 +166,15 @@ public class ChonTacGiaGUI extends JFrame {
         }
         this.dispose();
     }
+    
+    private boolean isLoaiSelected(TacGiaDTO tg) {
+        for (TacGiaDTO selectedTG : selectedListTG) {
+            if (selectedTG .getMaTG().equals(tg.getMaTG())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     // Hàm tìm kiếm tác giả theo tên hoặc mã tác giả
     private void timKiemTacGia() {
@@ -181,6 +191,7 @@ public class ChonTacGiaGUI extends JFrame {
     }
 
     public static void main(String[] args) {
-        new ChonTacGiaGUI();
+        ArrayList<TacGiaDTO> selectedListTG = new ArrayList<>();
+        new ChonTacGiaGUI(selectedListTG);
     }
 }

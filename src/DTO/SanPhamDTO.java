@@ -1,19 +1,22 @@
 package DTO;
 
+import java.util.ArrayList;
+
 public class SanPhamDTO {
-    private String maSach, tenSach, maLoai, nxb;
+
+    private String maSach, tenSach, nxb;
     private int namXB, soLuong, trangthai;
     private double giaBia, giaBan;
-    public String[] tenHinh;
-    private String tacGia;
+    public ArrayList<String> tenHinh;
+    private ArrayList<TacGiaDTO> tacGia;
+    private ArrayList<LoaiDTO> loai;
 
     public SanPhamDTO() {
     }
 
-    public SanPhamDTO(String maSach, String tenSach, String maLoai, String nxb, int namXB, int soLuong, int trangthai, double giaBia, double giaBan, String[] tenHinh, String tacGia) {
+    public SanPhamDTO(String maSach, String tenSach, String nxb, int namXB, int soLuong, int trangthai, double giaBia, double giaBan, ArrayList<String> tenHinh, ArrayList<TacGiaDTO> tacGia, ArrayList<LoaiDTO> loai) {
         this.maSach = maSach;
         this.tenSach = tenSach;
-        this.maLoai = maLoai;
         this.nxb = nxb;
         this.namXB = namXB;
         this.soLuong = soLuong;
@@ -22,22 +25,35 @@ public class SanPhamDTO {
         this.giaBan = giaBan;
         this.tenHinh = tenHinh;
         this.tacGia = tacGia;
+        this.loai = loai;
     }
 
-    public String[] getTenHinh() {
-        return tenHinh;
+    public SanPhamDTO(String maSach, String tenSach, ArrayList<LoaiDTO> loai) {
+        this.maSach = maSach;
+        this.tenSach = tenSach;
+        this.loai = loai;
     }
 
-    public void setTenHinh(String[] tenHinh) {
-        this.tenHinh = tenHinh;
+    public String getLoaiToString() { //Dạng ten a, b, c
+        StringBuilder tenLoai = new StringBuilder();
+        for (LoaiDTO loaiDTO : loai) {
+            if (tenLoai.length() > 0) {
+                tenLoai.append(",");
+            }
+            tenLoai.append(loaiDTO.getTenLoai());
+        }
+        return tenLoai.toString();
     }
 
-    public String getTacGia() {
-        return tacGia;
-    }
-
-    public void setTacGia(String tacGia) {
-        this.tacGia = tacGia;
+    public String getTacGiaToString() {
+        StringBuilder tenTacGia = new StringBuilder();
+        for (TacGiaDTO tacGiaDTO : tacGia) {
+            if (tenTacGia.length() > 0) {
+                tenTacGia.append(",");
+            }
+            tenTacGia.append(tacGiaDTO.getTenTG());
+        }
+        return tenTacGia.toString();
     }
 
     public String getMaSach() {
@@ -54,14 +70,6 @@ public class SanPhamDTO {
 
     public void setTenSach(String tenSach) {
         this.tenSach = tenSach;
-    }
-
-    public String getMaLoai() {
-        return maLoai;
-    }
-
-    public void setMaLoai(String maLoai) {
-        this.maLoai = maLoai;
     }
 
     public String getNxb() {
@@ -111,4 +119,29 @@ public class SanPhamDTO {
     public void setGiaBan(double giaBan) {
         this.giaBan = giaBan;
     }
+
+    public ArrayList<String> getTenHinh() {
+        return tenHinh;
+    }
+
+    public void setTenHinh(ArrayList<String> tenHinh) {
+        this.tenHinh = tenHinh;
+    }
+
+    public ArrayList<TacGiaDTO> getTacGia() {
+        return tacGia;
+    }
+
+    public void setTacGia(ArrayList<TacGiaDTO> tacGia) {
+        this.tacGia = tacGia;
+    }
+
+    public ArrayList<LoaiDTO> getLoai() {
+        return loai;
+    }
+
+    public void setLoai(ArrayList<LoaiDTO> loai) {
+        this.loai = loai;
+    }
+
 }

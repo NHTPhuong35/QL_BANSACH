@@ -4,6 +4,10 @@
  */
 package GUI;
 
+import BUS.ChiTietHoaDonBUS;
+import DTO.ChiTietHoaDonDTO;
+import DTO.HoaDonDTO;
+import DTO.LoaiDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -12,6 +16,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -32,18 +38,23 @@ public class CTHD extends JFrame implements MouseListener {
     private DefaultTableModel dtm;
     private JTable table;
     private JButton btnX;
+    private HoaDonDTO hd;
 
-    public CTHD() {
+    public CTHD(HoaDonDTO hd) {
         this.setLayout(new BorderLayout());
         this.setSize(750, 550);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLocationRelativeTo(null);
         this.setUndecorated(true);
+        this.setBackground(Color.decode("#E5F1FB"));
+        this.hd = hd;
+        
 
         pnHeader = new JPanel();
         pnHeader.setBackground(BASE.color_heaer);
         pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
         pnHeader.setPreferredSize(new Dimension(0, 30));
+        
 
         btnX = new JButton("X");
         btnX.setPreferredSize(new Dimension(50, 30));
@@ -57,29 +68,33 @@ public class CTHD extends JFrame implements MouseListener {
         pnHeader.add(btnX);
 
         pnMain = new JPanel(new BorderLayout());
+        pnMain.setBackground(Color.decode("#E5F1FB"));
         JPanel pnInfo = new JPanel(new BorderLayout());
+        pnInfo.setBackground(Color.decode("#E5F1FB"));
 
         JLabel lblHoaDon = new JLabel("Hóa đơn");
         lblHoaDon.setFont(new Font(BASE.typeface, Font.PLAIN, 50));
         lblHoaDon.setForeground(Color.decode("#2F7679"));
 
-        lblNgayLap = new JLabel("Ngày lập:20/09/2024");
+        lblNgayLap = new JLabel("Ngày lập: " + hd.getNgayHD() + "  " + hd.getTGian());
         lblNgayLap.setFont(BASE.font);
-        lblMaHD = new JLabel("Mã hóa đơn: HD01");
+        lblMaHD = new JLabel("Mã hóa đơn: " + hd.getSoHD());
         lblMaHD.setFont(BASE.font);
 
         JPanel pnInfoHD = new JPanel();
+        pnInfoHD.setBackground(Color.decode("#E5F1FB"));
         pnInfoHD.setLayout(new BoxLayout(pnInfoHD, BoxLayout.Y_AXIS));
         pnInfoHD.add(lblHoaDon);
         pnInfoHD.add(lblNgayLap);
         pnInfoHD.add(lblMaHD);
 
         JPanel pnInfoPerson = new JPanel();
+        pnInfoPerson.setBackground(Color.decode("#E5F1FB"));
         pnInfoPerson.setLayout(new BoxLayout(pnInfoPerson, BoxLayout.X_AXIS));
         pnInfoPerson.setBorder(new EmptyBorder(20, 0, 20, 20));
-        lblNV = new JLabel("Bình Yên");
+        lblNV = new JLabel(hd.getTenDN());
         JPanel pnNv = createTitle("Người lập hóa đơn", lblNV);
-        lblKH = new JLabel("Yên Tĩnh");
+        lblKH = new JLabel(hd.getMaKH());
         JPanel pnKh = createTitle("Khách hàng", lblKH);
         pnInfoPerson.add(pnNv);
         pnInfoPerson.add(Box.createRigidArea(new Dimension(40, 0)));
@@ -89,9 +104,11 @@ public class CTHD extends JFrame implements MouseListener {
         pnInfo.add(pnInfoPerson, BorderLayout.SOUTH);
 
         pnMain.add(pnInfo, BorderLayout.CENTER);
+        pnMain.setBackground(Color.decode("#E5F1FB"));
         pnMain.setBorder(new EmptyBorder(0, 20, 0, 20));
 
         JPanel pnTable = new JPanel(new BorderLayout());
+        pnTable.setBackground(Color.WHITE);
         Object[] colSP = {"Tên sản phẩm", "Thể loại", "Số lượng", "Đơn giá", "Thành tiền"};
         dtm = new DefaultTableModel(colSP, 0) {
             @Override
@@ -105,13 +122,16 @@ public class CTHD extends JFrame implements MouseListener {
         styleTable(table);
         pnTable.add(tableSPScr, BorderLayout.CENTER);
 
-        lblTongCong = new JLabel("Tổng cộng: 0");
+        double TongTien = TinhTongTien();
+        
+        lblTongCong = new JLabel("Tổng cộng: " + TongTien + "đ");
         StyleLable(lblTongCong);
-        lblGiamGia = new JLabel("Giảm giá: 0");
+        lblGiamGia = new JLabel("Giảm giá: " + hd.getTienGiamGia() + "đ");
         StyleLable(lblGiamGia);
-        lblThanhTien = new JLabel("Thành tiền: 0");
+        lblThanhTien = new JLabel("Thành tiền: " + (TongTien - hd.getTienGiamGia()) + "đ");
         StyleLable(lblThanhTien);
         JPanel pnMoney = new JPanel();
+        pnMoney.setBackground(Color.decode("#E5F1FB"));
         pnMoney.setLayout(new BoxLayout(pnMoney, BoxLayout.Y_AXIS));
         pnMoney.add(lblTongCong);
         pnMoney.add(lblGiamGia);
@@ -121,6 +141,7 @@ public class CTHD extends JFrame implements MouseListener {
         pnMain.add(pnTable, BorderLayout.CENTER);
 
         pnFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        pnFooter.setBackground(Color.decode("#E5F1FB"));
         pnFooter.setBorder(new EmptyBorder(0, 20, 0, 20));
         pnFooter.add(pnMoney);
 
@@ -128,6 +149,27 @@ public class CTHD extends JFrame implements MouseListener {
         this.add(pnMain, BorderLayout.CENTER);
         this.add(pnFooter, BorderLayout.SOUTH);
         this.setVisible(true);
+        
+        showDetailBill();
+    }
+    
+    private void showDetailBill() {
+        ChiTietHoaDonBUS bus = new ChiTietHoaDonBUS(hd.getSoHD());
+        ArrayList<ChiTietHoaDonDTO> list = bus.getDscthd();
+        dtm.setRowCount(0);
+        for(ChiTietHoaDonDTO ct : list) {
+            dtm.addRow(new Object[]{ct.getSp().getTenSach(),ct.getSp().getLoaiToString(),ct.getSoLuong(),ct.getdonGia(),ct.getdonGia()*ct.getSoLuong()});
+        }
+    }
+    
+    private double TinhTongTien() {
+        ChiTietHoaDonBUS bus = new ChiTietHoaDonBUS(hd.getSoHD());
+        ArrayList<ChiTietHoaDonDTO> list = bus.getDscthd();
+        double Tong = 0.0;
+        for(ChiTietHoaDonDTO ct : list) {
+            Tong += ct.getdonGia()*ct.getSoLuong();
+        }
+        return Tong;
     }
 
     private void styleTable(JTable table) {
@@ -147,6 +189,7 @@ public class CTHD extends JFrame implements MouseListener {
 
     private JPanel createTitle(String title, JLabel lblName) {
         JPanel pn = new JPanel();
+        pn.setBackground(Color.decode("#E5F1FB"));
         pn.setLayout(new BoxLayout(pn, BoxLayout.Y_AXIS));
         JLabel lblTitle = new JLabel(title);
         lblTitle.setFont(new Font(BASE.typeface, Font.PLAIN, 18));
@@ -166,7 +209,7 @@ public class CTHD extends JFrame implements MouseListener {
     }
 
     public static void main(String[] args) {
-        new CTHD();
+//        new CTHD();
     }
 
     @Override

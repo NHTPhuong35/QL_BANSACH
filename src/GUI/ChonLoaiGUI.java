@@ -25,33 +25,33 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
 
-public class ChonLoaiGUI extends JFrame{
+public class ChonLoaiGUI extends JFrame {
+
     private JPanel pnHeader;
     private JTable tbLoai;
     private JButton btnThem, btnTroVe;
     private JTextField txtTimKiem;
     ArrayList<LoaiDTO> dsLoai;
-    ArrayList<LoaiDTO> selectedListLoai = new ArrayList<>();
+    ArrayList<LoaiDTO> selectedListLoai;
 
-    public ChonLoaiGUI() {
+    public ChonLoaiGUI(ArrayList<LoaiDTO> selectedListLoai) {
+        this.selectedListLoai = selectedListLoai;
         dsLoai = new ArrayList<>();
-        dsLoai.add(new LoaiDTO("Loai1", "loại 1"));
-        dsLoai.add(new LoaiDTO("Loai2", "loại 2"));
-        dsLoai.add(new LoaiDTO("Loai3", "loại 3"));
-        dsLoai.add(new LoaiDTO("Loai4", "loại 4"));
-        dsLoai.add(new LoaiDTO("Loai5", "loại 5"));
+        dsLoai.add(new LoaiDTO("L01", "Kỹ năng sống"));
+        dsLoai.add(new LoaiDTO("L02", "Tâm lý học"));
+        dsLoai.add(new LoaiDTO("L03", "Quản trị - lãnh đạo"));
         init();
     }
-    
-    public void init(){
+
+    public void init() {
         this.setSize(800, 500);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+
         pnHeader = new JPanel();
         pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
+
         btnThem = new JButton("+ Thêm loại");
         btnThem.setPreferredSize(new Dimension(150, 30));
         btnThem.setMaximumSize(new Dimension(150, 30));
@@ -77,7 +77,7 @@ public class ChonLoaiGUI extends JFrame{
                 ChonLoaiGUI.this.dispose();
             }
         });
-        
+
         JLabel lblTimKiem = new JLabel("Tìm kiếm", JLabel.CENTER);
         lblTimKiem.setFont(BASE.font);
         txtTimKiem = new JTextField();
@@ -90,7 +90,7 @@ public class ChonLoaiGUI extends JFrame{
         pnHeader.add(lblTimKiem);
         pnHeader.add(Box.createRigidArea(new Dimension(10, 0)));
         pnHeader.add(txtTimKiem);
-        
+
         // Table
         String[] headerTable = {"", "Mã loại", "Tên loại"};
 
@@ -102,15 +102,16 @@ public class ChonLoaiGUI extends JFrame{
                 return column == 0;
             }
         };
-        
+
         tbLoai = new JTable();
         tbLoai.setRowHeight(30);
 
         for (LoaiDTO loai : dsLoai) {
-            df.addRow(new Object[]{false, loai.getMaLoai(), loai.getTenLoai()});
+            boolean isSelected = isLoaiSelected(loai); // Kiểm tra loại đã được chọn trước đó
+            df.addRow(new Object[]{isSelected, loai.getMaLoai(), loai.getTenLoai()});
         }
         tbLoai.setModel(df);
-        
+
         // Đặt cell editor và renderer cho checkbox
         tbLoai.getColumnModel().getColumn(0).setCellRenderer(tbLoai.getDefaultRenderer(Boolean.class));
         tbLoai.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JCheckBox()));
@@ -148,7 +149,7 @@ public class ChonLoaiGUI extends JFrame{
         this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
-    
+
     // Hàm để lấy danh sách tác giả được chọn
     private void layDanhSachLoai(DefaultTableModel df) {
         selectedListLoai.clear(); // Xóa danh sách trước khi lấy dữ liệu mới
@@ -163,8 +164,17 @@ public class ChonLoaiGUI extends JFrame{
         }
         this.dispose();
     }
-    
-     // Hàm tìm kiếm tác giả theo tên hoặc mã tác giả
+
+    private boolean isLoaiSelected(LoaiDTO loai) {
+        for (LoaiDTO selectedLoai : selectedListLoai) {
+            if (selectedLoai.getMaLoai().equals(loai.getMaLoai())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Hàm tìm kiếm tác giả theo tên hoặc mã tác giả
     private void timKiemLoai() {
         String keyword = txtTimKiem.getText().toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
         DefaultTableModel df = (DefaultTableModel) tbLoai.getModel(); // Lấy mô hình của JTable
@@ -173,12 +183,17 @@ public class ChonLoaiGUI extends JFrame{
         // Lọc dữ liệu dựa trên từ khóa tìm kiếm
         for (LoaiDTO loai : dsLoai) {
             if (loai.getMaLoai().toLowerCase().contains(keyword) || loai.getTenLoai().toLowerCase().contains(keyword)) {
-                df.addRow(new Object[]{false, loai.getMaLoai(), loai.getTenLoai()});
+                boolean isSelected = isLoaiSelected(loai);
+                df.addRow(new Object[]{isSelected, loai.getMaLoai(), loai.getTenLoai()});
             }
         }
+        // Thiết lập lại editor cho cột checkbox
+        tbLoai.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JCheckBox()));
+
     }
 
     public static void main(String[] args) {
-        new ChonLoaiGUI();
+        ArrayList<LoaiDTO> loai = new ArrayList<>();
+        new ChonLoaiGUI(loai);
     }
 }

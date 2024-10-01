@@ -380,6 +380,8 @@ public class HomeGUI extends JFrame implements MouseListener{
         showPanel = new JPanel();
         showPanel.setBackground(Color.WHITE);
         showPanel.setLayout(new BorderLayout());
+        showPanel.setPreferredSize(new Dimension(940,527));
+        
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -460,7 +462,13 @@ public class HomeGUI extends JFrame implements MouseListener{
             showPanel.repaint(); 
         }
         if(btn == hoadonButton){
-            //Hoá đơn
+            HoaDonGUI hdGUI = new HoaDonGUI();
+            showPanel.removeAll();
+            showPanel.add(hdGUI, BorderLayout.CENTER);
+            hdGUI.setVisible(true);
+
+            showPanel.revalidate(); 
+            showPanel.repaint(); 
         }
         if(btn == khachhangButton){
             //Khách hàng
