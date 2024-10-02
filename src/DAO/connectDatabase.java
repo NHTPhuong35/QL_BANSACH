@@ -2,15 +2,17 @@ package DAO;
 
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class connectDatabase {
 
-    private Connection conn;
+    private Connection conn = null;
     private String url;
     private String dbName;
     private String driver;
-
+	private static connectDatabase instance = null;
     private String userName;
     private String password;
 
@@ -52,7 +54,18 @@ public class connectDatabase {
     }
 
     public Connection getConn() {
-        return conn;
+        return this.conn;
     }
+    
+	public static connectDatabase getInstance(){
+		if (instance == null) {
+			try {
+				instance = new connectDatabase();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return instance;
+	}
 
 }
