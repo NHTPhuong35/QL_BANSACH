@@ -496,7 +496,11 @@ public class HomeGUI extends JFrame implements MouseListener {
             //Nhà cung cấp
         }
         if (btn == taikhoanButton) {
-            //Tài khoản
+            TaiKhoanGUI tkGUI = new TaiKhoanGUI();
+            showPanel.removeAll();
+            showPanel.add(tkGUI, BorderLayout.CENTER);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
         if (btn == phieunhapButton) {
             //Phiếu nhập

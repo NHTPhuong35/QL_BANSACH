@@ -42,6 +42,7 @@ public class ChonTacGiaGUI extends JFrame {
         dsTG.add(new TacGiaDTO("TG02", "Morgan Housel"));
         dsTG.add(new TacGiaDTO("TG03", "Diệp Hồng Vũ"));
         dsTG.add(new TacGiaDTO("TG04", "Phan Văn Trường"));
+        
         init();
     }
 

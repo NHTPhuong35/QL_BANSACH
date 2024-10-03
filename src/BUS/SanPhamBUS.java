@@ -50,8 +50,4 @@ public class SanPhamBUS {
         }
         return false;
     }
-    public static void main(String[] args) {
-        SanPhamBUS spBUS = new SanPhamBUS();
-        spBUS.delete("SP06", false);
-    }
 }
