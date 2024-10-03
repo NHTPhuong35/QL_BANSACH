@@ -57,6 +57,7 @@ public class CTHD extends JFrame implements MouseListener {
         
 
         btnX = new JButton("X");
+        btnX.setFocusPainted(false);
         btnX.setPreferredSize(new Dimension(50, 30));
         btnX.setBackground(Color.red);
         btnX.setCursor(new Cursor(Cursor.HAND_CURSOR));
