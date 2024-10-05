@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public abstract class DAO<T> {
 //    Connection conn = connectDatabase.getInstance().getConnection();
-
+	
     public abstract ArrayList<T> getAll() throws SQLException;
 
     public abstract T get(int id) throws SQLException;
