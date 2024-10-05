@@ -199,7 +199,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         String[] header = {"Tên sách", "Thể loại", "Nhà xuất bản", "Năm xuất bản", "Số lượng", "Giá bìa"};
         JTable table = new JTable();
         table.setFont(BASE.font);
-        table.setDefaultEditor(Object.class, null);
+        table.setDefaultEditor(Object.class, null); //không cho chỉnh sửa
         table.setRowHeight(40); //thiết lập chiều cao các cột
 
         // Thiết lập dữ liệu cho JTable

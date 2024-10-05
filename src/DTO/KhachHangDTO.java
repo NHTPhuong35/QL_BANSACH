@@ -17,6 +17,20 @@ public class KhachHangDTO {
         this.TrangThai = TrangThai;
     }
 
+    public KhachHangDTO(String MaKh, String TenKh, String Sdt, double DiemTichluy) {
+        this.MaKh = MaKh;
+        this.TenKh = TenKh;
+        this.Sdt = Sdt;
+        this.DiemTichluy = DiemTichluy;
+    }
+
+    public KhachHangDTO(String TenKh, String Sdt) {
+        this.TenKh = TenKh;
+        this.Sdt = Sdt;
+    }
+    
+    
+    
     public String getMaKh() {
         return MaKh;
     }

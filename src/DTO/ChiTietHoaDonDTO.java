@@ -26,10 +26,11 @@ public class ChiTietHoaDonDTO {
         this.soLuong = soLuong;
     }
 
-    public ChiTietHoaDonDTO(String maSach, double donGia, int soLuong) {
+    public ChiTietHoaDonDTO(String maSach, double donGia, int soLuong, SanPhamDTO sp) {
         this.maSach = maSach;
         this.donGia = donGia;
         this.soLuong = soLuong;
+        this.sp = sp; 
     }
     
 

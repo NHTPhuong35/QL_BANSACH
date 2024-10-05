@@ -211,13 +211,13 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
 
         pnThuocTinh[0].add(txtTenSach); //Tên sách
 
-        pnThuocTinh[1].add(txtNhaXB);
-        pnThuocTinh[2].add(txtNamXB);
-        pnThuocTinh[3].add(txtGiaBia);
-        pnThuocTinh[4].setLayout(new BoxLayout(pnThuocTinh[4], BoxLayout.X_AXIS));
+        pnThuocTinh[1].add(txtNhaXB); //Nhà xuất bản
+        pnThuocTinh[2].add(txtNamXB); //Năm xuất bản
+        pnThuocTinh[3].add(txtGiaBia); //Giá bìa
+        pnThuocTinh[4].setLayout(new BoxLayout(pnThuocTinh[4], BoxLayout.X_AXIS)); //Chọn Loại
         pnThuocTinh[4].add(Box.createRigidArea(new Dimension(160, 0)));
         pnThuocTinh[4].add(btnChonLoai);
-        pnThuocTinh[5].setLayout(new BoxLayout(pnThuocTinh[5], BoxLayout.X_AXIS));
+        pnThuocTinh[5].setLayout(new BoxLayout(pnThuocTinh[5], BoxLayout.X_AXIS)); //Chọn tác giả
         pnThuocTinh[5].add(Box.createRigidArea(new Dimension(150, 0)));
         pnThuocTinh[5].add(btnChonTacGia);
 

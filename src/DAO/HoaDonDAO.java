@@ -25,7 +25,7 @@ public class HoaDonDAO {
         try {
             conn.connect();
             String sql = "SELECT * FROM HOADON";
-            try (PreparedStatement pre = conn.getConn().prepareStatement(sql);) {
+            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
                 ResultSet rs = pre.executeQuery();
                 while (rs.next()) {
                     HoaDonDTO hd = new HoaDonDTO(rs.getString("SOHD"),
