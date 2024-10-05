@@ -1,11 +1,15 @@
 package GUI;
 
+import BUS.PhieuNhapBUS; // Import the PhieuNhapBUS class
+import DTO.PhieuNhapDTO; // Import the PhieuNhapDTO class
+// import java.util.ArrayList; // Import ArrayList for demonstration purposes
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class PhieuNhapGUI extends JPanel {
 
@@ -53,9 +57,22 @@ public class PhieuNhapGUI extends JPanel {
             }
         };
 
-        // Thêm dữ liệu mẫu vào bảng
-        model.addRow(new Object[] { "PN01", "Tự giúp bản thân", "NXB Trẻ", "20-09-2024", "111,111", "XEM" });
-        model.addRow(new Object[] { "PN02", "Tiểu thuyết", "1990", "21-09-2022", "100,999", "XEM" });
+        // Fetch data from PhieuNhapBUS and populate the table
+        PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+        List<PhieuNhapDTO> phieuNhapList = phieuNhapBUS.getAllPhieuNhap();
+        for (PhieuNhapDTO phieuNhap : phieuNhapList) {
+            model.addRow(new Object[] {
+                    phieuNhap.getMaPN(),
+                    phieuNhap.getTenDN(),
+                    phieuNhap.getMaNCC(),
+                    phieuNhap.getNgayNhap(),
+                    phieuNhap.getTongTien(),
+                    "XEM"
+            });
+        }
+        
+
+
 
         // Tạo thanh tìm kiếm
         JTextField searchField = new JTextField(15);
@@ -67,7 +84,7 @@ public class PhieuNhapGUI extends JPanel {
         // Tạo bảng cuộn cho bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Đặt màu nền cho bảng và tiêu đề
+        table.getTableHeader().setBackground(BASE.color_table_header); // Màu xanh tiêu đề bảng
         table.getTableHeader().setBackground(BASE.color_table_heaer); // Màu xanh tiêu đề bảng
         table.setBackground(Color.WHITE);
 
