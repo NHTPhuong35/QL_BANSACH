@@ -19,8 +19,8 @@ public class connectDatabase {
         dbName = "qlbs";
         driver = "com.mysql.cj.jdbc.Driver";
         userName = "root";
-        password = "Phuong35";
-
+        password = "abcABC12@";
+        
     }
 
     public connectDatabase(String url, String dbName, String driver, String userName, String password) {
