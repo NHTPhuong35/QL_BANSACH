@@ -75,12 +75,12 @@ public class BanHangGUI extends JPanel {
         lblTitleSP.setPreferredSize(new Dimension(300, 50));
         lblTitleSP.setFont(BASE.font_title);
         btnThemSp = createBtn("Chọn sản phẩm", "btnChon");
-        
+
         JPanel pnlayoutnull = new JPanel();
         pnlayoutnull.add(btnThemSp);
-        
-        JPanel pnH = new JPanel(new BorderLayout(10, 10)); 
-        pnH.add(lblTitleSP, BorderLayout.WEST);  
+
+        JPanel pnH = new JPanel(new BorderLayout(10, 10));
+        pnH.add(lblTitleSP, BorderLayout.WEST);
         pnH.add(pnlayoutnull, BorderLayout.EAST);
 
         pnDanhSachSp = createPnDanhSachSp();
@@ -182,7 +182,7 @@ public class BanHangGUI extends JPanel {
         inputPn.add(btnThanhToan, gbc);
 
         pnThanhToan.add(inputPn, BorderLayout.NORTH);
-    }
+                    }
 
     private void styleBtn(JPanel b, String text, String name) {
         JLabel t = new JLabel(text, JLabel.CENTER);
@@ -225,12 +225,12 @@ public class BanHangGUI extends JPanel {
         // Thêm sản phẩm mẫu
         addProduct("Sản phẩm 1", 10, 100.0);
         addProduct("Sản phẩm 2", 5, 150.0);
-    }
+        }
 
     private void addProduct(String name, int quantity, double price) {
         Object[] rowData = {name, quantity, price, "Xóa"}; // Thêm nút xóa
         dtmSP.addRow(rowData);
-    }
+        }
 
     private void styleTable(JTable table) {
         JTableHeader header = table.getTableHeader();
