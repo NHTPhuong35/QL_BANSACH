@@ -36,10 +36,10 @@ public class ChonLoaiGUI extends JFrame {
     private JLabel exit;
     private JTextField txtTimKiem;
     ArrayList<LoaiDTO> dsLoai;
-    ArrayList<LoaiDTO> selectedListLoai;
+    ChucNangSanPhamGUI cnSPGUI;
 
-    public ChonLoaiGUI(ArrayList<LoaiDTO> selectedListLoai) {
-        this.selectedListLoai = selectedListLoai;
+    public ChonLoaiGUI(ChucNangSanPhamGUI cnSPGUI) {
+        this.cnSPGUI = cnSPGUI;
         dsLoai = new ArrayList<>();
         dsLoai.add(new LoaiDTO("L01", "Kỹ năng sống"));
         dsLoai.add(new LoaiDTO("L02", "Tâm lý học"));
@@ -51,7 +51,7 @@ public class ChonLoaiGUI extends JFrame {
         this.setSize(800, 500);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        this.setUndecorated(true);
+        this.setUndecorated(true);
 
         pnHeader = new JPanel();
         pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.Y_AXIS));
@@ -76,6 +76,7 @@ public class ChonLoaiGUI extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e){
                 ChonLoaiGUI.this.dispose();
+                cnSPGUI.setVisible(true);
             }
             
         });
@@ -110,6 +111,7 @@ public class ChonLoaiGUI extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 ChonLoaiGUI.this.dispose();
+                cnSPGUI.setVisible(true);
             }
         });
 
@@ -191,21 +193,22 @@ public class ChonLoaiGUI extends JFrame {
 
     // Hàm để lấy danh sách tác giả được chọn
     private void layDanhSachLoai(DefaultTableModel df) {
-        selectedListLoai.clear(); // Xóa danh sách trước khi lấy dữ liệu mới
+        cnSPGUI.dsLoai.clear(); // Xóa danh sách trước khi lấy dữ liệu mới
         for (int i = 0; i < df.getRowCount(); i++) {
             Boolean isSelected = (Boolean) df.getValueAt(i, 0); // Kiểm tra checkbox
             if (isSelected) {
                 String maLoai = (String) df.getValueAt(i, 1); // Lấy mã tác giả
                 String tenLoai = (String) df.getValueAt(i, 2); // Lấy tên tác giả
                 LoaiDTO Loai = new LoaiDTO(maLoai, tenLoai); // Tạo đối tượng Loai
-                selectedListLoai.add(Loai); // Thêm vào danh sách
+                cnSPGUI.dsLoai.add(Loai); // Thêm vào danh sách
             }
         }
         this.dispose();
+        cnSPGUI.setVisible(true);
     }
 
     private boolean isLoaiSelected(LoaiDTO loai) {
-        for (LoaiDTO selectedLoai : selectedListLoai) {
+        for (LoaiDTO selectedLoai : cnSPGUI.dsLoai) {
             if (selectedLoai.getMaLoai().equals(loai.getMaLoai())) {
                 return true;
             }
@@ -229,10 +232,5 @@ public class ChonLoaiGUI extends JFrame {
         // Thiết lập lại editor cho cột checkbox
         tbLoai.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 
-    }
-
-    public static void main(String[] args) {
-        ArrayList<LoaiDTO> loai = new ArrayList<>();
-        new ChonLoaiGUI(loai);
     }
 }

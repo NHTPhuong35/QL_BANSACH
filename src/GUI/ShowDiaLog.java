@@ -45,7 +45,7 @@ public class ShowDiaLog extends JDialog {
         JLabel lblThongBao = new JLabel("Thông báo");
         lblThongBao.setForeground(white);
         lblThongBao.setFont(font);
-        lblClose = new JLabel(createResizedIcon(ShowDiaLog.class, "..//image//close_icon.png", 20, 20));
+        lblClose = new JLabel(createResizedIcon(ShowDiaLog.class, "..//image//exit_icon.png", 20, 20));
         lblClose.setCursor(Cursor.getDefaultCursor());
         lblClose.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         pnTop.add(lblThongBao, BorderLayout.CENTER);

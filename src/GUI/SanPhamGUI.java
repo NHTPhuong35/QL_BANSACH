@@ -13,6 +13,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -32,6 +34,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -42,7 +46,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     private SanPhamBUS spBUS;
     private JPanel pnHeader, pnContent;
     private JPanel pnChiTietSP, pnThaoTac;
-    private JButton btnThem, btnSua, btnXoa, btnTim, btnLamMoi;
+    private JButton btnThem, btnSua, btnXoa, btnLamMoi;
     private JPanel pnTimKiem;
     private JTextField txtTimKiem;
     private JComboBox<String> cbxLoai;
@@ -146,6 +150,24 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         txtTimKiem = new JTextField();
         txtTimKiem.setFont(BASE.font);
         txtTimKiem.setPreferredSize(new Dimension(150, 25));
+        txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                selectedSP = new SanPhamDTO();
+                timKiemSanPham(dsSP);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                selectedSP = new SanPhamDTO();
+                timKiemSanPham(dsSP);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+
         JLabel lblLoai = new JLabel("Thể loại");
         lblLoai.setFont(BASE.font);
         cbxLoai = new JComboBox<>();
@@ -155,15 +177,30 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         for (int i = 0; i < loai.size(); i++) {
             cbxLoai.addItem(loai.get(i));
         }
-        btnTim = new JButton("Tìm");
-        btnTim.setBackground(BASE.color_heaer);
-        btnTim.setFont(BASE.font);
-        btnTim.setOpaque(true);
-        btnTim.setBorderPainted(false);
-        btnTim.setFocusPainted(false);
-        btnTim.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnTim.setPreferredSize(new Dimension(80, 25));
-        btnTim.addMouseListener(this);
+        cbxLoai.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedSP = new SanPhamDTO();
+                String selected = (String) cbxLoai.getSelectedItem();
+
+                ArrayList<SanPhamDTO> dsTimKiem = new ArrayList<>();
+                // Thực hiện tìm kiếm theo giá trị đã chọn
+                if (!selected.equals("Tất cả")) {
+                    for (int i = 0; i < dsSP.size(); i++) {
+                        for (LoaiDTO loai : dsSP.get(i).getLoai()) {
+                            if (loai.getTenLoai().equals(selected)) {
+                                dsTimKiem.add(dsSP.get(i));
+                                break;
+                            }
+                        }
+
+                    }
+                    timKiemSanPham((dsTimKiem));
+                } else {
+                    timKiemSanPham((dsSP));
+                }
+            }
+        });
 
         btnLamMoi = new JButton("Làm mới");
         btnLamMoi.setBackground(BASE.color_heaer);
@@ -181,7 +218,6 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnTimKiem.add(lblLoai);
         pnTimKiem.add(cbxLoai);
         pnTimKiem.add(Box.createRigidArea(new Dimension(10, 0)));
-        pnTimKiem.add(btnTim);
         pnTimKiem.add(btnLamMoi);
 
         //Bảng danh sách sản phẩm
@@ -322,42 +358,18 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         return panel;
     }
 
-    public void SearchSP(String ten, String loai) {
-        df.setRowCount(0);
-        ArrayList<SanPhamDTO> ds = new ArrayList<>();
+    private void timKiemSanPham(ArrayList<SanPhamDTO> dsSP) {
+        String keyword = txtTimKiem.getText().toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
+        DefaultTableModel df = (DefaultTableModel) tbSanPham.getModel(); // Lấy mô hình của JTable
+        df.setRowCount(0); // Xóa toàn bộ dữ liệu hiện có trong bảng
+
+        // Lọc dữ liệu dựa trên từ khóa tìm kiếm theo tên sách, nhà xuất bản
         for (SanPhamDTO sp : dsSP) {
-            boolean matches = true;
-
-            // Kiểm tra thể loại
-            if (!loai.equals("Tất cả")) {
-                boolean found = false;
-                for (LoaiDTO loaiDTO : sp.getLoai()) {
-                    if (loaiDTO.getTenLoai().equals(loai)) {
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    matches = false;
-                }
-            }
-
-            // Kiểm tra tên sách
-            if (!ten.isEmpty() && !sp.getTenSach().toLowerCase().contains(ten.toLowerCase())) {
-                matches = false;
-            }
-
-            // Nếu cả hai điều kiện đều thỏa mãn, thêm sản phẩm vào danh sách
-            if (matches) {
-                ds.add(sp);
+            String giaBia = FormatInt.format(sp.getGiaBia());
+            if (sp.getTenSach().toLowerCase().contains(keyword) || sp.getNxb().toLowerCase().contains(keyword)) {
+                df.addRow(new Object[]{sp.getTenSach(), sp.getLoaiToString(), sp.getNxb(), sp.getNamXB(), sp.getSoLuong(), giaBia});
             }
         }
-        pnContent.remove(jpSanPham); // Bỏ bảng cũ
-        tbSanPham = initContent(ds); // Tạo bảng mới với dữ liệu tìm được
-        jpSanPham = new JScrollPane(tbSanPham); // Tạo JScrollPane mới
-        pnContent.add(jpSanPham, BorderLayout.CENTER); // Thêm bảng mới vào nội dung
-        pnContent.revalidate(); // Cập nhật lại giao diện
-        pnContent.repaint();
     }
 
     public void reset() {
@@ -372,24 +384,31 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     }
 
     public void AddSP(SanPhamDTO sp) {
-        spBUS.add(sp);
-        pnContent.remove(jpSanPham);
-        tbSanPham = initContent(dsSP);
-        jpSanPham = new JScrollPane(tbSanPham);
-        pnContent.add(jpSanPham, BorderLayout.CENTER);
-        pnContent.revalidate();
-        pnContent.repaint();
-
+        if (spBUS.add(sp)) {
+            new ShowDiaLog("Thêm sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
+            pnContent.remove(jpSanPham);
+            tbSanPham = initContent(dsSP);
+            jpSanPham = new JScrollPane(tbSanPham);
+            pnContent.add(jpSanPham, BorderLayout.CENTER);
+            pnContent.revalidate();
+            pnContent.repaint();
+        } else {
+            new ShowDiaLog("Thêm sản phẩm thất bại!", ShowDiaLog.ERROR_DIALOG);
+        }
     }
 
     public void EditSP(SanPhamDTO sp) {
-        spBUS.set(sp);
-        pnContent.remove(jpSanPham);
-        tbSanPham = initContent(dsSP);
-        jpSanPham = new JScrollPane(tbSanPham);
-        pnContent.add(jpSanPham, BorderLayout.CENTER);
-        pnContent.revalidate();
-        pnContent.repaint();
+        if (spBUS.set(sp)) {
+            new ShowDiaLog("Sửa sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
+            pnContent.remove(jpSanPham);
+            tbSanPham = initContent(dsSP);
+            jpSanPham = new JScrollPane(tbSanPham);
+            pnContent.add(jpSanPham, BorderLayout.CENTER);
+            pnContent.revalidate();
+            pnContent.repaint();
+        } else {
+            new ShowDiaLog("Sửa sản phẩm thất bại!", ShowDiaLog.ERROR_DIALOG);
+        }
     }
 
     public static void main(String[] args) {
@@ -408,13 +427,13 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         JButton btn = (JButton) e.getSource();
-        if (btn == btnTim) {
-            SearchSP(txtTimKiem.getText(), (String) cbxLoai.getSelectedItem());
-        }
         if (btn == btnLamMoi) {
             reset();
         }
         if (btn == btnThem) {
+            tbSanPham.clearSelection();
+            selectedSP = new SanPhamDTO();
+
             ChucNangSanPhamGUI t = new ChucNangSanPhamGUI(this);
             t.initAdd();
             t.setVisible(true);
@@ -436,9 +455,10 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                 int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn xoá sách này không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == JOptionPane.YES_OPTION) {
                     if (spBUS.delete(selectedSP.getMaSach(), false)) {
-                        JOptionPane.showMessageDialog(null,
-                                "Đã xoá thành công", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                        new ShowDiaLog("Đã xoá sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
                         dsSP.remove(selectedSP);
+                        tbSanPham.clearSelection();
+                        selectedSP = new SanPhamDTO();
                         pnContent.remove(jpSanPham);
                         tbSanPham = initContent(dsSP);
                         jpSanPham = new JScrollPane(tbSanPham);
@@ -453,8 +473,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                         pnContent.revalidate();
                         pnContent.repaint();
                     } else {
-                        JOptionPane.showMessageDialog(null,
-                                "Thất bại", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                        new ShowDiaLog("Xoá sản phẩm thất bại!", ShowDiaLog.ERROR_DIALOG);
                     }
                 }
 

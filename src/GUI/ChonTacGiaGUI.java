@@ -37,10 +37,10 @@ public class ChonTacGiaGUI extends JFrame {
     private JLabel exit;
     private JTextField txtTimKiem;
     ArrayList<TacGiaDTO> dsTG;
-    ArrayList<TacGiaDTO> selectedListTG;
+    ChucNangSanPhamGUI cnSPGUI;
 
-    public ChonTacGiaGUI(ArrayList<TacGiaDTO> selectedListTG) {
-        this.selectedListTG = selectedListTG;
+    public ChonTacGiaGUI(ChucNangSanPhamGUI cnSPGUI) {
+        this.cnSPGUI = cnSPGUI;
         dsTG = new ArrayList<>();
         dsTG.add(new TacGiaDTO("TG01", "Nguyễn Anh Dũng"));
         dsTG.add(new TacGiaDTO("TG02", "Morgan Housel"));
@@ -113,6 +113,7 @@ public class ChonTacGiaGUI extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 ChonTacGiaGUI.this.dispose();
+                cnSPGUI.setVisible(true);
             }
         });
 
@@ -194,21 +195,22 @@ public class ChonTacGiaGUI extends JFrame {
 
     // Hàm để lấy danh sách tác giả được chọn
     private void layDanhSachTacGia(DefaultTableModel df) {
-        selectedListTG.clear(); // Xóa danh sách trước khi lấy dữ liệu mới
+        cnSPGUI.dsTG.clear(); // Xóa danh sách trước khi lấy dữ liệu mới
         for (int i = 0; i < df.getRowCount(); i++) {
             Boolean isSelected = (Boolean) df.getValueAt(i, 0); // Kiểm tra checkbox
             if (isSelected) {
                 String maTacGia = (String) df.getValueAt(i, 1); // Lấy mã tác giả
                 String tenTacGia = (String) df.getValueAt(i, 2); // Lấy tên tác giả
                 TacGiaDTO tacGia = new TacGiaDTO(maTacGia, tenTacGia); // Tạo đối tượng TacGia
-                selectedListTG.add(tacGia); // Thêm vào danh sách
+                cnSPGUI.dsTG.add(tacGia); // Thêm vào danh sách
             }
         }
         this.dispose();
+        cnSPGUI.setVisible(true);
     }
     
     private boolean isLoaiSelected(TacGiaDTO tg) {
-        for (TacGiaDTO selectedTG : selectedListTG) {
+        for (TacGiaDTO selectedTG : cnSPGUI.dsTG) {
             if (selectedTG .getMaTG().equals(tg.getMaTG())) {
                 return true;
             }
@@ -228,10 +230,5 @@ public class ChonTacGiaGUI extends JFrame {
                 df.addRow(new Object[]{false, tg.getMaTG(), tg.getTenTG()});
             }
         }
-    }
-
-    public static void main(String[] args) {
-        ArrayList<TacGiaDTO> selectedListTG = new ArrayList<>();
-        new ChonTacGiaGUI(selectedListTG);
     }
 }

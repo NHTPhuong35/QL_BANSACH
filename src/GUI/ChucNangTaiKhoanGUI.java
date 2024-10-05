@@ -168,13 +168,39 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         setVisible(true);
     }
 
+    public void initEdit() {
+        this.setSize(new Dimension(width, 450));
+        lblHeader.setText("Sửa tài khoản");
+        pnThuocTinh[1].setVisible(false);
+        pnThuocTinh[6].setVisible(false);
+        pnThaoTac.add(btnLuu);
+        pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
+        pnThaoTac.add(btnHuy);
+        this.add(pnThaoTac);
+        this.add(Box.createVerticalStrut(20));
+
+        txtTenNV.setText(tkGUI.selectedTK.getTenNV());
+        txtDiaChi.setText(tkGUI.selectedTK.getDiaChi());
+        txtSDT.setText(tkGUI.selectedTK.getSDT());
+        txtEmail.setText(tkGUI.selectedTK.getEmail());
+        txtMatKhau.setText(tkGUI.selectedTK.getMatKhau());
+    }
+
     public void addTK() {
         QuyenDTO selectedQuyen = (QuyenDTO) cbxQuyen.getSelectedItem();
-        TaiKhoanDTO tk = new TaiKhoanDTO("NV111", txtTenNV.getText(),
+        TaiKhoanDTO tk = new TaiKhoanDTO(txtTenNV.getText(),
                 txtDiaChi.getText(), txtSDT.getText(), txtEmail.getText(),
                 new String(txtMatKhau.getPassword()), selectedQuyen, 1);
-        tkGUI.themTaiKhoan(tk);
         this.dispose();
+        tkGUI.themTaiKhoan(tk);
+    }
+
+    public void editTK() {
+        TaiKhoanDTO tk = new TaiKhoanDTO(tkGUI.selectedTK.getTenDN(), txtTenNV.getText(),
+                txtDiaChi.getText(), txtSDT.getText(), txtEmail.getText(),
+                new String(txtMatKhau.getPassword()), tkGUI.selectedTK.getQuyen(), 1);
+        this.dispose();
+        tkGUI.suaTaiKhoan(tk);
     }
 
     public static void main(String[] args) {
@@ -194,6 +220,9 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         if (btn == btnHuy) {
             tkGUI.selectedTK = new TaiKhoanDTO();
             this.dispose();
+        }
+        if (btn == btnLuu) {
+            editTK();
         }
     }
 

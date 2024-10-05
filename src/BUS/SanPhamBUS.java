@@ -26,6 +26,8 @@ public class SanPhamBUS {
     }
 
     public boolean add(SanPhamDTO sp) {
+        String maSP = TaoMaSP();
+        sp.setMaSach(maSP);
         dsSP.add(sp);
         SanPhamDAO spDAO = new SanPhamDAO();
         return spDAO.themSanPham(sp);
@@ -63,5 +65,31 @@ public class SanPhamBUS {
             }
         }
         return list;
+    }
+    
+    public String TaoMaSP() {
+        String maLonNhat = "SP01";
+        for (SanPhamDTO sp : dsSP) {
+            String maSP = sp.getMaSach();
+            if (maSP.compareTo(maLonNhat) > 0) {
+                maLonNhat = maSP;
+            }
+        }
+        String soPhanSo = maLonNhat.substring(2);
+        int soCuoi;
+
+        try {
+            soCuoi = Integer.parseInt(soPhanSo);
+        } catch (NumberFormatException e) {
+            soCuoi = 0;
+        }
+
+        soCuoi++;
+
+        if (soCuoi < 10) {
+            return String.format("SP0%d", soCuoi);
+        } else {
+            return String.format("SP%d", soCuoi);
+        }
     }
 }

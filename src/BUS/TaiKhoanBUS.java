@@ -34,6 +34,8 @@ public class TaiKhoanBUS {
     }
     
     public boolean add(TaiKhoanDTO tk){
+        String tenDN = TaoMaTK();
+        tk.setTenDN(tenDN);
         dsTK.add(tk);
         TaiKhoanDAO tkDAO = new TaiKhoanDAO();
         return tkDAO.themTaiKhoan(tk);
@@ -59,5 +61,31 @@ public class TaiKhoanBUS {
             }
         }
         return false;
+    }
+    
+    public String TaoMaTK() {
+        String maLonNhat = "NV01";
+        for (TaiKhoanDTO tk : dsTK) {
+            String tenDN = tk.getTenDN();
+            if (tenDN.compareTo(maLonNhat) > 0) {
+                maLonNhat = tenDN;
+            }
+        }
+        String soPhanSo = maLonNhat.substring(2);
+        int soCuoi;
+
+        try {
+            soCuoi = Integer.parseInt(soPhanSo);
+        } catch (NumberFormatException e) {
+            soCuoi = 0;
+        }
+
+        soCuoi++;
+
+        if (soCuoi < 10) {
+            return String.format("NV0%d", soCuoi);
+        } else {
+            return String.format("NV%d", soCuoi);
+        }
     }
 }

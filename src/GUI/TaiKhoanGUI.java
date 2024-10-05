@@ -127,15 +127,16 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         txtTimKiem = new JTextField();
         txtTimKiem.setFont(BASE.font);
         txtTimKiem.setPreferredSize(new Dimension(150, 25));
-//        txtTimKiem.addActionListener(e -> timKiemTaiKhoan(dsTK));
         txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
+                selectedTK = new TaiKhoanDTO();
                 timKiemTaiKhoan(dsTK);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
+                selectedTK = new TaiKhoanDTO();
                 timKiemTaiKhoan(dsTK);
             }
 
@@ -157,6 +158,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         cbxQuyen.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                selectedTK = new TaiKhoanDTO();
                 String selected = (String) cbxQuyen.getSelectedItem();
 
                 ArrayList<TaiKhoanDTO> dsTimKiem = new ArrayList<>();
@@ -235,7 +237,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
                 int col = table.getSelectedColumn(); // Lấy chỉ số cột được chọn
                 int row = table.getSelectedRow(); // Lấy chỉ số hàng được chọn
                 if (e.getClickCount() == 2) {
-                    if (row >= 0) {
+                    if (row >= 0 && col != 3) {
                         selectedTK = dsTK.get(row);
                         XemThongTinTaiKhoanGUI t = new XemThongTinTaiKhoanGUI(selectedTK); //Gọi xem thông tin tài khoản
                     }
@@ -281,18 +283,32 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         }
     }
 
+    public void reload(ArrayList<TaiKhoanDTO> dsTaiKhoan) {
+        this.remove(jpTaiKhoan);
+        tbTaiKhoan = initContent(dsTaiKhoan);
+        jpTaiKhoan = new JScrollPane(tbTaiKhoan);
+        this.add(jpTaiKhoan, BorderLayout.CENTER);
+        this.revalidate();
+        this.repaint();
+    }
+
     public void themTaiKhoan(TaiKhoanDTO tk) {
         if (tkBUS.add(tk)) {
             new ShowDiaLog("Thêm tài khoản thành công!", ShowDiaLog.SUCCESS_DIALOG);
-            this.remove(jpTaiKhoan);
-            tbTaiKhoan = initContent(dsTK);
-            jpTaiKhoan = new JScrollPane(tbTaiKhoan);
-            this.add(jpTaiKhoan, BorderLayout.CENTER);
-            this.revalidate();
-            this.repaint();
+            reload(dsTK);
         } else {
             new ShowDiaLog("Thêm tài khoản thất bại!", ShowDiaLog.ERROR_DIALOG);
         }
+    }
+
+    public void suaTaiKhoan(TaiKhoanDTO tk) {
+        if(tkBUS.set(tk)){
+            new ShowDiaLog("Sửa tài khoản thành công!", ShowDiaLog.SUCCESS_DIALOG);
+            reload(dsTK);
+        } else {
+            new ShowDiaLog("Sửa tài khoản thất bại!", ShowDiaLog.ERROR_DIALOG);
+        }
+        
     }
 
     public static void main(String[] args) {
@@ -309,10 +325,12 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         JButton btn = (JButton) e.getSource();
         if (btn == btnThem) {
+            tbTaiKhoan.clearSelection();
+            selectedTK = new TaiKhoanDTO();
+
             ChucNangTaiKhoanGUI t = new ChucNangTaiKhoanGUI(this);
             t.initAdd();
             t.setVisible(true);
-            selectedTK = new TaiKhoanDTO();
         }
         if (btn == btnXoa) {
             if (selectedTK == null || selectedTK.getTenDN() == null) {
@@ -325,20 +343,24 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
                         JOptionPane.showMessageDialog(null,
                                 "Đã xoá thành công", "Thông báo", JOptionPane.DEFAULT_OPTION);
                         dsTK.remove(selectedTK);
-                        this.remove(jpTaiKhoan);
-                        tbTaiKhoan = initContent(dsTK);
-                        jpTaiKhoan = new JScrollPane(tbTaiKhoan);
-                        this.add(jpTaiKhoan, BorderLayout.CENTER);
                         selectedTK = new TaiKhoanDTO();
-                        this.revalidate();
-                        this.repaint();
-
+                        tbTaiKhoan.clearSelection();
+                        reload(dsTK);
                     } else {
                         JOptionPane.showMessageDialog(null,
                                 "Thất bại", "Thông báo", JOptionPane.DEFAULT_OPTION);
                     }
                 }
             }
+        }
+        if (btn == btnSua) {
+            if (selectedTK == null || selectedTK.getTenDN() == null) {
+                new ShowDiaLog("Hãy chọn tài khoản cần sửa!", ShowDiaLog.ERROR_DIALOG);
+            } else {
+                ChucNangTaiKhoanGUI t = new ChucNangTaiKhoanGUI(this);
+                t.initEdit();
+            }
+
         }
     }
 

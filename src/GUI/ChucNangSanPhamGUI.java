@@ -46,8 +46,8 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     private JLabel imageNameLabel; //hien thi ten anh chon
     JPanel imagePanelDefault; //khi chưa chọn ảnh
 
-    private ArrayList<LoaiDTO> dsLoai = new ArrayList<>(); //Danh sách loại
-    private ArrayList<TacGiaDTO> dsTG = new ArrayList<>(); //Danh sách tác giả
+    ArrayList<LoaiDTO> dsLoai = new ArrayList<>(); //Danh sách loại
+    ArrayList<TacGiaDTO> dsTG = new ArrayList<>(); //Danh sách tác giả
     private int width = 450, height = 710;
     private int width_row = 200, height_row = 30;
 
@@ -342,12 +342,10 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
             String anh[] = imageName.toArray(new String[0]);
             int namXB = Integer.parseInt(txtNamXB.getText());
             double giaBia = Double.parseDouble(txtGiaBia.getText());
-            SanPhamDTO m = new SanPhamDTO("SP111", txtTenSach.getText(),
+            SanPhamDTO m = new SanPhamDTO("", txtTenSach.getText(),
                     txtNhaXB.getText(), namXB, 0, 1, giaBia, 0, imageName, dsTG, dsLoai);
-
-            spGUI.AddSP(m);
             this.dispose();
-
+            spGUI.AddSP(m);
         } catch (NumberFormatException e) {
             System.out.println("Định dạng số không hợp lệ: " + e.getMessage());
         } catch (Exception e) {
@@ -355,14 +353,14 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         }
 
     }
-    
-    public void editSP(){
-        SanPhamDTO sp = new SanPhamDTO(spGUI.selectedSP.getMaSach(),txtTenSach.getText(),
-                txtNhaXB.getText(), Integer.parseInt(txtNamXB.getText()), 
-                spGUI.selectedSP.getSoLuong(), spGUI.selectedSP.getTrangthai(), Double.parseDouble(txtGiaBia.getText()), 
-                spGUI.selectedSP.getGiaBan(),imageName, spGUI.selectedSP.getTacGia(),spGUI.selectedSP.getLoai());
-        spGUI.EditSP(sp);
+
+    public void editSP() {
+        SanPhamDTO sp = new SanPhamDTO(spGUI.selectedSP.getMaSach(), txtTenSach.getText(),
+                txtNhaXB.getText(), Integer.parseInt(txtNamXB.getText()),
+                spGUI.selectedSP.getSoLuong(), spGUI.selectedSP.getTrangthai(), Double.parseDouble(txtGiaBia.getText()),
+                spGUI.selectedSP.getGiaBan(), imageName, spGUI.selectedSP.getTacGia(), spGUI.selectedSP.getLoai());
         this.dispose();
+        spGUI.EditSP(sp);
     }
 
     public static void main(String[] args) {
@@ -379,18 +377,18 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
             this.dispose();
         }
         if (btn == btnChonLoai) {
-            ChonLoaiGUI loai = new ChonLoaiGUI(dsLoai);
-            dsLoai = loai.selectedListLoai;
+            ChonLoaiGUI loai = new ChonLoaiGUI(this);
+            this.setVisible(false);
         }
 
         if (btn == btnChonTacGia) {
-            ChonTacGiaGUI tg = new ChonTacGiaGUI(dsTG);
-            dsTG = tg.selectedListTG;
+            ChonTacGiaGUI tg = new ChonTacGiaGUI(this);
+            this.setVisible(false);
         }
         if (btn == btnXacNhan) {
             addSP();
         }
-        if(btn == btnLuu){
+        if (btn == btnLuu) {
             editSP();
         }
     }

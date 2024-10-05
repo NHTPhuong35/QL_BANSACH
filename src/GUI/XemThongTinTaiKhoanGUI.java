@@ -80,7 +80,7 @@ public class XemThongTinTaiKhoanGUI extends JFrame{
         pnContent.setLayout(new BoxLayout(pnContent, BoxLayout.Y_AXIS));
         JPanel[] pnThongTin = new JPanel[5];
         String[] thuocTinh = {"Tên đăng nhập: ","Tên nhân viên: ","Số điện thoại: ","Email: ","Địa chỉ: "};
-        String[] data = {tkDTO.getTenDN(),tkDTO.getTenNV(),tkDTO.getSDT(),tkDTO.getEmail(),tkDTO.getSDT()};
+        String[] data = {tkDTO.getTenDN(),tkDTO.getTenNV(),tkDTO.getSDT(),tkDTO.getEmail(),tkDTO.getDiaChi()};
         for(int i=0; i<pnThongTin.length; i++){
             
             JLabel lblThuocTinh = new JLabel(thuocTinh[i],JLabel.LEFT);
