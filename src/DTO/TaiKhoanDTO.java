@@ -5,86 +5,87 @@
 package DTO;
 
 public class TaiKhoanDTO {
-    private String TenDn,TenNV,DiaChi, Sdt, Email, MaQuyen, MatKhau;
-    private int TrangThai;
+
+    private String tenDN, tenNV, diaChi, SDT, email, matKhau;
+    private QuyenDTO quyen;
+    private int trangThai;
 
     public TaiKhoanDTO() {
     }
 
-    
-    public TaiKhoanDTO(String TenDn, String TenNV, String DiaChi, String Sdt, String Email, String MaQuyen, String MatKhau, int TrangThai) {
-        this.TenDn = TenDn;
-        this.TenNV = TenNV;
-        this.DiaChi = DiaChi;
-        this.Sdt = Sdt;
-        this.Email = Email;
-        this.MaQuyen = MaQuyen;
-        this.MatKhau = MatKhau;
-        this.TrangThai = TrangThai;
+    public TaiKhoanDTO(String tenDN, String tenNV, String diaChi, String SDT, String email, String matKhau, QuyenDTO quyen, int trangThai) {
+        this.tenDN = tenDN;
+        this.tenNV = tenNV;
+        this.diaChi = diaChi;
+        this.SDT = SDT;
+        this.email = email;
+        this.matKhau = matKhau;
+        this.quyen = quyen;
+        this.trangThai = trangThai;
     }
 
-    public String getTenDn() {
-        return TenDn;
+    public QuyenDTO getQuyen() {
+        return quyen;
+    }
+
+    public void setQuyen(QuyenDTO quyen) {
+        this.quyen = quyen;
+    }
+
+    public String getTenDN() {
+        return tenDN;
+    }
+
+    public void setTenDN(String tenDN) {
+        this.tenDN = tenDN;
     }
 
     public String getTenNV() {
-        return TenNV;
+        return tenNV;
+    }
+
+    public void setTenNV(String tenNV) {
+        this.tenNV = tenNV;
     }
 
     public String getDiaChi() {
-        return DiaChi;
+        return diaChi;
     }
 
-    public String getSdt() {
-        return Sdt;
+    public void setDiaChi(String diaChi) {
+        this.diaChi = diaChi;
+    }
+
+    public String getSDT() {
+        return SDT;
+    }
+
+    public void setSDT(String SDT) {
+        this.SDT = SDT;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
-    public String getMaQuyen() {
-        return MaQuyen;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getMatKhau() {
-        return MatKhau;
+        return matKhau;
+    }
+
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
     }
 
     public int getTrangThai() {
-        return TrangThai;
+        return trangThai;
     }
 
-    public void setTenDn(String TenDn) {
-        this.TenDn = TenDn;
+    public void setTrangThai(int trangThai) {
+        this.trangThai = trangThai;
     }
 
-    public void setTenNV(String TenNV) {
-        this.TenNV = TenNV;
-    }
-
-    public void setDiaChi(String DiaChi) {
-        this.DiaChi = DiaChi;
-    }
-
-    public void setSdt(String Sdt) {
-        this.Sdt = Sdt;
-    }
-
-    public void setEmail(String Email) {
-        this.Email = Email;
-    }
-
-    public void setMaQuyen(String MaQuyen) {
-        this.MaQuyen = MaQuyen;
-    }
-
-    public void setMatKhau(String MatKhau) {
-        this.MatKhau = MatKhau;
-    }
-
-    public void setTrangThai(int TrangThai) {
-        this.TrangThai = TrangThai;
-    }
-    
 }

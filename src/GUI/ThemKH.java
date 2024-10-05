@@ -1,8 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package GUI.Dialog.TacGia;
+package GUI;
 
 /**
  *
@@ -12,30 +8,29 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import GUI.TacGiaGUI;
-
-public class ThemTacGiaDialog extends JDialog {
-    private JTextField maField, tenField;
+//import GUI.KHGUI;
+public class ThemKH extends JDialog {
+    private JTextField sdtField, tenField;
     private JButton confirmButton, cancelButton;
-    private TacGiaGUI parentPanel;
-
-    public ThemTacGiaDialog(Window owner, TacGiaGUI parentPanel) {
-        super(owner, "Thêm nhà tác giả", ModalityType.APPLICATION_MODAL);
+    private KHGUI parentPanel;
+    
+    public ThemKH(Window owner, KHGUI parentPanel) {
+        super(owner, "Thêm khách hàng", ModalityType.APPLICATION_MODAL);
         this.parentPanel = parentPanel;
         
         setSize(300, 150);
         setLayout(new BorderLayout());
-
-        // Panel cho nhập liệu
+        // panel cho  nhập
         JPanel inputPanel = new JPanel(new GridLayout(2, 2));
-        inputPanel.add(new JLabel("Mã tác giả:"));
-        maField = new JTextField();
-        inputPanel.add(maField);
-        inputPanel.add(new JLabel("Tên tác giả:"));
+        inputPanel.add(new JLabel("Tên khách hàng:"));
         tenField = new JTextField();
         inputPanel.add(tenField);
+        
+        inputPanel.add(new JLabel("Số điện thoại:"));
+        sdtField = new JTextField();
+        inputPanel.add(sdtField);
         add(inputPanel, BorderLayout.CENTER);
-
+        
         // Panel cho các nút
         JPanel buttonPanel = new JPanel();
         confirmButton = new JButton("Xác nhận");
@@ -43,29 +38,28 @@ public class ThemTacGiaDialog extends JDialog {
         buttonPanel.add(confirmButton);
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
-
+        
         // Xử lý "Xác nhận"
         confirmButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String ma = maField.getText();
                 String ten = tenField.getText();
-                if (!ma.isEmpty() && !ten.isEmpty()) {
-                    parentPanel.addTacGia(ma, ten);
-                    JOptionPane.showMessageDialog(ThemTacGiaDialog.this,
+                String sdt = sdtField.getText();
+                if (!sdt.isEmpty() && !ten.isEmpty()) {
+                    parentPanel.addKH(ten,sdt);
+                    JOptionPane.showMessageDialog(ThemKH.this,
                             "Đã thêm tác giả: " + ten,
                             "Thông báo",
                             JOptionPane.INFORMATION_MESSAGE);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(ThemTacGiaDialog.this,
+                    JOptionPane.showMessageDialog(ThemKH.this,
                             "Vui lòng nhập đầy đủ thông tin",
                             "Lỗi",
                             JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
         // Xử lý "Hủy"
         cancelButton.addActionListener(new ActionListener() {
             @Override
@@ -73,7 +67,6 @@ public class ThemTacGiaDialog extends JDialog {
                 dispose();
             }
         });
-
         setLocationRelativeTo(owner);
-    }
+    } 
 }

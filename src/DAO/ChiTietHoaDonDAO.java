@@ -74,6 +74,24 @@ public class ChiTietHoaDonDAO {
     }
     return ds;
 }
+    
+    public boolean ThemCTHoaDon(ChiTietHoaDonDTO ct) {
+        boolean success = false;
+        try {
+            conn.connect();
+            String sql = "INSERT INTO cthoadon(SOHD,MASACH,SOLUONG,DONGIA) VALUES(?,?,?,?)";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1, ct.getSoHD());
+            pre.setString(2, ct.getMaSach());
+            pre.setInt(3, ct.getSoLuong());
+            pre.setDouble(4, ct.getdonGia());
+            success = pre.executeUpdate() > 0;
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return success;
+    }
 
     
     public static void main(String[] args) {

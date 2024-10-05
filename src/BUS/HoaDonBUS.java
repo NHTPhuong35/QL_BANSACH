@@ -38,5 +38,10 @@ public class HoaDonBUS {
             }   
         }
     }
-
+    
+    public void ThemHoaDon(HoaDonDTO hd) {
+        HoaDonDAO dao = new HoaDonDAO();
+        dao.ThemHoaDon(hd);
+    }
+    
 }
