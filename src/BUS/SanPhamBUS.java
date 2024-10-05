@@ -23,13 +23,13 @@ public class SanPhamBUS {
         SanPhamDAO spDAO = new SanPhamDAO();
         dsSP = spDAO.DanhSachSanPham();
     }
-    
+
     public boolean add(SanPhamDTO sp){
         dsSP.add(sp);
         SanPhamDAO spDAO = new SanPhamDAO();
         return spDAO.themSanPham(sp);
     }
-    
+
     public boolean set(SanPhamDTO sp){
         for(int i=0; i<dsSP.size(); i++){
             if(dsSP.get(i).getMaSach().equals(sp.getMaSach())){
@@ -53,5 +53,5 @@ public class SanPhamBUS {
     public static void main(String[] args) {
         SanPhamBUS spBUS = new SanPhamBUS();
         spBUS.delete("SP06", false);
-    }
-}
+            }
+        }
