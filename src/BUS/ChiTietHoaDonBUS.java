@@ -27,4 +27,8 @@ public class ChiTietHoaDonBUS {
         return dscthd;
     }
     
+    public void ThemCTHoaDon(ChiTietHoaDonDTO ct) {
+       ChiTietHoaDonDAO dao = new ChiTietHoaDonDAO();
+       dao.ThemCTHoaDon(ct);
+    }
 }
