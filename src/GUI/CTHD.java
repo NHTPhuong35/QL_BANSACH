@@ -7,7 +7,6 @@ package GUI;
 import BUS.ChiTietHoaDonBUS;
 import DTO.ChiTietHoaDonDTO;
 import DTO.HoaDonDTO;
-import DTO.LoaiDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -17,7 +16,6 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -57,7 +55,6 @@ public class CTHD extends JFrame implements MouseListener {
         
 
         btnX = new JButton("X");
-        btnX.setFocusPainted(false);
         btnX.setPreferredSize(new Dimension(50, 30));
         btnX.setBackground(Color.red);
         btnX.setCursor(new Cursor(Cursor.HAND_CURSOR));

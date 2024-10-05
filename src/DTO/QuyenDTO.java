@@ -35,4 +35,8 @@ public class QuyenDTO {
         this.tenQuyen = tenQuyen;
     }
     
+    @Override
+    public String toString() {
+        return tenQuyen;  // Ghi đè toString để trả về tên quyền
+    }
 }

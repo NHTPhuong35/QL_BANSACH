@@ -158,6 +158,8 @@ public class ThongTinHDGUI extends JPanel {
         pnBtnTim.add(btnLamMoi);
 
         JPanel pnTimkiem = new JPanel();
+        pnTimkiem.setPreferredSize(new Dimension(600,200));
+        pnTimkiem.setMaximumSize(new Dimension(600,200));
         pnTimkiem.setBackground(Color.WHITE);
         pnTimkiem.setLayout(new BoxLayout(pnTimkiem, BoxLayout.X_AXIS));
         pnTimkiem.setBorder(BorderFactory.createTitledBorder(

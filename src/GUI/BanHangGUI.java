@@ -4,6 +4,10 @@
  */
 package GUI;
 
+import BUS.KhachHangBUS;
+import DTO.ChiTietHoaDonDTO;
+import DTO.KhachHangDTO;
+import DTO.SanPhamDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -11,16 +15,18 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
+import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -32,16 +38,23 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellEditor;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 public class BanHangGUI extends JPanel {
 
+    private String MaNV;
     private JPanel pnThongTinSP, pnThanhToan, pnDanhSachSp;
     private DefaultTableModel dtmSP;
     private JPanel btnThanhToan;
     private JTable tableSP;
     private JButton btnThemSp;
+    private JTextField tfTongCong, tfMaNV, tfMaKH;
+    private ArrayList<ChiTietHoaDonDTO> ctHoaDon = new ArrayList<>();
 
     public BanHangGUI() {
+        this.MaNV = "NV001";
         init();
         initComponents();
     }
@@ -75,12 +88,12 @@ public class BanHangGUI extends JPanel {
         lblTitleSP.setPreferredSize(new Dimension(300, 50));
         lblTitleSP.setFont(BASE.font_title);
         btnThemSp = createBtn("Chọn sản phẩm", "btnChon");
-        
+
         JPanel pnlayoutnull = new JPanel();
         pnlayoutnull.add(btnThemSp);
-        
-        JPanel pnH = new JPanel(new BorderLayout(10, 10)); 
-        pnH.add(lblTitleSP, BorderLayout.WEST);  
+
+        JPanel pnH = new JPanel(new BorderLayout(10, 10));
+        pnH.add(lblTitleSP, BorderLayout.WEST);
         pnH.add(pnlayoutnull, BorderLayout.EAST);
 
         pnDanhSachSp = createPnDanhSachSp();
@@ -93,7 +106,7 @@ public class BanHangGUI extends JPanel {
         lblTitleHD.setFont(BASE.font_title);
 
         JLabel lblMaKH, lblMaNV, lblGiamGia, lblTongCong, lblTongHD;
-        JTextField tfMaKH, tfMaNV, tfGiamGia, tfTongCong, tfTongHD;
+        JTextField tfGiamGia, tfTongHD;
 
         // Tạo JPanel để chứa lblMaKH, tfMaKH và btnTaoKH
         JPanel pnMaKH = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -137,6 +150,7 @@ public class BanHangGUI extends JPanel {
         tfMaNV.setFont(BASE.font);
         tfMaNV.setEnabled(false);
         tfMaNV.setPreferredSize(new Dimension(tfMaNV.getPreferredSize().width, 30));
+        tfMaNV.setText(MaNV);
         gbc.gridy = 2;
         inputPn.add(tfMaNV, gbc);
 
@@ -145,7 +159,7 @@ public class BanHangGUI extends JPanel {
         gbc.gridy = 3;
         inputPn.add(lblTongCong, gbc);
 
-        tfTongCong = new JTextField();
+        tfTongCong = new JTextField(TongTien() + "");
         tfTongCong.setFont(BASE.font);
         tfTongCong.setEditable(false);
         tfTongCong.setPreferredSize(new Dimension(tfTongCong.getPreferredSize().width, 30));
@@ -181,7 +195,38 @@ public class BanHangGUI extends JPanel {
         gbc.gridy = 9;
         inputPn.add(btnThanhToan, gbc);
 
+        btnThemSp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ChonSanPhamGUI spGUI = new ChonSanPhamGUI(BanHangGUI.this);
+
+                spGUI.setVisible(true);
+            }
+        });
+
         pnThanhToan.add(inputPn, BorderLayout.NORTH);
+
+        btnThanhToan.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel clickedPanel = (JPanel) e.getSource();
+                if ("btnThanhToan".equals(clickedPanel.getName())) {
+                    if (tfMaKH.getText().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Vui lòng nhập mã khách hàng!");
+                        return;
+                    }
+
+                    if (dtmSP.getRowCount() == 0) {
+                        JOptionPane.showMessageDialog(null, "Danh sách sản phẩm trống!");
+                        return;
+                    }
+
+                    ThanhToanHoaDon();
+                    JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
+                }
+            }
+        });
+
     }
 
     private void styleBtn(JPanel b, String text, String name) {
@@ -202,34 +247,86 @@ public class BanHangGUI extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        String[] columnNames = {"Tên sản phẩm", "Số lượng", "Thành tiền", ""};
+        String[] columnNames = {"Tên sản phẩm", "Số lượng", "Giá sách", "Thành tiền", ""};
         dtmSP = new DefaultTableModel(columnNames, 0);
         tableSP = new JTable(dtmSP) {
             public boolean isCellEditable(int row, int column) {
                 return column == 1;
             }
+
+            @Override
+            public TableCellEditor getCellEditor(int row, int column) {
+                if (column == 1) { // Chỉ áp dụng cho cột "Số lượng"
+                    // Tạo JFormattedTextField chỉ cho phép nhập số nguyên
+                    JFormattedTextField formattedTextField = new JFormattedTextField();
+                    formattedTextField.setValue(0); // Giá trị mặc định là 0
+                    formattedTextField.setHorizontalAlignment(JFormattedTextField.RIGHT);
+
+                    // Định dạng để chỉ chấp nhận số nguyên >= 0
+                    NumberFormat format = NumberFormat.getIntegerInstance();
+                    format.setGroupingUsed(false); // Không hiển thị dấu phân cách
+                    NumberFormatter formatter = new NumberFormatter(format);
+                    formatter.setValueClass(Integer.class);
+                    formatter.setAllowsInvalid(false); // Không cho phép ký tự không hợp lệ
+                    formatter.setMinimum(0); // Chỉ cho phép giá trị >= 0
+                    formattedTextField.setFormatterFactory(new DefaultFormatterFactory(formatter));
+
+                    return new DefaultCellEditor(formattedTextField);
+                }
+                return super.getCellEditor(row, column);
+            }
         };
+
+        tableSP.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tableSP.rowAtPoint(e.getPoint());
+                int col = tableSP.columnAtPoint(e.getPoint());
+
+                // Kiểm tra nếu người dùng click vào cột cuối cùng (cột xóa)
+                if (col == 4) {
+                    int confirm = JOptionPane.showConfirmDialog(
+                            null,
+                            "Bạn có chắc muốn xóa dòng này?",
+                            "Xác nhận xóa",
+                            JOptionPane.YES_NO_OPTION
+                    );
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        dtmSP.removeRow(row);
+                        tfTongCong.setText(TongTien() + "");
+                    }
+                }
+            }
+        });
         styleTable(tableSP);
 
         tableSP.setFillsViewportHeight(true);
         JScrollPane scrollPane = new JScrollPane(tableSP);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-
-        addSampleData();
-
         return panel;
     }
 
-    private void addSampleData() {
-        // Thêm sản phẩm mẫu
-        addProduct("Sản phẩm 1", 10, 100.0);
-        addProduct("Sản phẩm 2", 5, 150.0);
+    private double TongTien() {
+        double tong = 0.0;
+        int sl_dong = dtmSP.getRowCount();
+        for (int i = 0; i < sl_dong; i++) {
+            double gia = Double.parseDouble(dtmSP.getValueAt(i, 3) + "");
+            tong += gia;
+        }
+        return tong;
     }
 
-    private void addProduct(String name, int quantity, double price) {
-        Object[] rowData = {name, quantity, price, "Xóa"}; // Thêm nút xóa
-        dtmSP.addRow(rowData);
+    public void DSHD(ArrayList<ChiTietHoaDonDTO> selectedProducts) {
+        dtmSP.setRowCount(0);
+        for (ChiTietHoaDonDTO ct : selectedProducts) {
+            addProduct(ct);
+        }
+    }
+
+    public void addProduct(ChiTietHoaDonDTO ct) {
+        dtmSP.addRow(new Object[]{ct.getSp().getTenSach(), ct.getSoLuong(), ct.getdonGia(), ct.getSoLuong() * ct.getdonGia(), "Xóa"});
+        tfTongCong.setText(TongTien() + "");
     }
 
     private void styleTable(JTable table) {
@@ -261,10 +358,29 @@ public class BanHangGUI extends JPanel {
         return btn;
     }
 
+    public ArrayList<ChiTietHoaDonDTO> getCtHoaDon() {
+        return ctHoaDon;
+    }
+
+    public void setCtHoaDon(ArrayList<ChiTietHoaDonDTO> ctHoaDon) {
+        this.ctHoaDon = ctHoaDon;
+    }
+
+    public void ThanhToanHoaDon() {
+        String MaKH = tfMaKH.getText();
+        KhachHangBUS khBUS = new KhachHangBUS();
+        KhachHangDTO kh = khBUS.layKHTheoMa(MaKH);
+        double diemtichluy = kh.getDiemTichluy();
+        if(diemtichluy < 100) {
+            
+        }
+    }
+
     public static void main(String[] args) {
         JFrame f = new JFrame();
-        f.setSize(600, 600);
+        f.setSize(1500, 800);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setLocationRelativeTo(null);
         f.add(new BanHangGUI());
         f.setVisible(true);
     }

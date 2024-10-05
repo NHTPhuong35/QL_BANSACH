@@ -466,7 +466,13 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == khachhangButton) {
-            //Khách hàng
+            KhachHangGUI khGUI = new KhachHangGUI();
+            showPanel.removeAll();
+            showPanel.add(khGUI, BorderLayout.CENTER);
+            khGUI.setVisible(true);
+
+            showPanel.revalidate();
+            showPanel.repaint();
         }
         if (btn == nhanvienButton) {
             //Nhân viên
