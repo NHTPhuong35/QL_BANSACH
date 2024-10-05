@@ -22,7 +22,7 @@ public class ShowDiaLog extends JDialog {
     final ImageIcon iconError = createResizedIcon(ShowDiaLog.class, "..//image//error_icon.png", 20, 20);
     final ImageIcon iconSuccess = createResizedIcon(ShowDiaLog.class, "..//image//success_icon.png", 20, 20);
     final ImageIcon iconInfo = createResizedIcon(ShowDiaLog.class, "..//image//information_icon.png", 20, 20);
-
+    
     public final static int ERROR_DIALOG = 1;
     public final static int SUCCESS_DIALOG = 2;
     public final static int INFO_DIALOG = 3;
