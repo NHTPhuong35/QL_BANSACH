@@ -32,7 +32,7 @@ public class PhieuNhapGUI extends JPanel {
         toolBar.add(deleteButton);
 
         // Tạo bảng hiển thị dữ liệu với các cột
-        String[] columns = { "Mã PN", "Tên nhân viên", "Nhà cung cấp", "Ngày lập", "Tổng tiền", " " };
+        String[] columns = { "Mã PN", "Tên nhân viên", "Nhà cung cấp", "Ngày lập", "Tổng tiền", "Chi tiết" };
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model) {
             // Custom render cho cột nút "XEM"
