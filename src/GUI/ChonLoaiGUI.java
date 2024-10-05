@@ -33,7 +33,6 @@ public class ChonLoaiGUI extends JFrame {
     private JPanel pnHeader;
     private JTable tbLoai;
     private JButton btnThem, btnTroVe;
-    private JLabel exit;
     private JTextField txtTimKiem;
     ArrayList<LoaiDTO> dsLoai;
     ArrayList<LoaiDTO> selectedListLoai;
@@ -51,43 +50,12 @@ public class ChonLoaiGUI extends JFrame {
         this.setSize(800, 500);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//        this.setUndecorated(true);
 
         pnHeader = new JPanel();
-        pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.Y_AXIS));
+        pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        //Tiêu đề
-        JPanel pnTieuDe = new JPanel();
-        pnTieuDe.setLayout(new BorderLayout());
-        pnTieuDe.setPreferredSize(new Dimension(800, 36));
-        pnTieuDe.setBackground(BASE.color_heaer);
-        pnTieuDe.setOpaque(true);
-
-        JLabel lblHeader = new JLabel("Chọn loại sản phẩm", JLabel.CENTER);
-        lblHeader.setFont(BASE.font_title);
-        lblHeader.setBorder(new EmptyBorder(0, 20, 0, 0));
-
-        ImageIcon icon = new ImageIcon("./src/image/exit_icon.png");
-        exit = new JLabel(icon, JLabel.CENTER);
-        exit.setPreferredSize(new Dimension(36, 36));
-        exit.setBackground(Color.RED);
-        exit.setOpaque(true);
-        exit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e){
-                ChonLoaiGUI.this.dispose();
-            }
-            
-        });
-        exit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        pnTieuDe.add(lblHeader, BorderLayout.WEST);
-        pnTieuDe.add(exit, BorderLayout.EAST);
-        
-        JPanel pnThaoTac = new JPanel();
-        pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
-        pnThaoTac.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
-        btnThem = new JButton("+ Lưu");
+        btnThem = new JButton("+ Thêm loại");
         btnThem.setPreferredSize(new Dimension(150, 30));
         btnThem.setMaximumSize(new Dimension(150, 30));
         btnThem.setBackground(BASE.btnThem);
@@ -100,7 +68,7 @@ public class ChonLoaiGUI extends JFrame {
         btnTroVe = new JButton("+ Trở về");
         btnTroVe.setPreferredSize(new Dimension(150, 30));
         btnTroVe.setMaximumSize(new Dimension(150, 30));
-        btnTroVe.setBackground(Color.decode("#99CCFF"));
+        btnTroVe.setBackground(BASE.color_heaer);
         btnTroVe.setFont(BASE.font);
         btnTroVe.setOpaque(true);
         btnTroVe.setBorderPainted(false);
@@ -118,18 +86,14 @@ public class ChonLoaiGUI extends JFrame {
         txtTimKiem = new JTextField();
         txtTimKiem.setPreferredSize(new Dimension(100, 20));
 
-        pnThaoTac.add(btnThem);
-        pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
-        pnThaoTac.add(btnTroVe);
-        pnThaoTac.add(Box.createRigidArea(new Dimension(100, 0)));
-        pnThaoTac.add(lblTimKiem);
-        pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
-        pnThaoTac.add(txtTimKiem);
+        pnHeader.add(btnThem);
+        pnHeader.add(Box.createRigidArea(new Dimension(10, 0)));
+        pnHeader.add(btnTroVe);
+        pnHeader.add(Box.createRigidArea(new Dimension(100, 0)));
+        pnHeader.add(lblTimKiem);
+        pnHeader.add(Box.createRigidArea(new Dimension(10, 0)));
+        pnHeader.add(txtTimKiem);
 
-        pnHeader.add(pnTieuDe);
-        pnHeader.add(Box.createVerticalStrut(10)); 
-        pnHeader.add(pnThaoTac);
-        
         // Table
         String[] headerTable = {"", "Mã loại", "Tên loại"};
 

@@ -2,17 +2,15 @@ package DAO;
 
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class connectDatabase {
 
-    private Connection conn = null;
+    private Connection conn;
     private String url;
     private String dbName;
     private String driver;
-	private static connectDatabase instance = null;
+
     private String userName;
     private String password;
 
@@ -21,7 +19,7 @@ public class connectDatabase {
         dbName = "qlbs";
         driver = "com.mysql.cj.jdbc.Driver";
         userName = "root";
-        password = "quynh04";
+        password = "";
 
     }
 
@@ -54,18 +52,7 @@ public class connectDatabase {
     }
 
     public Connection getConn() {
-        return this.conn;
+        return conn;
     }
     
-	public static connectDatabase getInstance(){
-		if (instance == null) {
-			try {
-				instance = new connectDatabase();
-			} catch (SQLException e) {
-				e.printStackTrace();
 			}
-		}
-		return instance;
-	}
-
-}
