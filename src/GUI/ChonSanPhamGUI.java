@@ -68,7 +68,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
         
         init();
         if(id.equals("PN")){
-           productPrice.setVisible(false);
+            productPrice.setVisible(false);
         }
     }
 
@@ -126,7 +126,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
 
     public JPanel initContent(ArrayList<SanPhamDTO> dsSP) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
-        
+
         // Tính toán kích thước dựa trên số lượng sản phẩm
         int dsSize = dsSP.size();
         int rows = (int) Math.ceil((double) dsSize / 4);
@@ -136,13 +136,13 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
         } else if (dsSize > 4) {
             panel.setPreferredSize(new Dimension(width, 320 * rows + 20));
         }
-        
+
         product = new JPanel[dsSize];
         for (int i = 0; i < dsSize; i++) {
             product[i] = createProductPanel(dsSP.get(i));
             panel.add(product[i]);
         }
-        
+
         JScrollPane scrollPane = new JScrollPane(panel);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -152,28 +152,28 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
 
         return mainPanel;
     }
-    
-    private JPanel createProductPanel(SanPhamDTO sp){
+
+    private JPanel createProductPanel(SanPhamDTO sp) {
         JPanel productPanel = new JPanel();
         productPanel.setPreferredSize(new Dimension(180, 300));
         productPanel.setLayout(new BoxLayout(productPanel, BoxLayout.Y_AXIS));
         productPanel.setAlignmentY(TOP_ALIGNMENT);
         productPanel.setBackground(Color.WHITE); // Đặt màu nền trắng hoặc tùy ý
-        
+
         // Hình ảnh sản phẩm
         ImageIcon icon = new ImageIcon("./src/image/" + (sp.getTenHinh().size() > 0 ? sp.getTenHinh().get(0) : "iconBook.jpg"));
         Image scaledImage = icon.getImage().getScaledInstance(180, 210, Image.SCALE_SMOOTH);
         JLabel label = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
         label.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
-        
+
         // Tên sản phẩm
         JLabel productName = new JLabel(sp.getTenSach(), JLabel.CENTER);
         productName.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
-        
+
         // Giá sản phẩm
         productPrice = new JLabel("Giá: " + FormatInt.format(sp.getGiaBan()) + " đ", JLabel.CENTER);
         productPrice.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
-        
+
         //button chon
         btnChon = new JButton("Chọn");
         btnChon.setPreferredSize(new Dimension(130, 30));
@@ -186,7 +186,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
         btnChon.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
 //        btnChon.addActionListener(e -> layDanhSachSP(sp));
-        
+
         // Thêm các thành phần vào productPanel
         productPanel.add(label);
         productPanel.add(Box.createVerticalStrut(5)); // Khoảng cách giữa các thành phần
@@ -195,7 +195,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
         productPanel.add(productPrice);
         productPanel.add(Box.createVerticalStrut(5));
         productPanel.add(btnChon);
-        
+
         // Cài đặt con trỏ chuột
         productPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         productPanel.addMouseListener(this);
@@ -210,7 +210,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
     public static void main(String[] args) {
         ChonSanPhamGUI t = new ChonSanPhamGUI(""); //Hoá đơn
 //        ChonSanPhamGUI t = new ChonSanPhamGUI("PN"); //Phiếu nhập
-    }
+        }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -235,4 +235,4 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener{
     @Override
     public void mouseExited(MouseEvent e) {
     }
-}
+    }
