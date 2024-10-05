@@ -520,7 +520,12 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == phieunhapButton) {
-            //Phiếu nhập
+            PhieuNhapGUI pnGUI = new PhieuNhapGUI();
+            showPanel.removeAll();
+            showPanel.add(pnGUI, BorderLayout.CENTER);
+            pnGUI.setVisible(true);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
     }
 

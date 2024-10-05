@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class PhieuNhapGUI extends JFrame {
+public class PhieuNhapGUI extends JPanel {
 
     public PhieuNhapGUI() {
         // Tạo các nút chức năng với màu sắc như trong hình
@@ -76,19 +76,17 @@ public class PhieuNhapGUI extends JFrame {
         topPanel.add(toolBar, BorderLayout.WEST); // Đưa các nút về phía trái
         topPanel.add(searchPanel, BorderLayout.EAST); // Thanh tìm kiếm ở phía phải
 
-        // Đặt layout cho cửa sổ chính
+        // Đặt layout cho JPanel
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH); // Thanh công cụ và tìm kiếm ở trên cùng
         add(scrollPane, BorderLayout.CENTER); // Bảng dữ liệu ở giữa với dữ liệu mẫu
-
-        // Cài đặt cửa sổ
-        setTitle("Phiếu Nhập");
-        setSize(1024, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
     public static void main(String[] args) {
-        new PhieuNhapGUI();
+        JFrame frame = new JFrame("Phiếu Nhập");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 400);
+        frame.add(new PhieuNhapGUI());
+        frame.setVisible(true);
     }
 }
