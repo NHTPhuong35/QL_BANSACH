@@ -1,13 +1,17 @@
 package GUI;
 
+import BUS.PhieuNhapBUS; // Import the PhieuNhapBUS class
+import DTO.PhieuNhapDTO; // Import the PhieuNhapDTO class
+// import java.util.ArrayList; // Import ArrayList for demonstration purposes
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
-public class PhieuNhapGUI extends JFrame {
+public class PhieuNhapGUI extends JPanel {
 
     public PhieuNhapGUI() {
         // Tạo các nút chức năng với màu sắc như trong hình
@@ -28,7 +32,7 @@ public class PhieuNhapGUI extends JFrame {
         toolBar.add(deleteButton);
 
         // Tạo bảng hiển thị dữ liệu với các cột
-        String[] columns = { "Mã PN", "Tên nhân viên", "Nhà cung cấp", "Ngày lập", "Tổng tiền", " " };
+        String[] columns = { "Mã PN", "Tên nhân viên", "Nhà cung cấp", "Ngày lập", "Tổng tiền", "Chi tiết" };
         DefaultTableModel model = new DefaultTableModel(columns, 0);
         JTable table = new JTable(model) {
             // Custom render cho cột nút "XEM"
@@ -53,9 +57,22 @@ public class PhieuNhapGUI extends JFrame {
             }
         };
 
-        // Thêm dữ liệu mẫu vào bảng
-        model.addRow(new Object[] { "PN01", "Tự giúp bản thân", "NXB Trẻ", "20-09-2024", "111,111", "XEM" });
-        model.addRow(new Object[] { "PN02", "Tiểu thuyết", "1990", "21-09-2022", "100,999", "XEM" });
+        // Fetch data from PhieuNhapBUS and populate the table
+        PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+        List<PhieuNhapDTO> phieuNhapList = phieuNhapBUS.getAllPhieuNhap();
+        for (PhieuNhapDTO phieuNhap : phieuNhapList) {
+            model.addRow(new Object[] {
+                    phieuNhap.getMaPN(),
+                    phieuNhap.getTenDN(),
+                    phieuNhap.getMaNCC(),
+                    phieuNhap.getNgayNhap(),
+                    phieuNhap.getTongTien(),
+                    "XEM"
+            });
+        }
+        
+
+
 
         // Tạo thanh tìm kiếm
         JTextField searchField = new JTextField(15);
@@ -67,7 +84,7 @@ public class PhieuNhapGUI extends JFrame {
         // Tạo bảng cuộn cho bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Đặt màu nền cho bảng và tiêu đề
+        table.getTableHeader().setBackground(BASE.color_table_header); // Màu xanh tiêu đề bảng
         table.getTableHeader().setBackground(BASE.color_table_heaer); // Màu xanh tiêu đề bảng
         table.setBackground(Color.WHITE);
 
@@ -76,19 +93,17 @@ public class PhieuNhapGUI extends JFrame {
         topPanel.add(toolBar, BorderLayout.WEST); // Đưa các nút về phía trái
         topPanel.add(searchPanel, BorderLayout.EAST); // Thanh tìm kiếm ở phía phải
 
-        // Đặt layout cho cửa sổ chính
+        // Đặt layout cho JPanel
         setLayout(new BorderLayout());
         add(topPanel, BorderLayout.NORTH); // Thanh công cụ và tìm kiếm ở trên cùng
         add(scrollPane, BorderLayout.CENTER); // Bảng dữ liệu ở giữa với dữ liệu mẫu
-
-        // Cài đặt cửa sổ
-        setTitle("Phiếu Nhập");
-        setSize(1024, 400);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
     }
 
     public static void main(String[] args) {
-        new PhieuNhapGUI();
+        JFrame frame = new JFrame("Phiếu Nhập");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1024, 400);
+        frame.add(new PhieuNhapGUI());
+        frame.setVisible(true);
     }
 }

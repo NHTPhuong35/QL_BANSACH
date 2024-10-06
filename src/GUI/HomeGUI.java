@@ -8,6 +8,7 @@ package GUI;
  *
  * @author nhatm
  */
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -47,7 +48,6 @@ public class HomeGUI extends JFrame implements MouseListener {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
        
-
         //**MENU**
         menuPanel = new JPanel();
         menuPanel.setLayout(new GridLayout(0, 1, 0, 0));
@@ -291,6 +291,7 @@ public class HomeGUI extends JFrame implements MouseListener {
         add(menuPanel, gbc);
 
         //***
+      
         //**HEADER**
         headPanel = new JPanel();
         logoPanel = new JPanel();
@@ -373,11 +374,14 @@ public class HomeGUI extends JFrame implements MouseListener {
         add(headPanel, gbc);
 
         //***
+        
         //**SHOW PANEL**
+        
         showPanel = new JPanel();
         showPanel.setBackground(Color.WHITE);
         showPanel.setLayout(new BorderLayout());
         showPanel.setPreferredSize(new Dimension(940, 527));
+
 
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -391,6 +395,7 @@ public class HomeGUI extends JFrame implements MouseListener {
         showPanel.repaint();
         //******//
 
+        
         //Settings
         ButtonSettings(menuPanel, new Font("Arial", Font.BOLD, 13), 15, false);
         LabelSettings(headPanel, new Font("Arial", Font.BOLD, 13));
@@ -477,8 +482,14 @@ public class HomeGUI extends JFrame implements MouseListener {
         if (btn == nhanvienButton) {
             //Nhân viên
         }
-        if (btn == thongkeButton) {
-            //Thống kê
+        if(btn == thongkeButton){
+            ThongKeGUI tkGUI = new ThongKeGUI();
+            showPanel.removeAll();
+            showPanel.add(tkGUI, BorderLayout.CENTER);
+            tkGUI.setVisible(true);
+            showPanel.revalidate(); 
+            showPanel.repaint(); 
+
         }
         if (btn == tacgiaButton) {
             TacGiaGUI tgGUI = new TacGiaGUI();
@@ -509,7 +520,12 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == phieunhapButton) {
-            //Phiếu nhập
+            PhieuNhapGUI pnGUI = new PhieuNhapGUI();
+            showPanel.removeAll();
+            showPanel.add(pnGUI, BorderLayout.CENTER);
+            pnGUI.setVisible(true);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
     }
 

@@ -46,7 +46,7 @@ public class ChonTacGiaGUI extends JFrame {
         dsTG.add(new TacGiaDTO("TG02", "Morgan Housel"));
         dsTG.add(new TacGiaDTO("TG03", "Diệp Hồng Vũ"));
         dsTG.add(new TacGiaDTO("TG04", "Phan Văn Trường"));
-        
+
         init();
     }
 
@@ -77,19 +77,20 @@ public class ChonTacGiaGUI extends JFrame {
         exit.setOpaque(true);
         exit.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e){
+            public void mouseClicked(MouseEvent e) {
                 ChonTacGiaGUI.this.dispose();
+                cnSPGUI.setVisible(true);
             }
-            
+
         });
         exit.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         pnTieuDe.add(lblHeader, BorderLayout.WEST);
         pnTieuDe.add(exit, BorderLayout.EAST);
-        
+
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
         pnThaoTac.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        
+
         btnThem = new JButton("+ Lưu");
         btnThem.setPreferredSize(new Dimension(150, 30));
         btnThem.setMaximumSize(new Dimension(150, 30));
@@ -131,7 +132,7 @@ public class ChonTacGiaGUI extends JFrame {
         pnThaoTac.add(txtTimKiem);
 
         pnHeader.add(pnTieuDe);
-        pnHeader.add(Box.createVerticalStrut(10)); 
+        pnHeader.add(Box.createVerticalStrut(10));
         pnHeader.add(pnThaoTac);
 
         // Table
@@ -189,8 +190,8 @@ public class ChonTacGiaGUI extends JFrame {
         this.add(pnHeader, BorderLayout.NORTH);
         this.add(jb, BorderLayout.CENTER);
 
-            this.setVisible(true);
-            this.setLocationRelativeTo(null);
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
     }
 
     // Hàm để lấy danh sách tác giả được chọn
@@ -208,10 +209,10 @@ public class ChonTacGiaGUI extends JFrame {
         this.dispose();
         cnSPGUI.setVisible(true);
     }
-    
+
     private boolean isLoaiSelected(TacGiaDTO tg) {
         for (TacGiaDTO selectedTG : cnSPGUI.dsTG) {
-            if (selectedTG .getMaTG().equals(tg.getMaTG())) {
+            if (selectedTG.getMaTG().equals(tg.getMaTG())) {
                 return true;
             }
         }

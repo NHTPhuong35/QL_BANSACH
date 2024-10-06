@@ -1,8 +1,5 @@
 package DTO;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class TacGiaDTO {
 
     private String maTG;
@@ -22,6 +19,10 @@ public class TacGiaDTO {
         this.maTG = maTG;
         this.tenTG = tenTG;
     }
+    
+//    public TacGiaDTO(String TenTG) {
+//        this.tenTG = tenTG;
+//    }
 
     public int getTrangThai() {
         return trangThai;
@@ -47,13 +48,4 @@ public class TacGiaDTO {
         this.tenTG = tenTG;
     }
     
-	public static TacGiaDTO getFromResultSet(ResultSet rs) throws SQLException {
-		TacGiaDTO c = new TacGiaDTO();
-		c.setMaTG(rs.getNString("MATG"));
-		c.setTenTG(rs.getNString("TENTG"));
-		c.setTrangThai(rs.getInt("TRANGTHAI"));
-
-		return c;
-	}
-
 }

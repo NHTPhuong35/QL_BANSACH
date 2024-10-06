@@ -1,7 +1,5 @@
 package GUI;
 
-import BUS.SanPhamBUS;
-import DTO.ChiTietHoaDonDTO;
 import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
 import DTO.TacGiaDTO;
@@ -12,14 +10,10 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -27,53 +21,62 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class ChonSanPhamGUI extends JFrame implements MouseListener {
+public class ChonSanPhamGUI extends JFrame implements MouseListener{
 
     private ArrayList<SanPhamDTO> dsSP;
-    private ArrayList<ChiTietHoaDonDTO> SelectedListSP = new ArrayList<>();
-    private Map<SanPhamDTO, JButton> productButtons = new HashMap<>(); // Lưu trữ nút "Chọn" cho từng sản phẩm
-    private ArrayList<SanPhamDTO> dsHD = new ArrayList<>();
+    private ArrayList<SanPhamDTO> SelectedListSP;
     private JPanel pnHeader, pnContent, pnTimKiem;
     private JPanel[] product;
     private JLabel exit;
     private JTextField txtTimKiem;
+    private JButton btnChon;
     private JLabel productPrice;
-    private int width = 900, height = 781;
-    private BanHangGUI BanHangGUI;
+    private int width=900, height=781;
 
     private DecimalFormat FormatInt = new DecimalFormat("#,###");
 
     public ChonSanPhamGUI(String id) {
+        ArrayList<TacGiaDTO> tgia = new ArrayList<>();
+        tgia.add(new TacGiaDTO("TG01", "Tác giả A"));
+        tgia.add(new TacGiaDTO("TG02", "Tác giả B"));
 
-        SanPhamBUS spBUS = new SanPhamBUS();
-        dsSP = spBUS.getDanhSachBan();
+        ArrayList<LoaiDTO> loaiSP = new ArrayList<>();
+        loaiSP.add(new LoaiDTO("L01", "Loai A"));
+        loaiSP.add(new LoaiDTO("L02", "Loai B"));
 
+        ArrayList<String> anh = new ArrayList<>();
+        anh.add("tu-duy-nguoc-1.jpg");
+        anh.add("tu-duy-nguoc-2.jpg");
+        anh.add("tu-duy-nguoc-3.jpg");
+
+        ArrayList<String> anh1 = new ArrayList<>();
+        anh.add("mot-doi-quan-tri-1.jpg");
+        anh.add("mot-doi-quan-tri-2.jpg");
+        anh.add("mot-doi-quan-tri-3.jpg");
+        SanPhamDTO sp = new SanPhamDTO("SP001", "Tư duy ngược", "Văn học Nhà Nội", 2024, 10, 1, 500, 500, anh, tgia, loaiSP);
+        dsSP = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            dsSP.add(sp);
+        }
+        SanPhamDTO sp1 = new SanPhamDTO("thn", "Một đời quản trị", "Văn học Nhà Nội", 2024, 10, 1, 500, 500, anh1, tgia, loaiSP);
+        dsSP.add(sp1);
+        
         init();
-        if (id.equals("PN")) {
+        if(id.equals("PN")){
             productPrice.setVisible(false);
         }
-    }
-
-    public ChonSanPhamGUI(BanHangGUI BanHangGUI) {
-        this.BanHangGUI = BanHangGUI;
-        this.SelectedListSP = BanHangGUI.getCtHoaDon();
-        SanPhamBUS spBUS = new SanPhamBUS();
-        dsSP = spBUS.getDanhSachBan();
-
-        init();
     }
 
     private void init() {
         this.setSize(width, height);
         this.setLayout(new BorderLayout());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setUndecorated(true);
+//        this.setUndecorated(true);
 
         //Tiêu đề
         pnHeader = new JPanel();
@@ -172,7 +175,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         productPrice.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
 
         //button chon
-        JButton btnChon = new JButton("Chọn");
+        btnChon = new JButton("Chọn");
         btnChon.setPreferredSize(new Dimension(130, 30));
         btnChon.setMaximumSize(new Dimension(130, 30));
         btnChon.setBackground(BASE.btnThem);
@@ -182,33 +185,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         btnChon.setFocusPainted(false);
         btnChon.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
-
-        productButtons.put(sp, btnChon);
-        btnChon.setActionCommand(sp.getMaSach());
-        btnChon.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String maSach = e.getActionCommand();
-                boolean productExists = false;
-                for (ChiTietHoaDonDTO ct : SelectedListSP) {
-                    if (ct.getMaSach().equals(maSach)) {
-                        ct.setSoLuong(ct.getSoLuong() + 1);
-                        productExists = true;
-                        break; // Break once the product is found
-                    }
-                }
-                if (!productExists) {
-                    for (SanPhamDTO product : dsSP) {
-                        if (product.getMaSach().equals(maSach)) {
-                            ChiTietHoaDonDTO ct = new ChiTietHoaDonDTO(product.getMaSach(), product.getGiaBan(), 1, product);
-                            SelectedListSP.add(ct);
-                            break;
-                        }
-                    }
-                }
-                sendSelectedProducts();
-            }
-        });
+//        btnChon.addActionListener(e -> layDanhSachSP(sp));
 
         // Thêm các thành phần vào productPanel
         productPanel.add(label);
@@ -226,18 +203,19 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         return productPanel;
     }
 
-    private void sendSelectedProducts() {
-        if (BanHangGUI != null) {
-            BanHangGUI.DSHD(SelectedListSP);
-            BanHangGUI.setCtHoaDon(SelectedListSP);
+//    private void layDanhSachSP(SanPhamDTO sp){
+//        SelectedListSP.add(sp);
+//    }
+    
+    public static void main(String[] args) {
+        ChonSanPhamGUI t = new ChonSanPhamGUI(""); //Hoá đơn
+//        ChonSanPhamGUI t = new ChonSanPhamGUI("PN"); //Phiếu nhập
         }
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         JLabel lbl = (JLabel) e.getSource();
-        if (lbl == exit) {
-            sendSelectedProducts();
+        if(lbl == exit){
             this.dispose();
         }
     }
@@ -257,9 +235,4 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
-
-    public static void main(String[] args) {
-        ChonSanPhamGUI spGUI = new ChonSanPhamGUI(""); // Hoá đơn
-
     }
-}

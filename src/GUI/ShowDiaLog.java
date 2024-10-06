@@ -23,7 +23,6 @@ public class ShowDiaLog extends JDialog {
     final ImageIcon iconSuccess = createResizedIcon(ShowDiaLog.class, "..//image//success_icon.jpg", 30, 30);
     final ImageIcon iconInfo = createResizedIcon(ShowDiaLog.class, "..//image//information_icon.jpg", 20, 20);
     
-
     public final static int ERROR_DIALOG = 1;
     public final static int SUCCESS_DIALOG = 2;
     public final static int INFO_DIALOG = 3;
@@ -70,7 +69,7 @@ public class ShowDiaLog extends JDialog {
         btnOK = new JButton("Chấp nhận");
         btnOK.setPreferredSize(new Dimension(100, 25));
         btnOK.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btnOK.setBackground(Color.LIGHT_GRAY);
+        btnOK.setBackground(Color.decode("#A6D8F0"));
         btnOK.setForeground(white);
         btnOK.setBorderPainted(false);
         btnOK.setFocusPainted(false);
@@ -83,7 +82,7 @@ public class ShowDiaLog extends JDialog {
         Color bgHeader = new Color(0);
         switch (type) {
             case ERROR_DIALOG:
-                bgHeader = new Color(255 , 69   , 0);
+                bgHeader = new Color(220, 20, 60);
                 lblIcon.setIcon(iconError);
                 break;
             case SUCCESS_DIALOG:
@@ -134,6 +133,6 @@ public class ShowDiaLog extends JDialog {
     }
     
     public static void main(String[] args) {
-        new ShowDiaLog("Tên không được để trống", ShowDiaLog.INFO_DIALOG);
+        new ShowDiaLog("thànhh công", ShowDiaLog.INFO_DIALOG);
     }
 }

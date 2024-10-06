@@ -5,7 +5,7 @@ import java.awt.*;
 // import java.awt.event.*; // Removed unused import
 import javax.swing.table.TableCellRenderer;
 
-public class TaoPhieuNhap extends JFrame {
+public class TaoPhieuNhap extends JPanel {
     private JTextField maPhieuNhapField, ngayField, maNhanVienField;
     private JComboBox<String> nhaCungCapComboBox;
     private String[] suppliers = { "Supplier 1", "Supplier 2", "Supplier 3" };
@@ -14,13 +14,9 @@ public class TaoPhieuNhap extends JFrame {
     private JButton xacNhanButton, huyButton, chonSachButton;
 
     public TaoPhieuNhap() {
-        setTitle("Tạo Phiếu Nhập");
-        setSize(800, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
-        
 
         // Mã phiếu nhập
         addLabel("Mã phiếu nhập:", 0, 0, gbc);
@@ -87,8 +83,6 @@ public class TaoPhieuNhap extends JFrame {
         gbc.gridy = 4;
         gbc.gridwidth = 5;
         add(buttonPanel, gbc);
-
-        setVisible(true);
     }
 
     private void addLabel(String text, int x, int y, GridBagConstraints gbc) {
@@ -153,6 +147,12 @@ public class TaoPhieuNhap extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(TaoPhieuNhap::new);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Tạo Phiếu Nhập");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(800, 600);
+            frame.add(new TaoPhieuNhap());
+            frame.setVisible(true);
+        });
     }
 }

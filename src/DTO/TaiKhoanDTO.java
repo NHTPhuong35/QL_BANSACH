@@ -24,16 +24,6 @@ public class TaiKhoanDTO {
         this.trangThai = trangThai;
     }
 
-    public TaiKhoanDTO(String tenNV, String diaChi, String SDT, String email, String matKhau, QuyenDTO quyen, int trangThai) {
-        this.tenNV = tenNV;
-        this.diaChi = diaChi;
-        this.SDT = SDT;
-        this.email = email;
-        this.matKhau = matKhau;
-        this.quyen = quyen;
-        this.trangThai = trangThai;
-    }
-
     public QuyenDTO getQuyen() {
         return quyen;
     }

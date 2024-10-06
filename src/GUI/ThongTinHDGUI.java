@@ -295,6 +295,7 @@ public class ThongTinHDGUI extends JPanel {
                         HoaDonBUS bus = new HoaDonBUS();
                         String soHD = dtm.getValueAt(selectedRow, 0).toString();
                         bus.CapNhatTrangThaiHD(soHD);
+                        bus.init(); //Phương thêm cho nó cập nhật danh sách
                         Reload(bus.getDsHD());
                     } else {
                         JOptionPane.showMessageDialog(null, "Chỉ được phép hủy hóa đơn trong Ngày");
@@ -328,9 +329,9 @@ public class ThongTinHDGUI extends JPanel {
     }
 
     private void Reload(ArrayList<HoaDonDTO> ds) {
-
         dtm.setRowCount(0);
         for (HoaDonDTO hd : ds) {
+            System.out.println(hd.getTrangThai());
             String TrangThai = hd.getTrangThai() == 1 ? "Đã xác nhận" : "Hủy";
             String NgayHD = convertDate(hd.getNgayHD());
             dtm.addRow(new Object[]{hd.getSoHD(), hd.getTenDN(), hd.getMaKH(), hd.getTGian(), NgayHD, hd.getTienGiamGia(), hd.getTongTien(), TrangThai});

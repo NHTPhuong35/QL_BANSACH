@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.TaiKhoanBUS;
 import DTO.QuyenDTO;
 import DTO.TaiKhoanDTO;
 import java.awt.Component;
@@ -39,6 +40,7 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
 
     private ArrayList<QuyenDTO> dsQuyen;
     private TaiKhoanGUI tkGUI;
+    private TaiKhoanBUS tkBUS = new TaiKhoanBUS();
     private int width = 400, height = 500;
     private int width_row = 200, height_row = 30;
 
@@ -187,8 +189,27 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
     }
 
     public void addTK() {
+        if (!xuLyKiemTraTenNV(txtTenNV.getText())) {
+            return;
+        }
+        if (!xuLyKiemTraDiaChi(txtDiaChi.getText())) {
+            return;
+        }
+        if(!xuLyKiemTraSDT(txtSDT.getText())){
+            return;
+        }
+        if(!xuLyKiemTraEmail(txtEmail.getText())){
+            return;
+        }
+        if(!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))){
+            return;
+        }
+        if(!txtNhapLaiMK.equals(txtMatKhau)){
+            new ShowDiaLog("<html>Mật khẩu nhập lại phải giống với mật khẩu!</html>", ShowDiaLog.ERROR_DIALOG);
+            return;
+        }
         QuyenDTO selectedQuyen = (QuyenDTO) cbxQuyen.getSelectedItem();
-        TaiKhoanDTO tk = new TaiKhoanDTO(txtTenNV.getText(),
+        TaiKhoanDTO tk = new TaiKhoanDTO("", txtTenNV.getText(),
                 txtDiaChi.getText(), txtSDT.getText(), txtEmail.getText(),
                 new String(txtMatKhau.getPassword()), selectedQuyen, 1);
         this.dispose();
@@ -196,6 +217,21 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
     }
 
     public void editTK() {
+        if (!xuLyKiemTraTenNV(txtTenNV.getText())) {
+            return;
+        }
+        if (!xuLyKiemTraDiaChi(txtDiaChi.getText())) {
+            return;
+        }
+        if(!xuLyKiemTraSDT(txtSDT.getText())){
+            return;
+        }
+        if(!xuLyKiemTraEmail(txtEmail.getText())){
+            return;
+        }
+        if(!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))){
+            return;
+        }
         TaiKhoanDTO tk = new TaiKhoanDTO(tkGUI.selectedTK.getTenDN(), txtTenNV.getText(),
                 txtDiaChi.getText(), txtSDT.getText(), txtEmail.getText(),
                 new String(txtMatKhau.getPassword()), tkGUI.selectedTK.getQuyen(), 1);
@@ -203,11 +239,50 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         tkGUI.suaTaiKhoan(tk);
     }
 
-    public static void main(String[] args) {
-//System.out.println(new String(txtMatKhau.getPassword()));
-//        ChucNangTaiKhoanGUI t = new ChucNangTaiKhoanGUI();
-//        t.initAdd();
-//            t.initEdit();
+    //----------------------------Các hàm check dữ liệu--------------------------
+    public boolean xuLyKiemTraTenNV(String tenNV) {
+        String ketQua = tkBUS.kiemTraTenNV(tenNV);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTraDiaChi(String diaChi) {
+        String ketQua = tkBUS.kiemTraDiaChi(diaChi);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTraSDT(String SDT) {
+        String ketQua = tkBUS.kiemTraSoDienThoai(SDT);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTraEmail(String email) {
+        String ketQua = tkBUS.kiemTraEmail(email);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTraMatKhau(String matKhau) {
+        String ketQua = tkBUS.kiemTraMatKhau(matKhau);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
     }
 
     @Override

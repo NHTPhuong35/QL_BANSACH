@@ -268,7 +268,6 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
     private void timKiemTaiKhoan(ArrayList<TaiKhoanDTO> dsTK) {
         String keyword = txtTimKiem.getText().toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển về chữ thường
-        DefaultTableModel df = (DefaultTableModel) tbTaiKhoan.getModel(); // Lấy mô hình của JTable
         df.setRowCount(0); // Xóa toàn bộ dữ liệu hiện có trong bảng
 
         // Lọc dữ liệu dựa trên từ khóa tìm kiếm
@@ -284,12 +283,15 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     }
 
     public void reload(ArrayList<TaiKhoanDTO> dsTaiKhoan) {
-        this.remove(jpTaiKhoan);
-        tbTaiKhoan = initContent(dsTaiKhoan);
-        jpTaiKhoan = new JScrollPane(tbTaiKhoan);
-        this.add(jpTaiKhoan, BorderLayout.CENTER);
-        this.revalidate();
-        this.repaint();
+        df.setRowCount(0);
+        
+        for(TaiKhoanDTO tk : dsTaiKhoan){
+            String trangThai = "Đang làm việc";
+            if (tk.getTrangThai() == 0) {
+                trangThai = "Nghỉ việc";
+            }
+            df.addRow(new Object[]{tk.getTenDN(), tk.getTenNV(), tk.getQuyen().getTenQuyen(),"********", trangThai});
+        }
     }
 
     public void themTaiKhoan(TaiKhoanDTO tk) {

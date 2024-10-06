@@ -4,8 +4,6 @@
  */
 package GUI;
 
-import BUS.KhachHangBUS;
-import DTO.KhachHangDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -13,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -29,6 +28,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+
+import BUS.KhachHangBUS;
+import DTO.KhachHangDTO;
 
 public class KhachHangGUI extends JPanel implements ActionListener {
 
@@ -193,7 +195,7 @@ public class KhachHangGUI extends JPanel implements ActionListener {
         JFrame f = new JFrame();
         f.setSize(1000, 800);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setLocationRelativeTo(null);
+        f.setLocationRelativeTo(null); 	
         f.add(new KhachHangGUI());
         f.setVisible(true);
     }

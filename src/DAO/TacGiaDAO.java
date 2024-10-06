@@ -2,80 +2,92 @@ package DAO;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import DTO.TacGiaDTO;
 
-public class TacGiaDAO extends DAO<TacGiaDTO> {
+public class TacGiaDAO  {
 
-	@Override
-	public ArrayList<TacGiaDTO> getAll() throws SQLException {
-		ArrayList<TacGiaDTO> tacgias = new ArrayList<>();
-		Statement statement = conn.createStatement();
-		String query = "SELECT * FROM `tacgia`";
-		ResultSet rs = statement.executeQuery(query);
-		while (rs.next()) {
-			TacGiaDTO tacgia = TacGiaDTO.getFromResultSet(rs);
-			tacgias.add(tacgia);
+	 	private connectDatabase conn;
+
+	    public  TacGiaDAO() {
+	        try {
+	            conn = new connectDatabase();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    public ArrayList<TacGiaDTO> dsTacGia() {
+	        ArrayList<TacGiaDTO> ds = new ArrayList<>();
+	        try {
+	            conn.connect();
+	            String sql = "SELECT * FROM TACGIA";
+	            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+	                ResultSet rs = pre.executeQuery();
+	                while (rs.next()) {
+	                    TacGiaDTO tg = new TacGiaDTO(rs.getString("MATG"), rs.getString("TENTG"));
+	                    ds.add(tg);
+	                }
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return ds;
+	    }
+
+	    public boolean ThemTacGia(TacGiaDTO tg) {
+	        try {
+	            conn.connect();
+	            String sql = "INSERT INTO TACGIA(MATG,TENTG,TRANGTHAI) VALUES (?,?,?)";
+	            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+	            pre.setString(1, tg.getMaTG());
+	            pre.setString(2, tg.getTenTG());
+	            pre.setInt(3, 1);
+	            return pre.executeUpdate() > 0;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
+
+	    public boolean SuaTacGia(TacGiaDTO tg) {
+	        try {
+	            conn.connect();
+	            String sql = "UPDATE TACGIA SET TENTG=? WHERE MATG= ?";
+	            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+	            pre.setString(1, tg.getTenTG());
+	            pre.setString(2, tg.getMaTG());
+	            return pre.executeUpdate() > 0;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return false;
+	        }
+	    }
+	    
+		public boolean XoaTacGia(String maTG) {
+			try {
+				conn.connect();
+				String sql = "DELETE FROM `TACGIA` WHERE `MATG` = ?";
+				try (PreparedStatement pre = conn.getConn().prepareStatement(sql)){
+					pre.setString(1, maTG);
+					pre.executeUpdate();
+				}
+				conn.disconnect();
+				return true;
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
 		}
-		return tacgias;
-	}
-
-	@Override
-	public TacGiaDTO get(int id) throws SQLException {
-		Statement statement = conn.createStatement();
-		String query = "SELECT * FROM `tacgia` WHERE MATG = " + id;
-		ResultSet rs = statement.executeQuery(query);
-		if (rs.next()) {
-			TacGiaDTO tacgia = TacGiaDTO.getFromResultSet(rs);
-			return tacgia;
-		}
-		return null;
-	}
-
-	@Override
-	public void save(TacGiaDTO t) throws SQLException {
-		if (t == null) {
-			throw new SQLException("TacGia rỗng");
-		}
-		String query = "INSERT INTO `tacgia` (`TENTG`, `TRANGTHAI`) VALUES (?, ?)";
-
-		PreparedStatement stmt = conn.prepareStatement(query);
-		stmt.setNString(1, t.getTenTG());
-		stmt.setInt(2, t.getTrangThai());
-		int row = stmt.executeUpdate();
-	}
-
-	@Override
-	public void update(TacGiaDTO t) throws SQLException {
-		if (t == null) {
-			throw new SQLException("TacGia rỗng");
-		}
-		String query = "UPDATE `tacgia` SET `TENTG` = ?, `TRANGTHAI` = ? WHERE `id` = ?";
-
-		PreparedStatement stmt = conn.prepareStatement(query);
-		stmt.setNString(1, t.getTenTG());
-		stmt.setInt(2, t.getTrangThai());
-		stmt.setNString(3, t.getMaTG());
-		int row = stmt.executeUpdate();
-	}
-
-	@Override
-	public void delete(TacGiaDTO t) throws SQLException {
-		PreparedStatement stmt = conn.prepareStatement("DELETE FROM `tacgia` WHERE `MATG` = ?");
-		stmt.setNString(1, t.getMaTG());
-		stmt.executeUpdate();
 		
-	}
+	    public static void main(String[] agrs) {
+	        TacGiaDAO dao = new TacGiaDAO();
+	        ArrayList<TacGiaDTO> ds = dao.dsTacGia();
+	        for (TacGiaDTO sp : ds) {
+	            System.out.println(sp.getMaTG() + " " + sp.getTenTG());
+	        }
+	    }
 
-	@Override
-	public void deleteById(int id) throws SQLException {
-		PreparedStatement stmt = conn.prepareStatement("DELETE FROM `tacgia` WHERE `MATG` = ?");
-		stmt.setInt(1, id);
-		stmt.executeUpdate();
-		
-	}
 
 }

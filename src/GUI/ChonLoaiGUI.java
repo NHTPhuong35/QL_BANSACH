@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package GUI;
 
 import DTO.LoaiDTO;
@@ -101,7 +105,7 @@ public class ChonLoaiGUI extends JFrame {
         btnTroVe = new JButton("+ Trở về");
         btnTroVe.setPreferredSize(new Dimension(150, 30));
         btnTroVe.setMaximumSize(new Dimension(150, 30));
-        btnTroVe.setBackground(Color.decode("#99CCFF"));
+        btnTroVe.setBackground(BASE.color_heaer);
         btnTroVe.setFont(BASE.font);
         btnTroVe.setOpaque(true);
         btnTroVe.setBorderPainted(false);
@@ -131,7 +135,7 @@ public class ChonLoaiGUI extends JFrame {
         pnHeader.add(pnTieuDe);
         pnHeader.add(Box.createVerticalStrut(10)); 
         pnHeader.add(pnThaoTac);
-        
+
         // Table
         String[] headerTable = {"", "Mã loại", "Tên loại"};
 
@@ -234,3 +238,4 @@ public class ChonLoaiGUI extends JFrame {
 
     }
 }
+
