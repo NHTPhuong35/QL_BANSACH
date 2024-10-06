@@ -10,29 +10,28 @@ public class ChiTietHoaDonDTO {
     private double donGia;
     private int soLuong;
     private SanPhamDTO sp;
-    
+
     public ChiTietHoaDonDTO(String soHD, String maSach, double donGia, int soLuong, SanPhamDTO sp) {
         this.soHD = soHD;
         this.maSach = maSach;
         this.donGia = donGia;
         this.soLuong = soLuong;
-        this.sp = sp; 
+        this.sp = sp;
     }
 
-    public ChiTietHoaDonDTO(String soHD, String maSach, double donGia, int soLuong) {
+    public ChiTietHoaDonDTO(String soHD, String maSach, int soLuong, double donGia) {
         this.soHD = soHD;
         this.maSach = maSach;
-        this.donGia = donGia;
         this.soLuong = soLuong;
+        this.donGia = donGia;
     }
 
     public ChiTietHoaDonDTO(String maSach, double donGia, int soLuong, SanPhamDTO sp) {
         this.maSach = maSach;
         this.donGia = donGia;
         this.soLuong = soLuong;
-        this.sp = sp; 
+        this.sp = sp;
     }
-    
 
     public String getSoHD() {
         return soHD;

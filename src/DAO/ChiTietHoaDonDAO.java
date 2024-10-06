@@ -61,8 +61,11 @@ public class ChiTietHoaDonDAO {
                 // Tạo đối tượng SanPhamDTO
                 SanPhamDTO sp = new SanPhamDTO(maSach, tenSach, loaiList);
                 
+                
                 // Tạo đối tượng ChiTietHoaDonDTO
                 ChiTietHoaDonDTO ct = new ChiTietHoaDonDTO(SoHD, maSach, donGia, soLuong, sp);
+                
+               
                 
                 // Thêm vào danh sách kết quả
                 ds.add(ct);
@@ -98,7 +101,7 @@ public class ChiTietHoaDonDAO {
         ChiTietHoaDonDAO dao = new ChiTietHoaDonDAO();
         ArrayList<ChiTietHoaDonDTO> list = dao.LayChiTietMotHD("HD01");
         for (ChiTietHoaDonDTO ct : list) {
-            System.out.println(ct.getSp().getTenSach() + "  " + ct.getSoLuong() + "  " + ct.getdonGia() + "  " + ct.getSoLuong() * ct.getdonGia() + "  " + ct.getSp().getLoaiToString());
+            System.out.println(ct.getSp().getTenSach() + "  " + ct.getSoLuong() + "  " + ct.getdonGia() + "  " + ct.getSoLuong() * ct.getdonGia() + "  " + ct.getSp().getLoaiToString() + " ");
         }
     }
 }

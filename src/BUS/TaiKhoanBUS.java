@@ -60,4 +60,13 @@ public class TaiKhoanBUS {
         }
         return false;
     }
+    
+    public String getTenNhanVien(String MaNV) {
+        for(TaiKhoanDTO tk : dsTK) {
+            if(tk.getTenDN().equals(MaNV)) {
+                return tk.getTenNV();
+            }
+        }
+        return "";
+    }
 }

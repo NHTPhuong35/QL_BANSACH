@@ -4,8 +4,12 @@
  */
 package GUI;
 
+import BUS.ChiTietHoaDonBUS;
 import BUS.HoaDonBUS;
+import BUS.SanPhamBUS;
+import DTO.ChiTietHoaDonDTO;
 import DTO.HoaDonDTO;
+import DTO.SanPhamDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -158,8 +162,8 @@ public class ThongTinHDGUI extends JPanel {
         pnBtnTim.add(btnLamMoi);
 
         JPanel pnTimkiem = new JPanel();
-        pnTimkiem.setPreferredSize(new Dimension(600,200));
-        pnTimkiem.setMaximumSize(new Dimension(600,200));
+        pnTimkiem.setPreferredSize(new Dimension(600, 200));
+        pnTimkiem.setMaximumSize(new Dimension(600, 200));
         pnTimkiem.setBackground(Color.WHITE);
         pnTimkiem.setLayout(new BoxLayout(pnTimkiem, BoxLayout.X_AXIS));
         pnTimkiem.setBorder(BorderFactory.createTitledBorder(
@@ -294,8 +298,20 @@ public class ThongTinHDGUI extends JPanel {
                     if (isSameDay(currentDate, ngayHDStr)) {
                         HoaDonBUS bus = new HoaDonBUS();
                         String soHD = dtm.getValueAt(selectedRow, 0).toString();
-                        bus.CapNhatTrangThaiHD(soHD);
-                        Reload(bus.getDsHD());
+                        
+                        if (bus.CapNhatTrangThaiHD(soHD)) {
+                            ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS(soHD);
+                            ArrayList<ChiTietHoaDonDTO> dsctHD = cthdBUS.getDscthd();
+                            HoaDonDTO hdDTO = bus.getHD(soHD);
+                            EditStatus(hdDTO);
+                            for (ChiTietHoaDonDTO ct : dsctHD) {
+                                SanPhamBUS spBUS = new SanPhamBUS();
+                                SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
+                                int sl = spDTO.getSoLuong() + ct.getSoLuong();
+                                spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                            }  
+                        }
+
                     } else {
                         JOptionPane.showMessageDialog(null, "Chỉ được phép hủy hóa đơn trong Ngày");
                     }
@@ -311,14 +327,15 @@ public class ThongTinHDGUI extends JPanel {
 
                     if (row != -1) { // Kiểm tra dòng có tồn tại
                         String soHD = table.getValueAt(row, 0) + "";
-                        String maKH = table.getValueAt(row, 1) + "";
-                        String tenDN = table.getValueAt(row, 2) + "";
+                        String maKH = table.getValueAt(row, 2) + "";
+                        String tenDN = table.getValueAt(row, 1) + "";
                         String tGian = table.getValueAt(row, 3) + "";
                         String ngayHD = table.getValueAt(row, 4) + "";
                         double tienGiamGia = Double.parseDouble(table.getValueAt(row, 5) + "");
                         double tongTien = Double.parseDouble(table.getValueAt(row, 6) + "");
 
                         HoaDonDTO hd = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
+
                         new CTHD(hd);
                     }
                 }
@@ -501,6 +518,25 @@ public class ThongTinHDGUI extends JPanel {
         btn.setHorizontalTextPosition(SwingConstants.CENTER);
         btn.setVerticalTextPosition(SwingConstants.BOTTOM); // Icon nằm trên văn bản
         return btn;
+    }
+
+    public void EditStatus(HoaDonDTO hd) {
+        int rowCount = dtm.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            if (dtm.getValueAt(i, 0).equals(hd.getSoHD())) {
+                String TrangThai = (hd.getTrangThai() == 1) ? "Đã xác nhận" : "Hủy";
+                String NgayHD = convertDate(hd.getNgayHD());
+                dtm.setValueAt(hd.getTenDN(), i, 1);
+                dtm.setValueAt(hd.getMaKH(), i, 2);
+                dtm.setValueAt(hd.getTGian(), i, 3);
+                dtm.setValueAt(NgayHD, i, 4);
+                dtm.setValueAt(hd.getTienGiamGia(), i, 5);
+                dtm.setValueAt(hd.getTongTien(), i, 6);
+                dtm.setValueAt(TrangThai, i, 7);
+                break;
+            }
+        }
+        dtm.fireTableDataChanged();
     }
 
     public static void main(String[] args) {

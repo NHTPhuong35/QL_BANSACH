@@ -4,8 +4,12 @@
  */
 package GUI;
 
+import BUS.ChiTietHoaDonBUS;
+import BUS.HoaDonBUS;
 import BUS.KhachHangBUS;
+import BUS.SanPhamBUS;
 import DTO.ChiTietHoaDonDTO;
+import DTO.HoaDonDTO;
 import DTO.KhachHangDTO;
 import DTO.SanPhamDTO;
 import java.awt.BorderLayout;
@@ -43,18 +47,20 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
 public class BanHangGUI extends JPanel {
-
+    
     private String MaNV;
     private JPanel pnThongTinSP, pnThanhToan, pnDanhSachSp;
     private DefaultTableModel dtmSP;
     private JPanel btnThanhToan;
     private JTable tableSP;
     private JButton btnThemSp;
-    private JTextField tfTongCong, tfMaNV, tfMaKH;
+    private JTextField tfTongCong, tfMaNV, tfMaKH, tfGiamGia, tfTongHD;
+    private JButton btnTaoKH;
     private ArrayList<ChiTietHoaDonDTO> ctHoaDon = new ArrayList<>();
+    private ArrayList<ChiTietHoaDonDTO> ListBook = new ArrayList<>();
 
     public BanHangGUI() {
-        this.MaNV = "NV001";
+        this.MaNV = "NV01";
         init();
         initComponents();
     }
@@ -106,7 +112,6 @@ public class BanHangGUI extends JPanel {
         lblTitleHD.setFont(BASE.font_title);
 
         JLabel lblMaKH, lblMaNV, lblGiamGia, lblTongCong, lblTongHD;
-        JTextField tfGiamGia, tfTongHD;
 
         // Tạo JPanel để chứa lblMaKH, tfMaKH và btnTaoKH
         JPanel pnMaKH = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -117,7 +122,7 @@ public class BanHangGUI extends JPanel {
         tfMaKH.setFont(BASE.font);
         tfMaKH.setPreferredSize(new Dimension(tfMaKH.getPreferredSize().width, 30));
 
-        JButton btnTaoKH = new JButton("Tạo mới");
+        btnTaoKH = new JButton("Tạo mới");
         btnTaoKH.setIcon(new ImageIcon(getClass().getResource("/Image/staff.png")));
         btnTaoKH.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -171,7 +176,7 @@ public class BanHangGUI extends JPanel {
         gbc.gridy = 5;
         inputPn.add(lblGiamGia, gbc);
 
-        tfGiamGia = new JTextField();
+        tfGiamGia = new JTextField("0.0");
         tfGiamGia.setFont(BASE.font);
         tfGiamGia.setEditable(false);
         tfGiamGia.setPreferredSize(new Dimension(tfGiamGia.getPreferredSize().width, 30));
@@ -183,7 +188,7 @@ public class BanHangGUI extends JPanel {
         gbc.gridy = 7;
         inputPn.add(lblTongHD, gbc);
 
-        tfTongHD = new JTextField();
+        tfTongHD = new JTextField("0.0");
         tfTongHD.setFont(BASE.font);
         tfTongHD.setEditable(false);
         tfTongHD.setPreferredSize(new Dimension(tfTongHD.getPreferredSize().width, 30));
@@ -212,21 +217,70 @@ public class BanHangGUI extends JPanel {
                 JPanel clickedPanel = (JPanel) e.getSource();
                 if ("btnThanhToan".equals(clickedPanel.getName())) {
                     if (tfMaKH.getText().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Vui lòng nhập mã khách hàng!");
+                        new ShowDiaLog("Vui lòng nhập mã khách hàng!", ShowDiaLog.ERROR_DIALOG);
                         return;
                     }
 
                     if (dtmSP.getRowCount() == 0) {
-                        JOptionPane.showMessageDialog(null, "Danh sách sản phẩm trống!");
+                        new ShowDiaLog("Danh sách sản phẩm trống!", ShowDiaLog.ERROR_DIALOG);
                         return;
                     }
+                    String MaKH = tfMaKH.getText();
+                    KhachHangBUS khBUS = new KhachHangBUS();
+                    KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
 
-                    ThanhToanHoaDon();
-                    JOptionPane.showMessageDialog(null, "Thanh toán thành công!");
+                    double TongTien = TongTien();
+                    double diemtichluy = khDTO.getDiemTichluy();
+                    double giamgia = DoiDiem(diemtichluy);
+                    double ThanhTien = 0;
+                    if (TongTien > giamgia) {
+                        double diemtl = DiemTichLuy(TongTien);
+                        khBUS.CapNhatDiemTL(MaKH, diemtl);
+                        ThanhTien = TongTien - giamgia;
+
+                    } else if (TongTien < giamgia) {
+                        double diemconlai = giamgia - TongTien;
+                        double diemtl = DiemTichLuy(TongTien);
+                        khBUS.CapNhatDiemTL(MaKH, diemtl + diemconlai);
+                        ThanhTien = 0;
+                    }
+
+                    HoaDonBUS hdBUS = new HoaDonBUS();
+                    HoaDonDTO hd = new HoaDonDTO(tfMaKH.getText(), tfMaNV.getText(), giamgia, ThanhTien);
+                    hd.setSoHD(hdBUS.TaoMaHD());
+                    if (hdBUS.ThemHoaDon(hd)) {
+                        ThemCTHD(hd.getSoHD());
+                        ChiTietHoaDonBUS ctBUS = new ChiTietHoaDonBUS();
+                        for (ChiTietHoaDonDTO ct : ListBook) {
+                            ctBUS.ThemCTHoaDon(ct);
+                            SanPhamBUS spBUS = new SanPhamBUS();
+                            SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
+                            int sl = spDTO.getSoLuong() - ct.getSoLuong();
+                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                        }
+
+                        new ShowDiaLog("Thanh Toán thành công", ShowDiaLog.SUCCESS_DIALOG);
+                        reset();
+                    } else {
+                        new ShowDiaLog("Thanh Toán thất tại", ShowDiaLog.ERROR_DIALOG);
+                    }
                 }
             }
         });
 
+        tfMaKH.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                TinhToanHD();
+            }
+        });
+         btnTaoKH.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ThemKhachHangGUI kh = new ThemKhachHangGUI(BanHangGUI.this);
+                
+            }
+        });
     }
 
     private void styleBtn(JPanel b, String text, String name) {
@@ -247,16 +301,16 @@ public class BanHangGUI extends JPanel {
         JPanel panel = new JPanel();
         panel.setLayout(new BorderLayout());
 
-        String[] columnNames = {"Tên sản phẩm", "Số lượng", "Giá sách", "Thành tiền", ""};
+        String[] columnNames = {"Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Giá sách", "Thành tiền", ""};
         dtmSP = new DefaultTableModel(columnNames, 0);
         tableSP = new JTable(dtmSP) {
             public boolean isCellEditable(int row, int column) {
-                return column == 1;
+                return column == 2;
             }
 
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                if (column == 1) { // Chỉ áp dụng cho cột "Số lượng"
+                if (column == 2) { // Chỉ áp dụng cho cột "Số lượng"
                     // Tạo JFormattedTextField chỉ cho phép nhập số nguyên
                     JFormattedTextField formattedTextField = new JFormattedTextField();
                     formattedTextField.setValue(0); // Giá trị mặc định là 0
@@ -283,8 +337,8 @@ public class BanHangGUI extends JPanel {
                 int row = tableSP.rowAtPoint(e.getPoint());
                 int col = tableSP.columnAtPoint(e.getPoint());
 
-                // Kiểm tra nếu người dùng click vào cột cuối cùng (cột xóa)
-                if (col == 4) {
+                // Kiểm tra nếu bảng có ít nhất một dòng và người dùng click vào cột xóa
+                if (row >= 0 && col == 5) {
                     int confirm = JOptionPane.showConfirmDialog(
                             null,
                             "Bạn có chắc muốn xóa dòng này?",
@@ -293,11 +347,38 @@ public class BanHangGUI extends JPanel {
                     );
                     if (confirm == JOptionPane.YES_OPTION) {
                         dtmSP.removeRow(row);
-                        tfTongCong.setText(TongTien() + "");
+                        TinhToanHD();
                     }
                 }
             }
         });
+
+        tableSP.getModel().addTableModelListener(e -> {
+            if (e.getColumn() == 2) { // Cột số lượng
+                int row = e.getFirstRow();
+
+                try {
+                    // Lấy số lượng mới (kiểm tra null và ép kiểu đúng)
+                    Object soLuongObj = tableSP.getValueAt(row, 2);
+                    int soLuong = (soLuongObj instanceof Integer) ? (Integer) soLuongObj : Integer.parseInt(soLuongObj.toString());
+
+                    // Lấy giá sách (kiểm tra null và ép kiểu đúng)
+                    Object donGiaObj = tableSP.getValueAt(row, 3);
+                    double donGia = (donGiaObj instanceof Double) ? (Double) donGiaObj : Double.parseDouble(donGiaObj.toString());
+
+                    // Tính lại thành tiền
+                    double thanhTien = soLuong * donGia;
+                    dtmSP.setValueAt(thanhTien, row, 4);
+
+                    // Cập nhật lại tổng cộng và tổng hóa đơn
+                    TinhToanHD();
+                } catch (Exception ex) {
+                    // Bắt lỗi và thông báo
+                    JOptionPane.showMessageDialog(null, "Lỗi trong quá trình cập nhật thành tiền: " + ex.getMessage());
+                }
+            }
+        });
+
         styleTable(tableSP);
 
         tableSP.setFillsViewportHeight(true);
@@ -311,7 +392,7 @@ public class BanHangGUI extends JPanel {
         double tong = 0.0;
         int sl_dong = dtmSP.getRowCount();
         for (int i = 0; i < sl_dong; i++) {
-            double gia = Double.parseDouble(dtmSP.getValueAt(i, 3) + "");
+            double gia = Double.parseDouble(dtmSP.getValueAt(i, 4) + "");
             tong += gia;
         }
         return tong;
@@ -325,8 +406,9 @@ public class BanHangGUI extends JPanel {
     }
 
     public void addProduct(ChiTietHoaDonDTO ct) {
-        dtmSP.addRow(new Object[]{ct.getSp().getTenSach(), ct.getSoLuong(), ct.getdonGia(), ct.getSoLuong() * ct.getdonGia(), "Xóa"});
-        tfTongCong.setText(TongTien() + "");
+        dtmSP.addRow(new Object[]{ct.getSp().getMaSach(), ct.getSp().getTenSach(), ct.getSoLuong(), ct.getdonGia(), ct.getSoLuong() * ct.getdonGia(), "Xóa"});
+        TinhToanHD();
+
     }
 
     private void styleTable(JTable table) {
@@ -366,15 +448,75 @@ public class BanHangGUI extends JPanel {
         this.ctHoaDon = ctHoaDon;
     }
 
-    public void ThanhToanHoaDon() {
+    public void TinhToanHD() {
         String MaKH = tfMaKH.getText();
         KhachHangBUS khBUS = new KhachHangBUS();
-        KhachHangDTO kh = khBUS.layKHTheoMa(MaKH);
-        double diemtichluy = kh.getDiemTichluy();
-        if(diemtichluy < 100) {
-            
+        KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
+
+        double TongTien = TongTien();
+
+        tfTongCong.setText(TongTien + "");
+
+        if (khDTO == null) {
+            tfGiamGia.setText("0.0");
+            tfTongHD.setText("0.0");
+        } else {
+            double diemtichluy = khDTO.getDiemTichluy();
+            double giamgia = DoiDiem(diemtichluy);
+            tfGiamGia.setText(giamgia + "");
+            if (TongTien == 0) {
+                tfTongHD.setText("0.0");
+            } else if (TongTien > giamgia) {
+                double TongHD = TongTien - giamgia;
+                tfTongHD.setText(TongHD + "");
+            } else if (TongTien < giamgia) {
+                double diemconlai = giamgia - TongTien;
+                tfTongHD.setText("0.0");
+                tfGiamGia.setText(TongTien + "");
+            }
+        }
+
+    }
+
+
+    public JTextField getTfMaKH() {
+        return tfMaKH;
+    }
+    
+    
+
+    private double DiemTichLuy(double TongTien) {
+        return Math.round(TongTien / 100000);
+    }
+
+    private double DoiDiem(double diemtichluy) {
+        return diemtichluy * 1000;
+    }
+
+    public void ThemCTHD(String SoHD) {
+        int rowCount = dtmSP.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            String MaSP = (String) dtmSP.getValueAt(i, 0);
+            int soLuong = (Integer) dtmSP.getValueAt(i, 2);
+            double donGia = (Double) dtmSP.getValueAt(i, 3);
+
+            ChiTietHoaDonDTO chiTiet = new ChiTietHoaDonDTO(SoHD, MaSP, soLuong, donGia);
+            ListBook.add(chiTiet);
         }
     }
+
+    private void reset() {
+        tfMaKH.setText("");
+        tfTongCong.setText("");
+        tfGiamGia.setText("");
+        tfTongHD.setText("");
+        ctHoaDon.clear();
+        DSHD(ctHoaDon);
+    }
+
+    
+    
+    
 
     public static void main(String[] args) {
         JFrame f = new JFrame();

@@ -64,4 +64,25 @@ public class SanPhamBUS {
         }
         return list;
     }
+    
+    public void CapNhatSoLuongSP(String MaSach, int SoLuong) {
+        SanPhamDAO dao = new SanPhamDAO();
+        dao.CapNhatSoLuongSP(MaSach, SoLuong);
+    }
+    
+    public SanPhamDTO getSP(String MaSach) {
+        SanPhamDAO spDAO = new SanPhamDAO();
+        ArrayList<SanPhamDTO> ds = spDAO.DanhSachSanPham();
+        for(SanPhamDTO sp : ds) {
+            if(sp.getMaSach().equals(MaSach)) {
+                return sp;
+            }
+        }
+        return null;
+    }
+    
+    public static void main(String[] agrs) {
+        SanPhamBUS spBUS = new SanPhamBUS();
+        spBUS.CapNhatSoLuongSP("SP01", 1);
+    }
 }

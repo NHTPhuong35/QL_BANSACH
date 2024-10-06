@@ -286,6 +286,22 @@ public class SanPhamDAO {
             pre.executeUpdate();
         }
     }
+    
+    public void CapNhatSoLuongSP(String MaSach, int SoLuong) {
+        try{
+            conn.connect();
+            String sql = "UPDATE SACH SET SOLUONG=? WHERE MASACH =?";
+            try(PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+                pre.setInt(1, SoLuong);
+                pre.setString(2, MaSach);
+                pre.executeUpdate();
+            }
+            conn.disconnect();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 
     public static void main(String[] args) {
         SanPhamDAO dao = new SanPhamDAO();
@@ -314,4 +330,6 @@ public class SanPhamDAO {
 //            System.out.println("Xoá thất bại!");
 //        }
     }
+    
+    
 }
