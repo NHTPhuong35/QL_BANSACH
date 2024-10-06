@@ -213,4 +213,8 @@ public class TaiKhoanBUS {
         return "Hợp lệ"; // Trả về "Hợp lệ" nếu mật khẩu đúng
     }
 
+    public static void main(String[] args) {
+        System.out.println("hello");
+        System.out.println("gggggggggggggggggggggg");
+    }
 }
