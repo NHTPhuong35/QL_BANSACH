@@ -89,7 +89,7 @@ public class KhachHangBUS {
 
     public boolean ThemKhachHang(KhachHangDTO kh) {
         if (KT_Ten(kh.getTenKh()) && KT_SDT(kh.getSdt()) && !KT_SDTTT(kh.getSdt())) {
-            kh.setMaKh(TaoMaKH());
+//            kh.setMaKh(TaoMaKH());
             KhachHangDAO khDAO = new KhachHangDAO();
             if (khDAO.ThemKhachHang(kh)) {
                 new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
@@ -137,13 +137,26 @@ public class KhachHangBUS {
         return false;
     }
 
+    public String getTenKH(String MaKH) {
+        KhachHangBUS khBUS = new KhachHangBUS();
+        ArrayList<KhachHangDTO> dsKH = khBUS.getDs();
+        for (KhachHangDTO x : dsKH) {
+            if (x.getMaKh().equals(MaKH)) { // So sánh mã khách hàng
+                return x.getTenKh(); // Trả về tên khách hàng
+            }
+        }
+        return "";
+    }
+    
+     public void CapNhatDiemTL(String MaKH, double diem) {
+          KhachHangDAO khDAO = new KhachHangDAO();
+          khDAO.CapNhatDiemTL(MaKH, diem);
+     }
+
     public static void main(String[] agrs) {
         KhachHangBUS khBUS = new KhachHangBUS();
 
-        KhachHangDTO kh = khBUS.layKHTheoMa("KH06");
-
-        kh.setTenKh("Ten");
-        boolean kq = khBUS.SuaKhachHang(kh);
-        System.out.println(kq);
+        System.out.println(khBUS.getTenKH("KH01"));
     }
 }
+

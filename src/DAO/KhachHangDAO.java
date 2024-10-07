@@ -70,11 +70,28 @@ public class KhachHangDAO {
         }
     }
 
-    public static void main(String[] agrs) {
-        KhachHangDAO dao = new KhachHangDAO();
-        ArrayList<KhachHangDTO> ds = dao.dsKhachHang();
-        for (KhachHangDTO sp : ds) {
-            System.out.println(sp.getMaKh() + " " + sp.getDiemTichluy() + " " + sp.getTenKh());
+    public void CapNhatDiemTL(String MaKH, double diem) {
+        try {
+            conn.connect();
+            String sql = "UPDATE KHACHHANG SET DIEMTICHLUY = ? WHERE MAKH=?";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+                pre.setDouble(1, diem);
+                pre.setString(2, MaKH);
+                pre.executeUpdate();
+            }
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+
+    public static void main(String[] agrs) {
+        KhachHangDAO dao = new KhachHangDAO();
+//        ArrayList<KhachHangDTO> ds = dao.dsKhachHang();
+//        for (KhachHangDTO sp : ds) {
+//            System.out.println(sp.getMaKh() + " " + sp.getDiemTichluy() + " " + sp.getTenKh());
+//        }
+        dao.CapNhatDiemTL("KH01", 120);
+    }
 }
+

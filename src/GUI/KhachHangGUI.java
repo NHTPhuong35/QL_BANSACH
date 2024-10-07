@@ -205,7 +205,8 @@ public class KhachHangGUI extends JPanel implements ActionListener {
         JButton source = (JButton) e.getSource();
 
         if (source.getName().equals("btnThem")) {
-            ThemKhachHangGUI kh = new ThemKhachHangGUI(KhachHangGUI.this);
+//            BanHangGUI banHangGUI = new BanHangGUI();
+//            ThemKhachHangGUI kh = new ThemKhachHangGUI();
         } else if (source.getName().equals("btnSua")) {
             int selectedRow = tbl.getSelectedRow();
             if (selectedRow != -1) {

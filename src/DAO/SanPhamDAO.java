@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package DAO;
 
 import DTO.LoaiDTO;
@@ -286,6 +290,22 @@ public class SanPhamDAO {
             pre.executeUpdate();
         }
     }
+    
+    public void CapNhatSoLuongSP(String MaSach, int SoLuong) {
+        try{
+            conn.connect();
+            String sql = "UPDATE SACH SET SOLUONG=? WHERE MASACH =?";
+            try(PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+                pre.setInt(1, SoLuong);
+                pre.setString(2, MaSach);
+                pre.executeUpdate();
+            }
+            conn.disconnect();
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
 
     public static void main(String[] args) {
         SanPhamDAO dao = new SanPhamDAO();
@@ -314,4 +334,7 @@ public class SanPhamDAO {
 //            System.out.println("Xoá thất bại!");
 //        }
     }
+    
+    
 }
+

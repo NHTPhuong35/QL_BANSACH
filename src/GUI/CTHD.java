@@ -5,8 +5,11 @@
 package GUI;
 
 import BUS.ChiTietHoaDonBUS;
+import BUS.KhachHangBUS;
+import BUS.TaiKhoanBUS;
 import DTO.ChiTietHoaDonDTO;
 import DTO.HoaDonDTO;
+import DTO.KhachHangDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -86,13 +89,20 @@ public class CTHD extends JFrame implements MouseListener {
         pnInfoHD.add(lblNgayLap);
         pnInfoHD.add(lblMaHD);
 
+        
+        KhachHangBUS khBUS = new KhachHangBUS();
+        String TenKH = khBUS.getTenKH(hd.getMaKH());
+        
+        TaiKhoanBUS tkBUS = new TaiKhoanBUS();
+        String TenNV = tkBUS.getTenNhanVien(hd.getTenDN());
+        
         JPanel pnInfoPerson = new JPanel();
         pnInfoPerson.setBackground(Color.decode("#E5F1FB"));
         pnInfoPerson.setLayout(new BoxLayout(pnInfoPerson, BoxLayout.X_AXIS));
         pnInfoPerson.setBorder(new EmptyBorder(20, 0, 20, 20));
-        lblNV = new JLabel(hd.getTenDN());
+        lblNV = new JLabel(TenNV);
         JPanel pnNv = createTitle("Người lập hóa đơn", lblNV);
-        lblKH = new JLabel(hd.getMaKH());
+        lblKH = new JLabel(TenKH);
         JPanel pnKh = createTitle("Khách hàng", lblKH);
         pnInfoPerson.add(pnNv);
         pnInfoPerson.add(Box.createRigidArea(new Dimension(40, 0)));
@@ -232,4 +242,6 @@ public class CTHD extends JFrame implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
+   
+      
 }

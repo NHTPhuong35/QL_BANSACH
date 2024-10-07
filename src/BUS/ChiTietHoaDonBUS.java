@@ -18,6 +18,11 @@ public class ChiTietHoaDonBUS {
         init();
     }
     
+    public ChiTietHoaDonBUS() {
+        dscthd = new ArrayList<>();
+        init();
+    }
+    
     public void init() {
         ChiTietHoaDonDAO dao = new ChiTietHoaDonDAO();
         dscthd = dao.LayChiTietMotHD(SoHD);
@@ -30,5 +35,18 @@ public class ChiTietHoaDonBUS {
     public void ThemCTHoaDon(ChiTietHoaDonDTO ct) {
        ChiTietHoaDonDAO dao = new ChiTietHoaDonDAO();
        dao.ThemCTHoaDon(ct);
+    }
+    
+//    public void ChiTietHD() {
+//        for(ChiTietHoaDonDTO ct : dscthd) {
+//            if(ct.getSoHD().equals(SoHD)) {
+//                System.out.println(ct.getSoHD() + " " + ct.getMaSach() + " " + ct.getSoLuong() + " " + ct.getdonGia());
+//            }
+//        }
+//    }
+    
+    public static void main(String[] agrs) {
+        ChiTietHoaDonBUS khBUS = new ChiTietHoaDonBUS("HD01");
+        
     }
 }

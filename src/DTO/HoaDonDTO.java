@@ -49,6 +49,15 @@ public class HoaDonDTO {
         this.tk = tk;
         this.kh = kh;
     }
+
+    public HoaDonDTO(String MaKH, String TenDN, double TienGiamGia, double TongTien) {
+        this.MaKH = MaKH;
+        this.TenDN = TenDN;
+        this.TienGiamGia = TienGiamGia;
+        this.TongTien = TongTien;
+    }
+    
+    
     
 
     public TaiKhoanDTO getTk() {
@@ -133,3 +142,4 @@ public class HoaDonDTO {
     
     
 }
+

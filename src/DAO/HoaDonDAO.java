@@ -53,7 +53,7 @@ public class HoaDonDAO {
             conn.connect();
             String sql = "INSERT INTO HOADON(SOHD,MAKH,TENDN,THOIGIAN,NGAYHD,TIENGIAMGIA,TONGTIEN,TRANGTHAI) VALUES(?,?,?,?,?,?,?,?)";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
-            pre.setString(1, hd.getMaKH());
+            pre.setString(1, hd.getSoHD());
             pre.setString(2, hd.getMaKH());
             pre.setString(3, hd.getTenDN());
             pre.setString(4, hd.getTGian());
@@ -139,3 +139,4 @@ public class HoaDonDAO {
     }
 
 }
+

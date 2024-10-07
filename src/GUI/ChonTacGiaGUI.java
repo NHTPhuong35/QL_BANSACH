@@ -78,6 +78,10 @@ public class ChonTacGiaGUI extends JFrame {
         exit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (cnSPGUI.dsTG == null || cnSPGUI.dsTG.isEmpty()) {
+                    new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
+                    return;
+                }
                 ChonTacGiaGUI.this.dispose();
                 cnSPGUI.setVisible(true);
             }
@@ -113,6 +117,10 @@ public class ChonTacGiaGUI extends JFrame {
         btnTroVe.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (cnSPGUI.dsTG == null || cnSPGUI.dsTG.isEmpty()) {
+                    new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
+                    return;
+                }
                 ChonTacGiaGUI.this.dispose();
                 cnSPGUI.setVisible(true);
             }
@@ -206,6 +214,11 @@ public class ChonTacGiaGUI extends JFrame {
                 cnSPGUI.dsTG.add(tacGia); // Thêm vào danh sách
             }
         }
+        if (cnSPGUI.dsTG == null || cnSPGUI.dsTG.isEmpty()) {
+            new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
+            return;
+        }
+
         this.dispose();
         cnSPGUI.setVisible(true);
     }

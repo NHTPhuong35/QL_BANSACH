@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.SanPhamBUS;
 import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
 import DTO.TacGiaDTO;
@@ -15,6 +16,8 @@ import java.awt.Image;
 import java.awt.ScrollPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -46,6 +49,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     private JLabel imageNameLabel; //hien thi ten anh chon
     JPanel imagePanelDefault; //khi chưa chọn ảnh
 
+    private SanPhamBUS spBUS = new SanPhamBUS();
     ArrayList<LoaiDTO> dsLoai = new ArrayList<>(); //Danh sách loại
     ArrayList<TacGiaDTO> dsTG = new ArrayList<>(); //Danh sách tác giả
     private int width = 450, height = 710;
@@ -164,10 +168,30 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         txtNamXB = new JTextField();
         txtNamXB.setPreferredSize(new Dimension(width_row, height_row));
         txtNamXB.setMaximumSize(new Dimension(width_row, height_row));
+        txtNamXB.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                // Nếu ký tự không phải là số hoặc là ký tự điều khiển, thì hủy sự kiện
+                if (!Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE) {
+                    e.consume(); // Ngăn không cho nhập
+                }
+            }
+        });
 
         txtGiaBia = new JTextField();
         txtGiaBia.setPreferredSize(new Dimension(width_row, height_row));
         txtGiaBia.setMaximumSize(new Dimension(width_row, height_row));
+        txtGiaBia.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                char c = e.getKeyChar();
+                // Nếu ký tự không phải là số hoặc là ký tự điều khiển, thì hủy sự kiện
+                if (!Character.isDigit(c) || c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE) {
+                    e.consume(); // Ngăn không cho nhập
+                }
+            }
+        });
 
         btnChonLoai = new JButton("Chọn loại");
         btnChonLoai.setBackground(Color.decode("#FFFFFF"));
@@ -337,30 +361,84 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     }
 
     public void addSP() {
-        // Kiểm tra xem các trường nhập liệu cần thiết có hợp lệ không
-        try {
-            String anh[] = imageName.toArray(new String[0]);
-            int namXB = Integer.parseInt(txtNamXB.getText());
-            double giaBia = Double.parseDouble(txtGiaBia.getText());
-            SanPhamDTO m = new SanPhamDTO("", txtTenSach.getText(),
-                    txtNhaXB.getText(), namXB, 0, 1, giaBia, 0, imageName, dsTG, dsLoai);
-            this.dispose();
-            spGUI.AddSP(m);
-        } catch (NumberFormatException e) {
-            System.out.println("Định dạng số không hợp lệ: " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Đã xảy ra lỗi: " + e.getMessage());
+        if (!xuLyKiemTraTenSach(txtTenSach.getText())) {
+            return;
+        }
+        if (!xuLyKiemTenNXB(txtNhaXB.getText())) {
+            return;
+        }
+        if (!xuLyKiemTraNamXB(txtNamXB.getText())) {
+            return;
+        }
+        if (!xuLyKiemTraGiaBia(txtGiaBia.getText())) {
+            return;
         }
 
+        String anh[] = imageName.toArray(new String[0]);
+        int namXB = Integer.parseInt(txtNamXB.getText());
+        double giaBia = Double.parseDouble(txtGiaBia.getText());
+        SanPhamDTO m = new SanPhamDTO("", txtTenSach.getText(),
+                txtNhaXB.getText(), namXB, 0, 1, giaBia, 0, imageName, dsTG, dsLoai);
+        this.dispose();
+        spGUI.AddSP(m);
     }
 
     public void editSP() {
+        if (!xuLyKiemTraTenSach(txtTenSach.getText())) {
+            return;
+        }
+        if (!xuLyKiemTenNXB(txtNhaXB.getText())) {
+            return;
+        }
+        if (!xuLyKiemTraNamXB(txtNamXB.getText())) {
+            return;
+        }
+        if (!xuLyKiemTraGiaBia(txtGiaBia.getText())) {
+            return;
+        }
         SanPhamDTO sp = new SanPhamDTO(spGUI.selectedSP.getMaSach(), txtTenSach.getText(),
                 txtNhaXB.getText(), Integer.parseInt(txtNamXB.getText()),
                 spGUI.selectedSP.getSoLuong(), spGUI.selectedSP.getTrangthai(), Double.parseDouble(txtGiaBia.getText()),
                 spGUI.selectedSP.getGiaBan(), imageName, spGUI.selectedSP.getTacGia(), spGUI.selectedSP.getLoai());
         this.dispose();
         spGUI.EditSP(sp);
+    }
+
+    //-----------------Các hàm kiểm tra dữ liệu-----------------------------------
+    public boolean xuLyKiemTraTenSach(String tenSach) {
+        String ketQua = spBUS.kiemTraTenSach(tenSach);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTenNXB(String tenNXB) {
+        String ketQua = spBUS.kiemTraTenNXB(tenNXB);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTraNamXB(String namXB) {
+        String ketQua = spBUS.kiemTraNamXB(namXB);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean xuLyKiemTraGiaBia(String giaBia) {
+        String ketQua = spBUS.kiemTraGiaBia(giaBia);
+        if (!ketQua.equals("Hợp lệ")) {
+            new ShowDiaLog(ketQua, ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) {

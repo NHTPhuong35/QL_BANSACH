@@ -212,4 +212,13 @@ public class TaiKhoanBUS {
 
         return "Hợp lệ"; // Trả về "Hợp lệ" nếu mật khẩu đúng
     }
+    
+    public String getTenNhanVien(String MaNV) {
+        for (TaiKhoanDTO tk : dsTK) {
+            if (tk.getTenDN().equals(MaNV)) {
+                return tk.getTenNV();
+            }
+        }
+        return "";
+    }
 }
