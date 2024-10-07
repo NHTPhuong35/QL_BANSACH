@@ -34,6 +34,7 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
     private KhachHangGUI KHGUI;
     private BanHangGUI banHangGUI;
     
+    
     public ThemKhachHangGUI(KhachHangGUI KHGUI) {
         this.KHGUI = KHGUI;
         init();
