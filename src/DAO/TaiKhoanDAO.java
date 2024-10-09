@@ -4,11 +4,13 @@
  */
 package DAO;
 
-import DTO.QuyenDTO;
-import DTO.TaiKhoanDTO;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import DTO.QuyenDTO;
+import DTO.TaiKhoanDTO;
 
 /**
  *
@@ -138,6 +140,18 @@ public class TaiKhoanDAO {
         }
         return result;
     }
+    
+    public TaiKhoanDTO timTaiKhoan(String userName)throws SQLException {
+			conn.connect();
+			String sql = "SELECT * FROM taikhoan WHERE taikhoan.TENDN = '" + userName + "'";
+			PreparedStatement pre = conn.getConn().prepareStatement(sql);
+			ResultSet rs = pre.executeQuery();
+			if (rs.next()) {
+				TaiKhoanDTO taikhoan = TaiKhoanDTO.getFromResultSet(rs);
+				return taikhoan;
+			}	
+			return null;
+	}
 
     public static void main(String[] args) {
         TaiKhoanDAO tk = new TaiKhoanDAO();

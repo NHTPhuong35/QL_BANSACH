@@ -2,7 +2,9 @@ package DAO;
 
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class connectDatabase {
 
@@ -19,7 +21,7 @@ public class connectDatabase {
         dbName = "qlbs";
         driver = "com.mysql.cj.jdbc.Driver";
         userName = "root";
-        password = "Phuong35";
+        password = "1234";
 
     }
 
