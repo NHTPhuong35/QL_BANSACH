@@ -21,7 +21,7 @@ public class connectDatabase {
         dbName = "qlbs";
         driver = "com.mysql.cj.jdbc.Driver";
         userName = "root";
-        password = "1234";
+        password = "abcABC12@";
 
     }
 
@@ -36,7 +36,7 @@ public class connectDatabase {
     public void connect() throws SQLException {
         try {
             Class.forName(driver);
-            conn = DriverManager.getConnection(url + dbName+ "?useSSL=false", userName, password);
+            conn = DriverManager.getConnection(url + dbName+ "?useSSL=false" + "&allowPublicKeyRetrieval=true", userName, password);
         } catch (ClassNotFoundException e) {
             throw new SQLException("Driver not found");
         }
