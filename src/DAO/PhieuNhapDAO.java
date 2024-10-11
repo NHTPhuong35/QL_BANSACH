@@ -54,11 +54,11 @@ public class PhieuNhapDAO {
             ResultSet rs = pre.executeQuery();
             while (rs.next()) {
                 String maPN1 = rs.getString("MAPN");
-                String maSP = rs.getString("MASP");
+                String maSach = rs.getString("MASACH");
                 int soLuong = rs.getInt("SOLUONG");
                 double tongTien = rs.getDouble("TONGTIEN");
                 double giaNhap = rs.getDouble("GIANHAP");
-                ChiTietPhieuNhapDTO ctpn = new ChiTietPhieuNhapDTO();
+                ChiTietPhieuNhapDTO ctpn = new ChiTietPhieuNhapDTO(maPN1, maSach, soLuong, tongTien, giaNhap);
                 ds.add(ctpn);
             }
             conn.disconnect();
@@ -120,17 +120,18 @@ public class PhieuNhapDAO {
         }
     }
 
-    public boolean suaPhieuNhap(PhieuNhapDTO pn) {
+    public boolean suaPhieuNhap(String maPN, String maNCC, String tenDN, java.util.Date ngayNhap, double tongTien,
+            int trangThai) {
         try {
             conn.connect();
-            String sql = "UPDATE phieunhap SET MANCC = ?, TENDN = ?, NGAYNHAP = ?, TONGTIEN = ?, TRANGTHAI = ? WHERE MAPN = ?";
+            String sql = "UPDATE phieunhap SET MANCC = ?, TENDN = ?, NGAYNHAP = ?, TONGTien = ?, TRANGTHAI = ? WHERE MAPN = ?";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
-            pre.setString(1, pn.getMaNCC());
-            pre.setString(2, pn.getTenDN());
-            pre.setDate(3, new java.sql.Date(pn.getNgayNhap().getTime()));
-            pre.setDouble(4, pn.getTongTien());
-            pre.setInt(5, pn.getTrangThai());
-            pre.setString(6, pn.getMaPN());
+            pre.setString(1, maNCC);
+            pre.setString(2, tenDN);
+            pre.setDate(3, new java.sql.Date(ngayNhap.getTime()));
+            pre.setDouble(4, tongTien);
+            pre.setInt(5, trangThai);
+            pre.setString(6, maPN);
             pre.executeUpdate();
             conn.disconnect();
             return true;
@@ -174,19 +175,37 @@ public class PhieuNhapDAO {
         }
     }
 
-    // public boolean xoaChiTietPhieuNhap(String maPN) {
-    //     try {
-    //         conn.connect();
-    //         String sql = "DELETE FROM chitietphieunhap WHERE MAPN = ?";
-    //         PreparedStatement pre = conn.getConn().prepareStatement(sql);
-    //         pre.setString(1, maPN);
-    //         pre.executeUpdate();
-    //         conn.disconnect();
-    //         return true;
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //         return false;
-    //     }
-    // }
+    public boolean xoaChiTietPhieuNhap(String maPN, String maSACH) {
+        try {
+            conn.connect();
+            String query = "DELETE FROM chitietphieunhap WHERE MAPN = ? AND MASACH = ?";
+            PreparedStatement preparedStatement = conn.getConn().prepareStatement(query);
+            preparedStatement.setString(1, maPN);
+            preparedStatement.setString(2, maSACH);
+            preparedStatement.executeUpdate();
+            conn.disconnect();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
+    public int getSoLuongSP(String maSP) {
+        int soLuong = 0;
+        try {
+            conn.connect();
+            String sql = "SELECT SOLUONG FROM sach WHERE MASACH = ?";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1, maSP);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                soLuong = rs.getInt("SOLUONG");
+            }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return soLuong;
+    }
 }

@@ -53,8 +53,7 @@ public class PhieuNhapBUS {
 
     public void suaPhieuNhap(String maPN, String maNCC, String tenDN, Date ngayNhap, double tongTien, int trangThai) {
         PhieuNhapDAO dao = new PhieuNhapDAO();
-        PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
-        if (dao.suaPhieuNhap(phieuNhap)) {
+        if (dao.suaPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai)) {
             JOptionPane.showMessageDialog(null, "Cập nhật phiếu nhập thành công!");
         } else {
             JOptionPane.showMessageDialog(null, "Cập nhật phiếu nhập thất bại!");
@@ -84,5 +83,20 @@ public class PhieuNhapBUS {
         } else {
             JOptionPane.showMessageDialog(null, "Cập nhật chi tiết phiếu nhập thất bại!");
         }
+    }
+
+    public void xoaChiTietPhieuNhap(String maPN, String maSP) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        if (dao.xoaChiTietPhieuNhap(maPN, maSP)) {
+            JOptionPane.showMessageDialog(null, "Xóa chi tiết phiếu nhập thành công!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Xóa chi tiết phiếu nhập thất bại!");
+        }
+    }
+
+    public static int getSoLuongSP(String maSP) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        int soLuong = dao.getSoLuongSP(maSP);
+        return soLuong;
     }
 }
