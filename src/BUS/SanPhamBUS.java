@@ -181,4 +181,8 @@ public class SanPhamBUS {
         return "Hợp lệ";
     }
 
+    public void xoaTatCa(){
+        SanPhamDAO spDAO = new SanPhamDAO();
+        spDAO.xoaTatCa();
+    }
 }

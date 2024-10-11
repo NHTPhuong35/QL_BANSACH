@@ -34,6 +34,17 @@ public class SanPhamDTO {
         this.loai = loai;
     }
 
+    public String getTenHinhToString(){
+        StringBuilder hinh = new StringBuilder();
+        for (String h : tenHinh) {
+            if (hinh.length() > 0) {
+                hinh.append(",");
+            }
+            hinh.append(h);
+        }
+        return hinh.toString();
+    }
+    
     public String getLoaiToString() { //Dạng ten a, b, c
         StringBuilder tenLoai = new StringBuilder();
         for (LoaiDTO loaiDTO : loai) {

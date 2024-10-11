@@ -2,13 +2,15 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
         <group>
-            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/BUS/TaiKhoanBUS.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/DTO/SanPhamDTO.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/TaiKhoanGUI.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/SanPhamGUI.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/ChonLoaiGUI.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/DAO/SanPhamDAO.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/xuLyFileExcelSanPham.java</file>
             <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/BUS/SanPhamBUS.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/fileChooser.java</file>
         </group>
-=======
-        <group/>
->>>>>>> 37895510e0e89e6179d3093a57630d10ad791286
     </open-files>
 </project-private>

@@ -290,22 +290,55 @@ public class SanPhamDAO {
             pre.executeUpdate();
         }
     }
-    
+
     public void CapNhatSoLuongSP(String MaSach, int SoLuong) {
-        try{
+        try {
             conn.connect();
             String sql = "UPDATE SACH SET SOLUONG=? WHERE MASACH =?";
-            try(PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
                 pre.setInt(1, SoLuong);
                 pre.setString(2, MaSach);
                 pre.executeUpdate();
             }
             conn.disconnect();
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
+
+    public void xoaTatCa() {
+        try {
+            conn.connect();
+
+            // Xóa tất cả hình ảnh liên quan đến sách
+            String deleteHinhSql = "DELETE FROM hinh";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(deleteHinhSql)) {
+                pre.executeUpdate();
+            }
+
+            // Xóa tất cả loại sách liên quan
+            String deleteLoaiSql = "DELETE FROM ctsachloai";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(deleteLoaiSql)) {
+                pre.executeUpdate();
+            }
+
+            // Xóa tất cả tác giả liên quan
+            String deleteTacGiaSql = "DELETE FROM ctsachtacgia";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(deleteTacGiaSql)) {
+                pre.executeUpdate();
+            }
+
+            // Xóa tất cả sách
+            String deleteSachSql = "DELETE FROM sach";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(deleteSachSql)) {
+                pre.executeUpdate();
+            }
+
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
         SanPhamDAO dao = new SanPhamDAO();
@@ -334,7 +367,5 @@ public class SanPhamDAO {
 //            System.out.println("Xoá thất bại!");
 //        }
     }
-    
-    
-}
 
+}

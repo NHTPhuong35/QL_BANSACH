@@ -46,7 +46,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     private SanPhamBUS spBUS;
     private JPanel pnHeader, pnContent;
     private JPanel pnChiTietSP, pnThaoTac;
-    private JButton btnThem, btnSua, btnXoa, btnLamMoi;
+    private JButton btnThem, btnSua, btnXoa, btnLamMoi, btnExport;
     private JPanel pnTimKiem;
     private JTextField txtTimKiem;
     private JComboBox<String> cbxLoai;
@@ -85,14 +85,18 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         this.setPreferredSize(new Dimension(width, height));
 
         pnHeader = new JPanel();
-        pnHeader.setLayout(new GridLayout(1, 2));
+        pnHeader.setLayout(new BorderLayout());
 
         spMacDinh = new SanPhamDTO("SP00", "Tên sách", "NXB", 0, 0, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         pnChiTietSP = initChiTietSP(spMacDinh);
+        
 
-        pnThaoTac = new JPanel();
-        pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.Y_AXIS));
+        pnThaoTac = new JPanel(); //Thao tác thêm, sửa, xoá, import, export excel
+        pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
+       
+        JPanel pnLeft = new JPanel(); //thêm sửa xoá
+        pnLeft.setLayout(new BoxLayout(pnLeft, BoxLayout.Y_AXIS));
 
         btnThem = new JButton("+ Thêm sách");
         btnThem.setPreferredSize(new Dimension(130, 30));
@@ -100,7 +104,6 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnThem.setBackground(BASE.btnThem);
         btnThem.setFont(BASE.font);
         btnThem.setOpaque(true);
-        btnThem.setBorderPainted(false);
         btnThem.setFocusPainted(false);
         btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnThem.addMouseListener(this);
@@ -111,7 +114,6 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnSua.setBackground(BASE.btnSua);
         btnSua.setFont(BASE.font);
         btnSua.setOpaque(true);
-        btnSua.setBorderPainted(false);
         btnSua.setFocusPainted(false);
         btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSua.addMouseListener(this);
@@ -122,21 +124,42 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnXoa.setBackground(BASE.btnXoa);
         btnXoa.setFont(BASE.font);
         btnXoa.setOpaque(true);
-        btnXoa.setBorderPainted(false);
         btnXoa.setFocusPainted(false);
         btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXoa.addMouseListener(this);
-
-        pnThaoTac.add(Box.createVerticalStrut(80));
-        pnThaoTac.add(btnThem);
-        pnThaoTac.add(Box.createVerticalStrut(20));
-        pnThaoTac.add(btnSua);
-        pnThaoTac.add(Box.createVerticalStrut(20));
-        pnThaoTac.add(btnXoa);
-        pnThaoTac.setBorder(BorderFactory.createEmptyBorder(0, 100, 0, 0));
-
-        pnHeader.add(pnChiTietSP);
-        pnHeader.add(pnThaoTac);
+        pnLeft.add(btnThem);
+        pnLeft.add(Box.createVerticalStrut(20));
+        pnLeft.add(btnSua);
+        pnLeft.add(Box.createVerticalStrut(20));
+        pnLeft.add(btnXoa);
+        
+        JPanel pnRight = new JPanel();
+        pnRight.setLayout(new BoxLayout(pnRight,BoxLayout.Y_AXIS));
+          
+        ImageIcon exportIcon = new ImageIcon("./src/image/export_icon.jpg");
+        Image exportImage = exportIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        exportIcon = new ImageIcon(exportImage);
+        btnExport = new JButton("Export Excel",exportIcon);
+        btnExport.setVerticalTextPosition(SwingConstants.BOTTOM);
+        btnExport.setHorizontalTextPosition(SwingConstants.CENTER);
+        btnExport.setPreferredSize(new Dimension(120, 80));
+        btnExport.setMaximumSize(new Dimension(120, 80));
+        btnExport.setBackground(Color.decode("#FFE4B5"));
+        btnExport.setFont(BASE.font);
+        btnExport.setOpaque(true);
+        btnExport.setFocusPainted(false);
+        btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnExport.addMouseListener(this);
+        pnRight.add(Box.createVerticalStrut(20));
+        pnRight.add(btnExport);
+        
+        pnThaoTac.add(pnLeft);
+        pnThaoTac.add(Box.createHorizontalStrut(50));
+        pnThaoTac.add(pnRight);
+        
+        pnHeader.add(pnChiTietSP,BorderLayout.WEST);
+        pnHeader.add(pnThaoTac,BorderLayout.EAST);
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 250));
 
         //Content
         pnContent = new JPanel();
@@ -292,7 +315,10 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
     public JPanel initChiTietSP(SanPhamDTO sp) {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(1, 2));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+//        panel.setPreferredSize(new Dimension(650, 300));
+//        panel.setMaximumSize(new Dimension(650, 500));
+        panel.add(Box.createHorizontalStrut(20));
 
         JPanel pnAnh = new JPanel();
         pnAnh.setLayout(new BoxLayout(pnAnh, BoxLayout.Y_AXIS));
@@ -353,8 +379,12 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnThongTin.add(Box.createVerticalStrut(20));
         pnThongTin.add(tacGia);
 
+        pnThongTin.add(Box.createVerticalGlue());
         panel.add(pnAnh);
+        panel.add(Box.createHorizontalStrut(20));
         panel.add(pnThongTin);
+        
+        
         return panel;
     }
 
@@ -478,6 +508,10 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                 }
 
             }
+        }
+        if(btn == btnExport){
+            xuLyFileExcelSanPham exExcel = new xuLyFileExcelSanPham();
+            exExcel.xuatExcel(dsSP);
         }
     }
 
