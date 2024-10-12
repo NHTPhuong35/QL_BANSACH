@@ -2,18 +2,34 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package GUI;
+
 
 /**
  *
  * @author nhatm
  */
+package  GUI;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public class HomeGUI extends JFrame implements MouseListener {
 
@@ -243,7 +259,8 @@ public class HomeGUI extends JFrame implements MouseListener {
                 taikhoanButton.setBackground(Color.WHITE);
             }
 
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            @Override
+			public void mouseExited(java.awt.event.MouseEvent evt) {
                 taikhoanButton.setBackground(Color.decode("#98DCE2"));
             }
         });
@@ -499,6 +516,7 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.revalidate();
             showPanel.repaint();
         }
+        
         if (btn == phanquyenButton) {
             PhanQuyenGUI phanquyenGUI = new PhanQuyenGUI();
             showPanel.removeAll();
@@ -507,7 +525,12 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == theloaiButton) {
-            //Thể loại
+            TheLoaiGUI tlGUI = new TheLoaiGUI();
+            showPanel.removeAll();
+            showPanel.add(tlGUI, BorderLayout.CENTER);
+            tlGUI.setVisible(true);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
         if (btn == nhacungcapButton) {
             //Nhà cung cấp

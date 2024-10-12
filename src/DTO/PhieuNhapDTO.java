@@ -20,6 +20,9 @@ public class PhieuNhapDTO {
         this.trangThai = trangThai;
     }
 
+    public PhieuNhapDTO() {
+    }
+
     public String getMaPN() {
         return maPN;
     }

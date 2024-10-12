@@ -2,7 +2,9 @@ package DAO;
 
 
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class connectDatabase {
 
@@ -34,7 +36,7 @@ public class connectDatabase {
     public void connect() throws SQLException {
         try {
             Class.forName(driver);
-            conn = DriverManager.getConnection(url + dbName+ "?useSSL=false", userName, password);
+            conn = DriverManager.getConnection(url + dbName+ "?useSSL=false" + "&allowPublicKeyRetrieval=true", userName, password);
         } catch (ClassNotFoundException e) {
             throw new SQLException("Driver not found");
         }

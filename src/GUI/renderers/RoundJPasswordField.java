@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package GUI.renderers;
 
 import java.awt.Color;
@@ -11,18 +7,15 @@ import java.awt.Insets;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
 
-/**
- *
- * @author nhatm
- */
-import javax.swing.JTextField;
+import javax.swing.JPasswordField;
 
-public class RoundJTextField extends JTextField {
+public class RoundJPasswordField extends JPasswordField{
+
 
     private int arcWidth;
     private int arcHeight;
 
-    public RoundJTextField(int columns, int arcWidth, int arcHeight) {
+    public RoundJPasswordField(int columns, int arcWidth, int arcHeight) {
         super(columns);
         this.arcWidth = arcWidth;
         this.arcHeight = arcHeight;
@@ -58,4 +51,3 @@ public class RoundJTextField extends JTextField {
         return new Insets(1, 10, 1, 10);  // Thêm khoảng trống bên trong để chữ không chạm viền
     }
 }
-

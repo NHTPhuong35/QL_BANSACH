@@ -9,6 +9,12 @@ import GUI.renderers.CustomCheckBoxRenderer;
 import GUI.renderers.NoBorderCheckBoxRenderer;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -23,7 +29,9 @@ public class PhanQuyenGUI extends JPanel {
     private JPanel phanquyenPanel;
     private JLabel timquyen;
     private JButton themquyen;
-   
+    private PhanQuyenBUS phanquyenBUS;
+    private JComboBox<String> comboBox;
+    
     public PhanQuyenGUI(){
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -60,11 +68,31 @@ public class PhanQuyenGUI extends JPanel {
                 themquyen.setBackground(Color.decode("#57B8C1"));
             }
         });
+        
+
         timquyen = new JLabel("Tìm quyền");
+        phanquyenBUS = new PhanQuyenBUS();
         
-        String[] options = { "Tất cả", "Tác giả", "Loại", "Nhà cung cấp", "Khách hàng", "Phiếu nhập", "Sản phẩm", "Hóa đơn", "Thống kê", "Tài khoản", "Phân quyền" };
-        JComboBox<String> comboBox = new JComboBox<>(options);
+        String[] options = phanquyenBUS.getTenPhanQuyenList();
+        comboBox = new JComboBox<>(options);
         
+        themquyen.addActionListener((ActionEvent e) -> {
+            ThemPhanQuyenDialog phanquyendialog = new ThemPhanQuyenDialog(this);
+            
+            //Xử lý khi JDialog tắt
+            phanquyendialog.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    String[] updatedOptions = phanquyenBUS.getTenPhanQuyenList();
+                    comboBox.removeAllItems();
+                    for (String option : updatedOptions) {
+                        comboBox.addItem(option); // Thêm các mục mới
+                    }
+                }
+            });
+            phanquyendialog.setVisible(true); // Hiển thị dialog   
+        });
+                
         headComponentsPanelgbc.gridx = 0;
         headComponentsPanelgbc.gridy = 0;
         headComponentsPanelgbc.weightx = 1;
@@ -108,20 +136,13 @@ public class PhanQuyenGUI extends JPanel {
         add(phanquyenPanel, gbc);
         
         //Table
-        String[] columnNames = {"", "Xem", "Thêm", "Sửa", "Xóa"};
-        Object[][] data = {
-            {"Tác giả", false, false, false, false},
-            {"Loại", false, false, false, false},
-            {"Nhà cung cấp", false, false, false, false},
-            {"Khách hàng", false, false, false, false},
-            {"Phiếu nhập", false, false, false, false},
-            {"Sản phẩm", false, false, false, false},
-            {"Hóa đơn", false, false, false, false},
-            {"Thống kê", false, false, false, false},
-            {"Tài khoản", false, false, false, false},
-            {"Phân quyền", false, false, false, false}
-        };
-
+        
+        String[] columnNames = {"","Xem", "Thêm", "Xóa", "Sửa"};
+        
+        String selectedRole = (String) comboBox.getSelectedItem();
+        String maphanquyen = phanquyenBUS.getMaPhanQuyenByTenPhanQuyen(selectedRole);
+        Object[][] data = phanquyenBUS.getPhanQuyenListByRole(maphanquyen);
+        
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
             @Override
             public Class<?> getColumnClass(int columnIndex) {
@@ -141,7 +162,68 @@ public class PhanQuyenGUI extends JPanel {
         }
 
         JScrollPane scrollPane = new JScrollPane(table);
+        
+//        ActionListener cho comboBox
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String selectedRole = (String) comboBox.getSelectedItem();
+                String maphanquyen = phanquyenBUS.getMaPhanQuyenByTenPhanQuyen(selectedRole);
+                Object[][] newData = phanquyenBUS.getPhanQuyenListByRole(maphanquyen);
 
+                model.setDataVector(newData, columnNames);
+
+                CustomCheckBoxRenderer customCheckBoxRenderer = new CustomCheckBoxRenderer();
+                for (int i = 1; i < table.getColumnCount(); i++) {
+                    table.getColumnModel().getColumn(i).setCellRenderer(customCheckBoxRenderer);
+                }
+                
+                DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+                centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+                
+                table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+
+                table.repaint();
+                table.revalidate();
+            }
+        });
+        
+        for (int i = 1; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(customCheckBoxRenderer);
+}
+        
+        //tickbox update
+        table.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                
+                String selectedRole = (String) comboBox.getSelectedItem();
+                String maphanquyen = phanquyenBUS.getMaPhanQuyenByTenPhanQuyen(selectedRole);
+
+                int row = table.rowAtPoint(e.getPoint());
+                int column = table.columnAtPoint(e.getPoint());
+                
+                // Kiểm tra nếu click vào cột checkbox (các cột bắt đầu từ 0)
+                if (column > 0 && row >= 0) { // Đảm bảo rằng hàng và cột hợp lệ
+                    Boolean currentValue = (Boolean) table.getValueAt(row, column);
+
+                    String tenphanquyen = (String) table.getValueAt(row, 0); // Cột 0 chứa mã quyền
+
+                    try {
+                        //Test
+//                        System.out.println("Giá trị ô trả về " + currentValue);
+//                        System.out.println("Giá trị hàng " + row);
+//                        System.out.println("Giá trị cột " + column);
+                        //
+                        phanquyenBUS.updatePhanQuyen(maphanquyen, currentValue, row, column);
+                        
+                    } catch (Exception ex) {
+                        ex.printStackTrace(); // Xử lý ngoại lệ nếu có
+                    }
+                }
+            }
+        });
+                
         //Settings UI/UX table
         table.setRowHeight(45);
         scrollPane.setSize(100,200);

@@ -4,12 +4,25 @@
  */
 package GUI;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import GUI.renderers.RoundJTextField;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+
+import BUS.ErrorPopup;
 import GUI.renderers.RoundJButton;
+import GUI.renderers.RoundJPasswordField;
+import GUI.renderers.RoundJTextField;
 
 /**
  *
@@ -25,7 +38,7 @@ public class LoginGUI extends JFrame {
     private JPanel dangnhapPanel;
     private JLabel tendangnhap;
     private JTextField inputtendangnhap;
-    private JTextField inputpassword;
+    private JPasswordField inputpassword;
     private JLabel matkhau;
     private JPanel matkhauPanel;
     private JLabel quenmatkhau;
@@ -100,7 +113,7 @@ public class LoginGUI extends JFrame {
         matkhauPanel.setLayout(new BorderLayout());
         matkhauPanel.setBackground(Color.decode("#98DCE2"));
         matkhau = new JLabel("Mật khẩu");
-        inputpassword = new RoundJTextField(30, 30, 30);
+        inputpassword = new RoundJPasswordField(30, 30, 30);
         inputpassword.setPreferredSize(new Dimension(370, 25));
         matkhauPanel.add(matkhau, BorderLayout.NORTH);
         matkhauPanel.add(inputpassword, BorderLayout.SOUTH);
@@ -150,9 +163,36 @@ public class LoginGUI extends JFrame {
         setSize(412, 431);
         setVisible(true);
         setLocationRelativeTo(null);
+        
     }
+    
+	public void showError(String message) {
+		ErrorPopup.show(new Exception(message));
+	}
+	
+	public void showError(Exception e) {
+		ErrorPopup.show(e);
+	}
+    
+	public JPasswordField getTxtPassword() {
+		return inputpassword;
+	}
+
+	public JTextField getTxtUsername() {
+		return inputtendangnhap;
+	}
+	
+	public JButton getBtnLogin() {
+		return dangnhapButton;
+	}
+	
+	public JLabel getLblForgotPassword() {
+		return quenmatkhau;
+	}
 
     public static void main(String args[]) {
         new LoginGUI();
     }
+
+
 }

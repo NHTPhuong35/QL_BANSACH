@@ -90,11 +90,10 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         spMacDinh = new SanPhamDTO("SP00", "Tên sách", "NXB", 0, 0, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
 
         pnChiTietSP = initChiTietSP(spMacDinh);
-        
 
         pnThaoTac = new JPanel(); //Thao tác thêm, sửa, xoá, import, export excel
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
-       
+
         JPanel pnLeft = new JPanel(); //thêm sửa xoá
         pnLeft.setLayout(new BoxLayout(pnLeft, BoxLayout.Y_AXIS));
 
@@ -132,14 +131,14 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnLeft.add(btnSua);
         pnLeft.add(Box.createVerticalStrut(20));
         pnLeft.add(btnXoa);
-        
+
         JPanel pnRight = new JPanel();
-        pnRight.setLayout(new BoxLayout(pnRight,BoxLayout.Y_AXIS));
-          
+        pnRight.setLayout(new BoxLayout(pnRight, BoxLayout.Y_AXIS));
+
         ImageIcon exportIcon = new ImageIcon("./src/image/export_icon.jpg");
         Image exportImage = exportIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         exportIcon = new ImageIcon(exportImage);
-        btnExport = new JButton("Export Excel",exportIcon);
+        btnExport = new JButton("Export Excel", exportIcon);
         btnExport.setVerticalTextPosition(SwingConstants.BOTTOM);
         btnExport.setHorizontalTextPosition(SwingConstants.CENTER);
         btnExport.setPreferredSize(new Dimension(120, 80));
@@ -152,13 +151,13 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnExport.addMouseListener(this);
         pnRight.add(Box.createVerticalStrut(20));
         pnRight.add(btnExport);
-        
+
         pnThaoTac.add(pnLeft);
         pnThaoTac.add(Box.createHorizontalStrut(50));
         pnThaoTac.add(pnRight);
-        
-        pnHeader.add(pnChiTietSP,BorderLayout.WEST);
-        pnHeader.add(pnThaoTac,BorderLayout.EAST);
+
+        pnHeader.add(pnChiTietSP, BorderLayout.WEST);
+        pnHeader.add(pnThaoTac, BorderLayout.EAST);
         pnHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 250));
 
         //Content
@@ -366,12 +365,27 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BoxLayout(pnThongTin, BoxLayout.Y_AXIS));
-        JLabel tenSP = new JLabel(sp.getTenSach());
+
+        String tenSach = sp.getTenSach();
+        if (sp.getTenSach().length() >= 30) {
+            int index = tenSach.lastIndexOf(" ", 30); // Tìm khoảng trắng gần nhất trước vị trí 30
+            tenSach = tenSach.substring(0, index) + "<br>" + tenSach.substring(index + 1);
+        }
+        JLabel tenSP = new JLabel("<html>" + tenSach + "</html>");
         tenSP.setFont(BASE.font_title);
-        JLabel giaBan = new JLabel("Giá: " + FormatInt.format(sp.getGiaBan()) + "đ");
+
+        JLabel giaBan = new JLabel("Giá: " + FormatInt.format(sp.getGiaBan()) + "đ"); //Giá
         giaBan.setFont(BASE.font);
-        JLabel tacGia = new JLabel("Tác giả: " + sp.getTacGiaToString());
+
+        String tenTacGia = sp.getTacGiaToString(); //Tác giả
+        if (sp.getTacGiaToString().length() >= 30) {
+            int index = tenTacGia.lastIndexOf(" ", 30);
+            tenTacGia = tenTacGia.substring(0, index) + "<br>" + tenTacGia.substring(index + 1);
+        }
+        JLabel tacGia = new JLabel("<html>Tác giả: " + tenTacGia + "</html>");
+        tacGia.setPreferredSize(new Dimension(100,57));
         tacGia.setFont(BASE.font);
+        
         pnThongTin.add(Box.createVerticalStrut(20));
         pnThongTin.add(tenSP);
         pnThongTin.add(Box.createVerticalStrut(20));
@@ -383,8 +397,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         panel.add(pnAnh);
         panel.add(Box.createHorizontalStrut(20));
         panel.add(pnThongTin);
-        
-        
+
         return panel;
     }
 
@@ -509,7 +522,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
             }
         }
-        if(btn == btnExport){
+        if (btn == btnExport) {
             xuLyFileExcelSanPham exExcel = new xuLyFileExcelSanPham();
             exExcel.xuatExcel(dsSP);
         }

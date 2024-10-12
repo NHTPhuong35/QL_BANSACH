@@ -4,6 +4,9 @@
  */
 package DTO;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class TaiKhoanDTO {
 
     private String tenDN, tenNV, diaChi, SDT, email, matKhau;
@@ -87,5 +90,20 @@ public class TaiKhoanDTO {
     public void setTrangThai(int trangThai) {
         this.trangThai = trangThai;
     }
-
+    
+	public boolean checkPassword(String password) {
+		return this.matKhau.equals(password);
+	}
+	
+	public static TaiKhoanDTO getFromResultSet(ResultSet rs) throws SQLException {
+		TaiKhoanDTO tk = new TaiKhoanDTO();
+		tk.setTenDN(rs.getString("TENDN"));
+		tk.setTenNV(rs.getString("TENNV"));
+		tk.setDiaChi(rs.getString("DIACHI"));
+		tk.setSDT(rs.getString("SDT"));
+		tk.setEmail(rs.getString("EMAIL"));
+		tk.setMatKhau(rs.getString("MATKHAU"));
+		tk.setTrangThai(rs.getInt("TRANGTHAI"));
+		return tk;
+	}
 }

@@ -294,8 +294,9 @@ public class SanPhamDAO {
     public void CapNhatSoLuongSP(String MaSach, int SoLuong) {
         try {
             conn.connect();
-            String sql = "UPDATE SACH SET SOLUONG=? WHERE MASACH =?";
-            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+
+            String sql = "UPDATE sach SET SOLUONG=? WHERE MASACH =?";
+            try(PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
                 pre.setInt(1, SoLuong);
                 pre.setString(2, MaSach);
                 pre.executeUpdate();

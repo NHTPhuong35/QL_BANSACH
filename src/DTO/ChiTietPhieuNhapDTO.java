@@ -7,6 +7,23 @@ public class ChiTietPhieuNhapDTO {
     private int SOLUONG;
     private double TONGTIEN;
 
+    public ChiTietPhieuNhapDTO() {
+    }
+    
+    public ChiTietPhieuNhapDTO(String MAPN, String MASACH, int SOLUONG, double TONGTIEN, double GIANHAP) {
+
+        this.MAPN = MAPN;
+
+        this.MASACH = MASACH;
+
+        this.SOLUONG = SOLUONG;
+
+        this.TONGTIEN = TONGTIEN;
+
+        this.GIANHAP = GIANHAP;
+
+    }
+
     // Getters and Setters
     public String getMAPN() {
         return MAPN;
