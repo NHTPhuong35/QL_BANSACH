@@ -34,11 +34,22 @@ public class SanPhamDTO {
         this.loai = loai;
     }
 
+    public String getTenHinhToString(){
+        StringBuilder hinh = new StringBuilder();
+        for (String h : tenHinh) {
+            if (hinh.length() > 0) {
+                hinh.append(", ");
+            }
+            hinh.append(h);
+        }
+        return hinh.toString();
+    }
+    
     public String getLoaiToString() { //Dạng ten a, b, c
         StringBuilder tenLoai = new StringBuilder();
         for (LoaiDTO loaiDTO : loai) {
             if (tenLoai.length() > 0) {
-                tenLoai.append(",");
+                tenLoai.append(", ");
             }
             tenLoai.append(loaiDTO.getTenLoai());
         }
@@ -49,7 +60,7 @@ public class SanPhamDTO {
         StringBuilder tenTacGia = new StringBuilder();
         for (TacGiaDTO tacGiaDTO : tacGia) {
             if (tenTacGia.length() > 0) {
-                tenTacGia.append(",");
+                tenTacGia.append(", ");
             }
             tenTacGia.append(tacGiaDTO.getTenTG());
         }
