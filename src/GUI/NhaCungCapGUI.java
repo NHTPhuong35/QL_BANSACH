@@ -1,94 +1,263 @@
 package GUI;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import java.awt.*;
+import javax.swing.table.JTableHeader;
 
-public class NhaCungCapGUI extends JPanel {
+import BUS.NhaCungCapBUS;
+import DTO.NhaCungCapDTO;
 
+public class NhaCungCapGUI extends JPanel implements ActionListener{
+	
+    private JTable tbl;
+    private DefaultTableModel dtm;
+    private JTextField tfTimKiem;
+    private JButton btnThem, btnSua, btnXoa;
+    private JPanel pnHeader, pnMain;
+    private JScrollPane tableSPScr;
+    NhaCungCapDTO selectedL = new NhaCungCapDTO();
+    private NhaCungCapBUS nccBUS;
+    private ArrayList<NhaCungCapDTO> dsNCC;
 
     public NhaCungCapGUI() {
+        init();
         initComponents();
+        nccBUS = new NhaCungCapBUS();
+        dsNCC = new ArrayList<>();
+        dsNCC = nccBUS.getDs();
+        reload(nccBUS.getDs());
     }
 
-    private void initComponents() {
-        jPanel1 = new JPanel();
-        btnADDNCC = new JButton();
-        btnDELETENCC = new JButton();
-        btnEDITNCC = new JButton();
-        jLabel1 = new JLabel();
-        txtsearch = new JTextField();
-        jScrollPane1 = new JScrollPane();
-        jTableNCC = new JTable();
+    public void init() {
+        this.setLayout(new BorderLayout());
+        this.setPreferredSize(new Dimension(1000, 600));
 
-        // Nút Thêm NCC
-        btnADDNCC.setBackground(new Color(102, 255, 102));
-        btnADDNCC.setText("+ Thêm NCC");
+        pnHeader = new JPanel(new BorderLayout());
+        pnHeader.setBackground(Color.WHITE);
+        pnHeader.setPreferredSize(new Dimension(0, 50));
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
 
-        // Nút Xóa NCC
-        btnDELETENCC.setBackground(new Color(255, 153, 153));
-        btnDELETENCC.setText("+ Xóa NCC");
+        pnMain = new JPanel(new BorderLayout());
+        this.add(pnHeader, BorderLayout.NORTH);
+        this.add(pnMain, BorderLayout.CENTER);
+    }
 
-        // Nút Sửa NCC
-        btnEDITNCC.setBackground(new Color(153, 153, 255));
-        btnEDITNCC.setText("+ Sửa NCC");
+    public void initComponents() {
 
-        // Label Tìm kiếm
-        jLabel1.setText("Tìm kiếm");
+        btnThem = createBtn("+Thêm nhà cung cấp", "#A6E3A1", "btnThem");
+        btnThem.addActionListener(this);
 
-        // Cài đặt Layout cho panel chứa các nút
-        GroupLayout jPanel1Layout = new GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setAutoCreateGaps(true);
-        jPanel1Layout.setAutoCreateContainerGaps(true);
+        btnSua = createBtn("+Sửa nhà cung cấp", "#B4BEFE", "btnSua");
+        btnSua.addActionListener(this);
 
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createSequentialGroup()
-                .addComponent(btnADDNCC)
-                .addComponent(btnEDITNCC)
-                .addComponent(btnDELETENCC)
-                .addComponent(jLabel1)
-                .addComponent(txtsearch, 150, Short.MAX_VALUE, Short.MAX_VALUE) // Kích thưddớc ô tìm kiếm có thể thay đổi
-        );
+        btnXoa = createBtn("+Xóa nhà cung cấp", "#EBA0AC", "btnXoa");
+        btnXoa.addActionListener(this);
 
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                .addComponent(btnADDNCC)
-                .addComponent(btnEDITNCC)
-                .addComponent(btnDELETENCC)
-                .addComponent(jLabel1)
-                .addComponent(txtsearch)
-        );
+        JPanel pnBtn = new JPanel();
+        pnBtn.setLayout(new BoxLayout(pnBtn, BoxLayout.X_AXIS));
+        pnBtn.setBackground(Color.WHITE);
 
-        // Định nghĩa bảng JTable
-        jTableNCC.setModel(new DefaultTableModel(
-            new Object[][] {},
-            new String[] {
-                "Mã NCC", "Tên NCC", "Địa Chỉ", "Email", "Số Điện Thoại"
+        pnBtn.add(btnThem);
+        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+        pnBtn.add(btnSua);
+        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+        pnBtn.add(btnXoa);
+
+        JLabel lblTimKiem = new JLabel("Tìm kiếm");
+        lblTimKiem.setFont(BASE.font);
+        tfTimKiem = new JTextField();
+        tfTimKiem.setPreferredSize(new Dimension(150, 30));
+
+        JPanel pnFind = new JPanel();
+        pnFind.setPreferredSize(new Dimension(250, 30));
+        pnFind.setLayout(new BoxLayout(pnFind, BoxLayout.X_AXIS));
+        pnFind.add(Box.createRigidArea(new Dimension(20, 0)));
+        Border outerBorder = BorderFactory.createLineBorder(Color.BLACK);
+        Border innerBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
+        pnFind.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
+        pnFind.add(lblTimKiem);
+        pnFind.add(Box.createRigidArea(new Dimension(5, 0)));
+        pnFind.add(tfTimKiem);
+
+        pnHeader.add(pnBtn, BorderLayout.WEST);
+        pnHeader.add(pnFind, BorderLayout.EAST);
+
+        String[] colName = {"Mã nhà cung cấp", "Tên nhà cung cấp"};
+        dtm = new DefaultTableModel(colName, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
             }
-        ));
-        jTableNCC.setRowHeight(25);
-        jScrollPane1.setViewportView(jTableNCC);
+        };
 
-        // Sử dụng BorderLayout để bảng có thể bao phủ hết formkjhghjjhggfdf
-        setLayout(new BorderLayout());
-        add(jPanel1, BorderLayout.NORTH);  // Đặt các nút ở phía trên
-        add(jScrollPane1, BorderLayout.CENTER);  // Đặt bảng ở giữa và mở rộng hết cỡ
+        tbl = new JTable(dtm);
+        styleTable(tbl);
+        tableSPScr = new JScrollPane(tbl);
 
-        // Loại bỏ kích thước cố định của JScrollPane
-        jScrollPane1.setPreferredSize(null); // Xóa kích thước cố định
+        pnMain.add(tableSPScr, BorderLayout.CENTER);
+
+        tfTimKiem.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                filterTable(dsNCC);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                filterTable(dsNCC);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
     }
 
- 
+    private JTable filterTable(ArrayList<NhaCungCapDTO> dsNCC) {
+        String key = tfTimKiem.getText().toLowerCase();
+        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+        ArrayList<NhaCungCapDTO> ds = new ArrayList<>();
+        ArrayList<NhaCungCapDTO> ds_all = nccBUS.getDs();
+        for (NhaCungCapDTO l : ds_all) {
+            if (l.getMaNhaCungCap().toLowerCase().contains(key) || l.getTenNhaCungCap().toLowerCase().contains(key)) {
+                ds.add(l);
+            }
+        }
+        reload(ds);
+        return tbl;
+    }
 
+    private JButton createBtn(String text, String color, String name) {
+        JButton btn = new JButton();
+        btn.setPreferredSize(new Dimension(170, 30));
+        btn.setMaximumSize(new Dimension(170, 30));
+        btn.setName(name);
+        btn.setText(text);
+        btn.setBackground(Color.decode(color));
+        btn.setFont(BASE.font);
+        btn.setOpaque(true);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-    // Biến toàn cục
-    private JButton btnADDNCC;
-    private JButton btnDELETENCC;
-    private JButton btnEDITNCC;
-    private JLabel jLabel1;
-    private JPanel jPanel1;
-    private JScrollPane jScrollPane1;
-    private JTable jTableNCC;
-    private JTextField txtsearch;
+        return btn;
+    }
+
+    private void styleTable(JTable table) {
+        JTableHeader header = table.getTableHeader();
+        header.setBackground(BASE.color_table_heaer);
+        header.setForeground(BASE.color_text);
+        header.setFont(BASE.font_header);
+        header.setPreferredSize(new Dimension(header.getWidth(), 40));
+
+        table.setRowHeight(35);
+        table.setFont(BASE.font);
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        table.setDefaultRenderer(Object.class, centerRenderer);
+    }
+
+    public void reload(ArrayList<NhaCungCapDTO> ds) {
+        dtm.setRowCount(0);
+        for (NhaCungCapDTO l : ds) {
+            dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap()});
+        }
+    }
+
+    public void EditRow(NhaCungCapDTO l) {
+        int rowCount = dtm.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            if (dtm.getValueAt(i, 0).equals(l.getMaNhaCungCap())) {
+                dtm.setValueAt(l.getTenNhaCungCap(), i, 1);
+                break;
+            }
+        }
+        dtm.fireTableDataChanged();
+    }
+
+    public void addRow(NhaCungCapDTO l) {
+        dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap()});
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JButton source = (JButton) e.getSource();
+
+        if (source.getName().equals("btnThem")) {
+            ThemNhaCungCapGUI l = new ThemNhaCungCapGUI(NhaCungCapGUI.this);
+        } else if (source.getName().equals("btnSua")) {
+            int selectedRow = tbl.getSelectedRow();
+            if (selectedRow != -1) {
+                String maNhaCungCap = (String) tbl.getValueAt(selectedRow, 0);
+
+                NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+                NhaCungCapDTO l = nccBUS.layNCCTheoMa(maNhaCungCap);
+
+                new SuaNhaCungCapGUI(l, NhaCungCapGUI.this);
+            } else {
+                new ShowDiaLog("Vui lòng chọn một nhà cung cấp để sửa", ShowDiaLog.ERROR_DIALOG);
+            }
+        } else if (source.getName().equals("btnXoa")) { //Phuong sua
+            int selectedRow = tbl.getSelectedRow();
+            if (selectedRow != -1) {
+                Object[] options = {"Có", "Không"};
+                int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn xoá nhà cung cấp này không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                if (result == JOptionPane.YES_OPTION) {
+                    String maNhaCungCap = (String) tbl.getValueAt(selectedRow, 0);
+                    NhaCungCapBUS nccBUS = new NhaCungCapBUS();
+
+                    if (nccBUS.XoaNhaCungCap(maNhaCungCap)) {
+                        JOptionPane.showMessageDialog(null,
+                                "Đã xoá thành công", "Thông báo", JOptionPane.DEFAULT_OPTION);
+
+                        // Cập nhật model của bảng
+                        DefaultTableModel model = (DefaultTableModel) tbl.getModel();
+                        model.removeRow(selectedRow);
+
+                        // Xóa phần tử khỏi dsTG
+                        dsNCC.remove(selectedRow);
+
+                        this.revalidate();
+                        this.repaint();
+                    } else {
+                        JOptionPane.showMessageDialog(null,
+                                "Thất bại", "Thông báo", JOptionPane.DEFAULT_OPTION);
+                    }
+                }
+            } else {
+                new ShowDiaLog("Hãy chọn nhà cung cấp cần xoá!", ShowDiaLog.INFO_DIALOG); //
+            }
+
+        }
+    }
+
+    public static void main(String[] agrs) {
+        JFrame f = new JFrame();
+        f.setSize(1000, 800);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.setLocationRelativeTo(null);
+        f.add(new NhaCungCapGUI());
+        f.setVisible(true);
+    }
 }
