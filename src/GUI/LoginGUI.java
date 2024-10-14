@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import BUS.ErrorPopup;
 import GUI.renderers.RoundJButton;
 import GUI.renderers.RoundJPasswordField;
 import GUI.renderers.RoundJTextField;
@@ -31,7 +30,7 @@ import GUI.renderers.RoundJTextField;
 public class LoginGUI extends JFrame {
 
     private JPanel loginContainer;
-    private JButton turnoffButton;
+//    private JButton turnoffButton;
     private JPanel inputLoginPanel;
     private JLabel applogo;
     private JLabel appname;
@@ -45,6 +44,7 @@ public class LoginGUI extends JFrame {
     private JButton dangnhapButton;
 
     public LoginGUI() {
+    	
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.white);
         setLayout(new GridBagLayout());
@@ -52,10 +52,10 @@ public class LoginGUI extends JFrame {
         setTitle("Đăng nhập");
         setBackground(Color.white);
 
-        turnoffButton = new JButton();
-        turnoffButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
-        turnoffButton.setBorderPainted(false);
-        turnoffButton.setBackground(Color.white);
+//        turnoffButton = new JButton();
+//        turnoffButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
+//        turnoffButton.setBorderPainted(false);
+//        turnoffButton.setBackground(Color.white);
         
         inputLoginPanel = new JPanel();
         inputLoginPanel.setBackground(Color.decode("#98DCE2"));
@@ -66,12 +66,12 @@ public class LoginGUI extends JFrame {
         loginContainer.setSize(394, 377);
         GridBagConstraints loginContainergbc = new GridBagConstraints();
 
-        loginContainergbc.gridx = 0;
-        loginContainergbc.gridy = 0;
-        loginContainergbc.weightx = 1;
-        loginContainergbc.weighty = 1;
-        loginContainergbc.anchor = GridBagConstraints.EAST;
-        loginContainer.add(turnoffButton, loginContainergbc);
+//        loginContainergbc.gridx = 0;
+//        loginContainergbc.gridy = 0;
+//        loginContainergbc.weightx = 1;
+//        loginContainergbc.weighty = 1;
+//        loginContainergbc.anchor = GridBagConstraints.EAST;
+//        loginContainer.add(turnoffButton, loginContainergbc);
 
         loginContainergbc.gridx = 0;
         loginContainergbc.gridy = 1;
@@ -90,7 +90,7 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.gridy = 0;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
-        inputLoginPanelrgbc.insets = new Insets(10, 0, 0, 0);
+        inputLoginPanelrgbc.insets = new Insets(20, 0, 0, 0);
         inputLoginPanel.add(applogo, inputLoginPanelrgbc);
 
         appname = new JLabel("Hãy đăng nhập vào cửa hàng");
@@ -139,7 +139,7 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.gridy = 4;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
-        inputLoginPanelrgbc.insets = new Insets(10, 0, 10, 0);
+        inputLoginPanelrgbc.insets = new Insets(15, 0, 15, 0);
         inputLoginPanel.add(quenmatkhau, inputLoginPanelrgbc);
 
         dangnhapButton = new RoundJButton("Đăng nhập", 30, 30);
@@ -151,28 +151,21 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
         inputLoginPanelrgbc.fill = GridBagConstraints.BOTH;
-        inputLoginPanelrgbc.insets = new Insets(10, 0, 10, 0);
+        inputLoginPanelrgbc.insets = new Insets(0, 0, 30, 0);
         inputLoginPanel.add(dangnhapButton, inputLoginPanelrgbc);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.2;
-        gbc.insets = new Insets(14, 15, 14, 15);
+        gbc.insets = new Insets(10, 10, 10, 10);
         add(loginContainer, gbc);
 
-        setSize(412, 431);
+        setSize(412, 420);
         setVisible(true);
         setLocationRelativeTo(null);
         
     }
     
-	public void showError(String message) {
-		ErrorPopup.show(new Exception(message));
-	}
-	
-	public void showError(Exception e) {
-		ErrorPopup.show(e);
-	}
     
 	public JPasswordField getTxtPassword() {
 		return inputpassword;
@@ -184,7 +177,7 @@ public class LoginGUI extends JFrame {
 	
 	public JButton getBtnLogin() {
 		return dangnhapButton;
-	}
+	}	
 	
 	public JLabel getLblForgotPassword() {
 		return quenmatkhau;
@@ -193,6 +186,4 @@ public class LoginGUI extends JFrame {
     public static void main(String args[]) {
         new LoginGUI();
     }
-
-
 }

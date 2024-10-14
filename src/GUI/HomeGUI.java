@@ -58,7 +58,6 @@ public class HomeGUI extends JFrame implements MouseListener {
     private JPanel showPanel;
 
     public HomeGUI() {
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Trang chủ");
         setLayout(new GridBagLayout());
@@ -464,9 +463,12 @@ public class HomeGUI extends JFrame implements MouseListener {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
+	public JButton getBtnLogout() {
+		return logoutButton;
+	}
     @Override
     public void mouseClicked(MouseEvent e) {
-        JButton btn = (JButton) e.getSource();
+        JButton btn = (JButton) e.getSource();       
         if (btn == sanphamButton) {
             int panelWidth = showPanel.getWidth();
             int panelHeight = showPanel.getHeight();
