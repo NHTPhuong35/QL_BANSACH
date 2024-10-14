@@ -373,7 +373,14 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         if (!xuLyKiemTraGiaBia(txtGiaBia.getText())) {
             return;
         }
-
+        if (dsLoai == null || dsLoai.isEmpty()) {
+            new ShowDiaLog("<html>Bạn chưa chọn loại.</html>", ShowDiaLog.ERROR_DIALOG);
+            return;
+        }
+        if (dsTG == null || dsTG.isEmpty()) {
+            new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
+            return;
+        }
         String anh[] = imageName.toArray(new String[0]);
         int namXB = Integer.parseInt(txtNamXB.getText());
         double giaBia = Double.parseDouble(txtGiaBia.getText());

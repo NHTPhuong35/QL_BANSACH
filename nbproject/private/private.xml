@@ -3,10 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/E:/Documents/NetBeansProjects/QL_BANSACH/src/GUI/HomeGUI.java</file>
             <file>file:/E:/Documents/NetBeansProjects/QL_BANSACH/src/DAO/connectDatabase.java</file>
             <file>file:/E:/Documents/NetBeansProjects/QL_BANSACH/src/GUI/ShowDiaLog.java</file>
             <file>file:/E:/Documents/NetBeansProjects/QL_BANSACH/src/GUI/SuaTacGia.java</file>
+=======
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/DAO/connectDatabase.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/DAO/SanPhamDAO.java</file>
+            <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/xuLyFileExcelSanPham.java</file>
+>>>>>>> d98b5e5d08f326cae774f4d413eae97ec6ff7ebd
         </group>
     </open-files>
 </project-private>

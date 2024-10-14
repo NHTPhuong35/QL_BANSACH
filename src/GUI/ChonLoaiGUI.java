@@ -79,10 +79,6 @@ public class ChonLoaiGUI extends JFrame {
         exit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (cnSPGUI.dsLoai == null || cnSPGUI.dsLoai.isEmpty()) {
-                    new ShowDiaLog("<html>Bạn chưa chọn loại.</html>", ShowDiaLog.ERROR_DIALOG);
-                    return;
-                }
                 ChonLoaiGUI.this.dispose();
                 cnSPGUI.setVisible(true);
             }
@@ -118,10 +114,6 @@ public class ChonLoaiGUI extends JFrame {
         btnTroVe.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (cnSPGUI.dsLoai == null || cnSPGUI.dsLoai.isEmpty()) {
-                    new ShowDiaLog("<html>Bạn chưa chọn loại.</html>", ShowDiaLog.ERROR_DIALOG);
-                    return;
-                }
                 ChonLoaiGUI.this.dispose();
                 cnSPGUI.setVisible(true);
             }
@@ -214,10 +206,6 @@ public class ChonLoaiGUI extends JFrame {
                 LoaiDTO Loai = new LoaiDTO(maLoai, tenLoai); // Tạo đối tượng Loai
                 cnSPGUI.dsLoai.add(Loai); // Thêm vào danh sách
             }
-        }
-        if (cnSPGUI.dsLoai == null || cnSPGUI.dsLoai.isEmpty()) {
-            new ShowDiaLog("<html>Bạn chưa chọn loại.</html>", ShowDiaLog.ERROR_DIALOG);
-            return;
         }
         this.dispose();
         cnSPGUI.setVisible(true);

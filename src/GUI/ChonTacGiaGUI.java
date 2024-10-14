@@ -1,5 +1,6 @@
 package GUI;
 
+import BUS.TacGiaBUS;
 import DTO.SanPhamDTO;
 import DTO.TacGiaDTO;
 import java.awt.BorderLayout;
@@ -41,11 +42,9 @@ public class ChonTacGiaGUI extends JFrame {
 
     public ChonTacGiaGUI(ChucNangSanPhamGUI cnSPGUI) {
         this.cnSPGUI = cnSPGUI;
+        TacGiaBUS tgBUS = new TacGiaBUS();
         dsTG = new ArrayList<>();
-        dsTG.add(new TacGiaDTO("TG01", "Nguyễn Anh Dũng"));
-        dsTG.add(new TacGiaDTO("TG02", "Morgan Housel"));
-        dsTG.add(new TacGiaDTO("TG03", "Diệp Hồng Vũ"));
-        dsTG.add(new TacGiaDTO("TG04", "Phan Văn Trường"));
+        dsTG = tgBUS.getDs();
 
         init();
     }
@@ -78,10 +77,6 @@ public class ChonTacGiaGUI extends JFrame {
         exit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (cnSPGUI.dsTG == null || cnSPGUI.dsTG.isEmpty()) {
-                    new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
-                    return;
-                }
                 ChonTacGiaGUI.this.dispose();
                 cnSPGUI.setVisible(true);
             }
@@ -117,10 +112,6 @@ public class ChonTacGiaGUI extends JFrame {
         btnTroVe.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (cnSPGUI.dsTG == null || cnSPGUI.dsTG.isEmpty()) {
-                    new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
-                    return;
-                }
                 ChonTacGiaGUI.this.dispose();
                 cnSPGUI.setVisible(true);
             }
@@ -213,10 +204,6 @@ public class ChonTacGiaGUI extends JFrame {
                 TacGiaDTO tacGia = new TacGiaDTO(maTacGia, tenTacGia); // Tạo đối tượng TacGia
                 cnSPGUI.dsTG.add(tacGia); // Thêm vào danh sách
             }
-        }
-        if (cnSPGUI.dsTG == null || cnSPGUI.dsTG.isEmpty()) {
-            new ShowDiaLog("<html>Bạn chưa chọn tác giả.</html>", ShowDiaLog.ERROR_DIALOG);
-            return;
         }
 
         this.dispose();
