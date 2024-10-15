@@ -145,6 +145,8 @@ public class PhieuNhapGUI extends JPanel {
         table.getTableHeader().setBackground(BASE.color_table_header); // Màu xanh tiêu đề bảng
         table.getTableHeader().setBackground(BASE.color_table_heaer); // Màu xanh tiêu đề bảng
         table.setBackground(Color.WHITE);
+        table.setFont(BASE.font);
+        table.setRowHeight(40); // thiết lập chiều cao các cột
 
         // Bố cục tổng thể
         JPanel topPanel = new JPanel(new BorderLayout());

@@ -18,7 +18,6 @@ public class SuaPhieuNhap extends JPanel {
     private JComboBox<String> nhaCungCapComboBox;
     private String[] suppliers = { "NCC01", "NCC02", "NCC03", "NCC04" };
     private JTable bookTable;
-    private JTextField tongTienField;
     private JButton xacNhanButton, huyButton, chonSachButton;
 
     PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO();
@@ -45,10 +44,10 @@ public class SuaPhieuNhap extends JPanel {
         phieuNhapDTO.setNgayNhap(ngayLap);
     }
 
-    public void setTongTien(Double tongTien) {
-        tongTienField.setText(String.valueOf(tongTien));
+    public void setTongTien(double tongTien) {
         phieuNhapDTO.setTongTien(tongTien);
     }
+
 
     public SuaPhieuNhap() {
         setLayout(new GridBagLayout());
@@ -69,24 +68,19 @@ public class SuaPhieuNhap extends JPanel {
         maNhanVienField = addTextField(phieuNhapDTO.getTenDN(), 1, 1, gbc);
 
         // Nhà cung cấp
+        addLabel("Nhà cung cấp:", 2, 1, gbc);
         nhaCungCapComboBox = new JComboBox<>(suppliers);
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
 
-        // Chọn sách button
-        chonSachButton = new JButton("+ Chọn sách");
-        chonSachButton.setBackground(Color.decode("#249171"));
-        gbc.gridx = 4;
-        gbc.gridy = 1;
-        add(chonSachButton, gbc);
 
         // Book table
-        String[] columnNames = { "Tên sách", "Số lượng", "Giá nhập", "Thành tiền", "" };
+        String[] columnNames = { "Tên sách", "Số lượng"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         bookTable = new JTable(tableModel); // Initialize bookTable with tableModel
-        bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-        bookTable.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
+        bookTable.setFont(BASE.font);
+        bookTable.setRowHeight(40); // thiết lập chiều cao các cột
         JScrollPane scrollPane = new JScrollPane(bookTable);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -96,13 +90,6 @@ public class SuaPhieuNhap extends JPanel {
         gbc.weighty = 1.0;
         add(scrollPane, gbc);
 
-        // Tổng tiền
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.weightx = 0;
-        gbc.weighty = 0;
-        addLabel("Tổng tiền:", 2, 3, gbc);
-        tongTienField = addTextField(String.valueOf(phieuNhapDTO.getTongTien()), 3, 3, gbc);
 
         // Buttons
         JPanel buttonPanel = new JPanel();
@@ -127,7 +114,6 @@ public class SuaPhieuNhap extends JPanel {
             phieuNhapDTO.setMaPN(maPhieuNhapField.getText());
             phieuNhapDTO.setMaNCC(nhaCungCapComboBox.getSelectedItem().toString());
             phieuNhapDTO.setTenDN(maNhanVienField.getText());
-            phieuNhapDTO.setTongTien(Double.parseDouble(tongTienField.getText()));
             phieuNhapDTO.setTrangThai(1); // Set trạng thái to 1
 
             phieuNhapBUS.suaPhieuNhap(
@@ -167,30 +153,12 @@ public class SuaPhieuNhap extends JPanel {
         for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
             Object[] rowData = {
                     chiTiet.getMASACH(),
-                    chiTiet.getSOLUONG(),
-                    chiTiet.getGIANHAP(),
-                    chiTiet.getTONGTIEN(),
-                    "Xóa"
+                    chiTiet.getSOLUONG()
             };
             tableModel.addRow(rowData);
         }
     }
 
-    private void xoaChiTietPhieuNhap(int row) {
-        DefaultTableModel tableModel = (DefaultTableModel) bookTable.getModel();
-        String maSach = (String) tableModel.getValueAt(row, 0);
-        int soLuong = (int) tableModel.getValueAt(row, 1);
-        phieuNhapBUS.xoaChiTietPhieuNhap(phieuNhapDTO.getMaPN(), maSach);
-        SanPhamBUS sanPhamBUS = new SanPhamBUS();
-        int currentStock = PhieuNhapBUS.getSoLuongSP(maSach);
-        sanPhamBUS.CapNhatSoLuongSP(maSach, currentStock + soLuong);
-
-        double currentTotal = Double.parseDouble(tongTienField.getText());
-        double rowTotal = (double) tableModel.getValueAt(row, 3);
-        double newTotal = currentTotal - rowTotal;
-        tongTienField.setText(String.valueOf(newTotal));
-        tableModel.removeRow(row);
-    }
 
     class ButtonRenderer extends JButton implements TableCellRenderer {
         private static final long serialVersionUID = 1L;
