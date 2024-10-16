@@ -535,7 +535,11 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == nhacungcapButton) {
-            //Nhà cung cấp
+            NhaCungCapGUI nccGUI = new NhaCungCapGUI();
+            showPanel.removeAll();
+            showPanel.add(nccGUI, BorderLayout.CENTER);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
         if (btn == taikhoanButton) {
             TaiKhoanGUI tkGUI = new TaiKhoanGUI();
