@@ -85,18 +85,19 @@ public class PhieuNhapBUS {
         }
     }
 
-    public void xoaChiTietPhieuNhap(String maPN, String maSP) {
-        PhieuNhapDAO dao = new PhieuNhapDAO();
-        if (dao.xoaChiTietPhieuNhap(maPN, maSP)) {
-            JOptionPane.showMessageDialog(null, "Xóa chi tiết phiếu nhập thành công!");
-        } else {
-            JOptionPane.showMessageDialog(null, "Xóa chi tiết phiếu nhập thất bại!");
-        }
-    }
 
     public static int getSoLuongSP(String maSP) {
         PhieuNhapDAO dao = new PhieuNhapDAO();
         int soLuong = dao.getSoLuongSP(maSP);
         return soLuong;
+    }
+
+    public void capNhatChiTietPhieuNhap(String maPN, String maSP, int soLuong) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        if (dao.capNhatChiTietPhieuNhap(maPN, maSP, soLuong)) {
+            JOptionPane.showMessageDialog(null, "Cập nhật chi tiết phiếu nhập thành công!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Cập nhật chi tiết phiếu nhập thất bại!");
+        }
     }
 }

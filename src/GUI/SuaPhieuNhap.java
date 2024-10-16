@@ -2,6 +2,8 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +21,8 @@ public class SuaPhieuNhap extends JPanel {
     private String[] suppliers = { "NCC01", "NCC02", "NCC03", "NCC04" };
     private JTable bookTable;
     private JButton xacNhanButton, huyButton, chonSachButton;
+    private ArrayList<String> befoArrayList = new ArrayList<>();
+    private ArrayList<String> afterArrayList = new ArrayList<>();
 
     PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO();
     PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
@@ -123,6 +127,49 @@ public class SuaPhieuNhap extends JPanel {
                     phieuNhapDTO.getNgayNhap(),
                     phieuNhapDTO.getTongTien(),
                     phieuNhapDTO.getTrangThai());
+            
+            // Add data to afterArrayList
+            DefaultTableModel updatedTableModel = (DefaultTableModel) bookTable.getModel();
+            int rowCount = updatedTableModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                String maSach = updatedTableModel.getValueAt(i, 0).toString();
+                String soLuong = updatedTableModel.getValueAt(i, 1).toString();
+                afterArrayList.add(maSach + "/" + soLuong);
+            }
+            
+            // Calculate the difference between afterArrayList and befoArrayList
+            ArrayList<String> diffArrayList = new ArrayList<>();
+            for (String after : afterArrayList) {
+                String[] afterParts = after.split("/");
+                String afterMaSach = afterParts[0];
+                int afterSoLuong = Integer.parseInt(afterParts[1]);
+
+                for (String before : befoArrayList) {
+                    String[] beforeParts = before.split("/");
+                    String beforeMaSach = beforeParts[0];
+                    int beforeSoLuong = Integer.parseInt(beforeParts[1]);
+
+                    if (afterMaSach.equals(beforeMaSach)) {
+                        int diffSoLuong = afterSoLuong - beforeSoLuong;
+                        diffArrayList.add(afterMaSach + "/" + diffSoLuong);
+                        break;
+                    }
+                }
+            }
+
+            System.out.println(diffArrayList);
+
+            // Update the database
+            for (String diff : diffArrayList) {
+                String[] parts = diff.split("/");
+                String maSach = parts[0];
+                int soLuong = Integer.parseInt(parts[1]);
+                phieuNhapBUS.capNhatChiTietPhieuNhap(phieuNhapDTO.getMaPN(), maSach, soLuong);
+            }
+
+            
+
+
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
             PhieuNhapGUI phieuNhapGUI = new PhieuNhapGUI();
@@ -157,6 +204,10 @@ public class SuaPhieuNhap extends JPanel {
             };
             tableModel.addRow(rowData);
         }
+        // Add data to beforeArrayList
+        for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
+            befoArrayList.add(chiTiet.getMASACH() + "/" + chiTiet.getSOLUONG());
+        }
     }
 
 
@@ -176,40 +227,6 @@ public class SuaPhieuNhap extends JPanel {
                 setBackground(UIManager.getColor("Button.background"));
             }
             return this;
-        }
-    }
-
-    class ButtonEditor extends DefaultCellEditor {
-        private String label;
-        private JButton button;
-
-        public ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(e -> {
-                fireEditingStopped();
-                int row = bookTable.getSelectedRow();
-                if ("Xóa".equals(label)) {
-                    xoaChiTietPhieuNhap(row);
-                }
-            });
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            label = (value == null) ? "" : value.toString();
-            button.setText(label);
-            if ("Xóa".equals(value)) {
-                button.setBackground(Color.decode("#EBA0AC"));
-            } else {
-                button.setBackground(UIManager.getColor("Button.background"));
-            }
-            return button;
-        }
-
-        public Object getCellEditorValue() {
-            return label;
         }
     }
 

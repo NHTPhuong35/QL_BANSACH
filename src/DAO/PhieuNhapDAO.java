@@ -175,21 +175,6 @@ public class PhieuNhapDAO {
         }
     }
 
-    public boolean xoaChiTietPhieuNhap(String maPN, String maSACH) {
-        try {
-            conn.connect();
-            String query = "DELETE FROM chitietphieunhap WHERE MAPN = ? AND MASACH = ?";
-            PreparedStatement preparedStatement = conn.getConn().prepareStatement(query);
-            preparedStatement.setString(1, maPN);
-            preparedStatement.setString(2, maSACH);
-            preparedStatement.executeUpdate();
-            conn.disconnect();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public int getSoLuongSP(String maSP) {
         int soLuong = 0;
@@ -208,4 +193,87 @@ public class PhieuNhapDAO {
         }
         return soLuong;
     }
+
+    
+
+    public boolean capNhatChiTietPhieuNhap(String maPN, String maSP, int soLuongDiff) {
+        try {
+            conn.connect();
+            
+            // Query to get the price of the product
+            String getGiaNhapSql = "SELECT GIANHAP FROM chitietphieunhap WHERE MAPN = ? AND MASACH = ?";
+            PreparedStatement getGiaNhapPre = conn.getConn().prepareStatement(getGiaNhapSql);
+            getGiaNhapPre.setString(1, maPN);
+            getGiaNhapPre.setString(2, maSP);
+            ResultSet giaNhapRs = getGiaNhapPre.executeQuery();
+            double giaSP = 0;
+            if (giaNhapRs.next()) {
+                giaSP = giaNhapRs.getDouble("GIANHAP");
+            }
+            
+            // Query to get the quantity of the product in ChiTietPhieuNhap with maPN and maSP
+            String getSoLuongSql = "SELECT SOLUONG FROM chitietphieunhap WHERE MAPN = ? AND MASACH = ?";
+            PreparedStatement getSoLuongPre = conn.getConn().prepareStatement(getSoLuongSql);
+            getSoLuongPre.setString(1, maPN);
+            getSoLuongPre.setString(2, maSP);
+            ResultSet soLuongRs = getSoLuongPre.executeQuery();
+            int soLuongHienTai = 0;
+            if (soLuongRs.next()) {
+                soLuongHienTai = soLuongRs.getInt("SOLUONG");
+            }
+
+            // Query the quantity of the product in Sach
+            String getSoLuongSPSql = "SELECT SOLUONG FROM sach WHERE MASACH = ?";
+            PreparedStatement getSoLuongSPPre = conn.getConn().prepareStatement(getSoLuongSPSql);
+            getSoLuongSPPre.setString(1, maSP);
+            ResultSet soLuongSPRs = getSoLuongSPPre.executeQuery();
+            int soLuongSP = 0;
+            if (soLuongSPRs.next()) {
+                soLuongSP = soLuongSPRs.getInt("SOLUONG");
+            }
+            
+            // Check if the new quantity is valid
+            if (soLuongSP + soLuongDiff < 0 || soLuongHienTai + soLuongDiff < 0) {
+                throw new SQLException("Quantity cannot be negative.");
+            }
+
+            // Update the quantity in the database
+            String updateSql = "UPDATE sach SET SOLUONG = ? WHERE MASACH = ?";
+            PreparedStatement updatePre = conn.getConn().prepareStatement(updateSql);
+            updatePre.setInt(1, soLuongSP - soLuongDiff);
+            updatePre.setString(2, maSP);
+            updatePre.executeUpdate();
+            
+            // Update the quantity in the ChiTietPhieuNhap table
+            String updateChiTietPhieuNhapSql = "UPDATE chitietphieunhap SET SOLUONG = ? WHERE MAPN = ? AND MASACH = ?";
+            PreparedStatement updateChiTietPhieuNhapPre = conn.getConn().prepareStatement(updateChiTietPhieuNhapSql);
+            updateChiTietPhieuNhapPre.setInt(1, soLuongHienTai + soLuongDiff);
+            updateChiTietPhieuNhapPre.setString(2, maPN);
+            updateChiTietPhieuNhapPre.setString(3, maSP);
+            updateChiTietPhieuNhapPre.executeUpdate();
+
+            // Update the total price in the ChiTietPhieuNhap table
+            String updatePhieuNhapSql = "UPDATE chitietphieunhap SET TONGTIEN = ? WHERE MAPN = ? AND MASACH = ?";
+            PreparedStatement updatePhieuNhapPre = conn.getConn().prepareStatement(updatePhieuNhapSql);
+            updatePhieuNhapPre.setDouble(1, (soLuongHienTai + soLuongDiff) * giaSP);
+            updatePhieuNhapPre.setString(2, maPN);
+            updatePhieuNhapPre.setString(3, maSP);
+            updatePhieuNhapPre.executeUpdate();
+
+            // Update the total price in the PhieuNhap table
+            String updateTongTienSql = "UPDATE phieunhap SET TONGTIEN = (SELECT SUM(TONGTIEN) FROM chitietphieunhap WHERE MAPN = ?) WHERE MAPN = ?";
+            PreparedStatement updateTongTienPre = conn.getConn().prepareStatement(updateTongTienSql);
+            updateTongTienPre.setString(1, maPN);
+            updateTongTienPre.setString(2, maPN);
+            updateTongTienPre.executeUpdate();
+
+            conn.disconnect();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
+
+
