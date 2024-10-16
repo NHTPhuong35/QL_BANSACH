@@ -2,6 +2,8 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +20,9 @@ public class SuaPhieuNhap extends JPanel {
     private JComboBox<String> nhaCungCapComboBox;
     private String[] suppliers = { "NCC01", "NCC02", "NCC03", "NCC04" };
     private JTable bookTable;
-    private JTextField tongTienField;
     private JButton xacNhanButton, huyButton, chonSachButton;
+    private ArrayList<String> befoArrayList = new ArrayList<>();
+    private ArrayList<String> afterArrayList = new ArrayList<>();
 
     PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO();
     PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
@@ -45,10 +48,10 @@ public class SuaPhieuNhap extends JPanel {
         phieuNhapDTO.setNgayNhap(ngayLap);
     }
 
-    public void setTongTien(Double tongTien) {
-        tongTienField.setText(String.valueOf(tongTien));
+    public void setTongTien(double tongTien) {
         phieuNhapDTO.setTongTien(tongTien);
     }
+
 
     public SuaPhieuNhap() {
         setLayout(new GridBagLayout());
@@ -69,24 +72,19 @@ public class SuaPhieuNhap extends JPanel {
         maNhanVienField = addTextField(phieuNhapDTO.getTenDN(), 1, 1, gbc);
 
         // Nhà cung cấp
+        addLabel("Nhà cung cấp:", 2, 1, gbc);
         nhaCungCapComboBox = new JComboBox<>(suppliers);
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
 
-        // Chọn sách button
-        chonSachButton = new JButton("+ Chọn sách");
-        chonSachButton.setBackground(Color.decode("#249171"));
-        gbc.gridx = 4;
-        gbc.gridy = 1;
-        add(chonSachButton, gbc);
 
         // Book table
-        String[] columnNames = { "Tên sách", "Số lượng", "Giá nhập", "Thành tiền", "" };
+        String[] columnNames = { "Tên sách", "Số lượng"};
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
         bookTable = new JTable(tableModel); // Initialize bookTable with tableModel
-        bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-        bookTable.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
+        bookTable.setFont(BASE.font);
+        bookTable.setRowHeight(40); // thiết lập chiều cao các cột
         JScrollPane scrollPane = new JScrollPane(bookTable);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -96,13 +94,6 @@ public class SuaPhieuNhap extends JPanel {
         gbc.weighty = 1.0;
         add(scrollPane, gbc);
 
-        // Tổng tiền
-        gbc.gridwidth = 1;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.weightx = 0;
-        gbc.weighty = 0;
-        addLabel("Tổng tiền:", 2, 3, gbc);
-        tongTienField = addTextField(String.valueOf(phieuNhapDTO.getTongTien()), 3, 3, gbc);
 
         // Buttons
         JPanel buttonPanel = new JPanel();
@@ -127,7 +118,6 @@ public class SuaPhieuNhap extends JPanel {
             phieuNhapDTO.setMaPN(maPhieuNhapField.getText());
             phieuNhapDTO.setMaNCC(nhaCungCapComboBox.getSelectedItem().toString());
             phieuNhapDTO.setTenDN(maNhanVienField.getText());
-            phieuNhapDTO.setTongTien(Double.parseDouble(tongTienField.getText()));
             phieuNhapDTO.setTrangThai(1); // Set trạng thái to 1
 
             phieuNhapBUS.suaPhieuNhap(
@@ -137,6 +127,49 @@ public class SuaPhieuNhap extends JPanel {
                     phieuNhapDTO.getNgayNhap(),
                     phieuNhapDTO.getTongTien(),
                     phieuNhapDTO.getTrangThai());
+            
+            // Add data to afterArrayList
+            DefaultTableModel updatedTableModel = (DefaultTableModel) bookTable.getModel();
+            int rowCount = updatedTableModel.getRowCount();
+            for (int i = 0; i < rowCount; i++) {
+                String maSach = updatedTableModel.getValueAt(i, 0).toString();
+                String soLuong = updatedTableModel.getValueAt(i, 1).toString();
+                afterArrayList.add(maSach + "/" + soLuong);
+            }
+            
+            // Calculate the difference between afterArrayList and befoArrayList
+            ArrayList<String> diffArrayList = new ArrayList<>();
+            for (String after : afterArrayList) {
+                String[] afterParts = after.split("/");
+                String afterMaSach = afterParts[0];
+                int afterSoLuong = Integer.parseInt(afterParts[1]);
+
+                for (String before : befoArrayList) {
+                    String[] beforeParts = before.split("/");
+                    String beforeMaSach = beforeParts[0];
+                    int beforeSoLuong = Integer.parseInt(beforeParts[1]);
+
+                    if (afterMaSach.equals(beforeMaSach)) {
+                        int diffSoLuong = afterSoLuong - beforeSoLuong;
+                        diffArrayList.add(afterMaSach + "/" + diffSoLuong);
+                        break;
+                    }
+                }
+            }
+
+            System.out.println(diffArrayList);
+
+            // Update the database
+            for (String diff : diffArrayList) {
+                String[] parts = diff.split("/");
+                String maSach = parts[0];
+                int soLuong = Integer.parseInt(parts[1]);
+                phieuNhapBUS.capNhatChiTietPhieuNhap(phieuNhapDTO.getMaPN(), maSach, soLuong);
+            }
+
+            
+
+
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
             PhieuNhapGUI phieuNhapGUI = new PhieuNhapGUI();
@@ -167,30 +200,16 @@ public class SuaPhieuNhap extends JPanel {
         for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
             Object[] rowData = {
                     chiTiet.getMASACH(),
-                    chiTiet.getSOLUONG(),
-                    chiTiet.getGIANHAP(),
-                    chiTiet.getTONGTIEN(),
-                    "Xóa"
+                    chiTiet.getSOLUONG()
             };
             tableModel.addRow(rowData);
         }
+        // Add data to beforeArrayList
+        for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
+            befoArrayList.add(chiTiet.getMASACH() + "/" + chiTiet.getSOLUONG());
+        }
     }
 
-    private void xoaChiTietPhieuNhap(int row) {
-        DefaultTableModel tableModel = (DefaultTableModel) bookTable.getModel();
-        String maSach = (String) tableModel.getValueAt(row, 0);
-        int soLuong = (int) tableModel.getValueAt(row, 1);
-        phieuNhapBUS.xoaChiTietPhieuNhap(phieuNhapDTO.getMaPN(), maSach);
-        SanPhamBUS sanPhamBUS = new SanPhamBUS();
-        int currentStock = PhieuNhapBUS.getSoLuongSP(maSach);
-        sanPhamBUS.CapNhatSoLuongSP(maSach, currentStock + soLuong);
-
-        double currentTotal = Double.parseDouble(tongTienField.getText());
-        double rowTotal = (double) tableModel.getValueAt(row, 3);
-        double newTotal = currentTotal - rowTotal;
-        tongTienField.setText(String.valueOf(newTotal));
-        tableModel.removeRow(row);
-    }
 
     class ButtonRenderer extends JButton implements TableCellRenderer {
         private static final long serialVersionUID = 1L;
@@ -208,40 +227,6 @@ public class SuaPhieuNhap extends JPanel {
                 setBackground(UIManager.getColor("Button.background"));
             }
             return this;
-        }
-    }
-
-    class ButtonEditor extends DefaultCellEditor {
-        private String label;
-        private JButton button;
-
-        public ButtonEditor(JCheckBox checkBox) {
-            super(checkBox);
-            button = new JButton();
-            button.setOpaque(true);
-            button.addActionListener(e -> {
-                fireEditingStopped();
-                int row = bookTable.getSelectedRow();
-                if ("Xóa".equals(label)) {
-                    xoaChiTietPhieuNhap(row);
-                }
-            });
-        }
-
-        public Component getTableCellEditorComponent(JTable table, Object value,
-                boolean isSelected, int row, int column) {
-            label = (value == null) ? "" : value.toString();
-            button.setText(label);
-            if ("Xóa".equals(value)) {
-                button.setBackground(Color.decode("#EBA0AC"));
-            } else {
-                button.setBackground(UIManager.getColor("Button.background"));
-            }
-            return button;
-        }
-
-        public Object getCellEditorValue() {
-            return label;
         }
     }
 

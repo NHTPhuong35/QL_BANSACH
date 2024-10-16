@@ -54,6 +54,8 @@ public class TaoPhieuNhap extends JPanel {
         bookTable.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
         bookTable.getColumn("").setCellRenderer(new ButtonRenderer());
         bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        bookTable.setFont(BASE.font);
+        bookTable.setRowHeight(40); // thiết lập chiều cao các cột
         JScrollPane scrollPane = new JScrollPane(bookTable);
         gbc.gridx = 0;
         gbc.gridy = 2;

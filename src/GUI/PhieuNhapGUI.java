@@ -69,6 +69,12 @@ public class PhieuNhapGUI extends JPanel {
                     suaPhieuNhapPanel.setMaPhieuNhap(maPN);
                     suaPhieuNhapPanel.setMaNhanVien(tenNV);
                     suaPhieuNhapPanel.setNhaCungCap(nhaCC);
+                    suaPhieuNhapFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                        @Override
+                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                            loadData(); // Reload the table data after closing the SuaPhieuNhap frame
+                        }
+                    });
                     suaPhieuNhapPanel.setNgay(ngayLap);
                     suaPhieuNhapPanel.setTongTien(tongTien);
 
@@ -145,6 +151,8 @@ public class PhieuNhapGUI extends JPanel {
         table.getTableHeader().setBackground(BASE.color_table_header); // Màu xanh tiêu đề bảng
         table.getTableHeader().setBackground(BASE.color_table_heaer); // Màu xanh tiêu đề bảng
         table.setBackground(Color.WHITE);
+        table.setFont(BASE.font);
+        table.setRowHeight(40); // thiết lập chiều cao các cột
 
         // Bố cục tổng thể
         JPanel topPanel = new JPanel(new BorderLayout());

@@ -8,6 +8,7 @@ import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
 import GUI.HomeGUI;
 import GUI.LoginGUI;
+import GUI.ShowDiaLog;
 
 public class LoginBUS {
 	
@@ -35,20 +36,19 @@ public class LoginBUS {
 			TaiKhoanDTO taikhoan = TkDAO.timTaiKhoan(username);
 
 			if (taikhoan == null) {
-				view.showError("Không tồn tại tài khoản!");
+				new ShowDiaLog("Không tồn tại tài khoản!", 1);
 				return;
 			}
 			if (!taikhoan.checkPassword(password)) {
-				view.showError("Mật khẩu sai");
+				new ShowDiaLog("Mật khẩu sai!", 1);
+			
 				return;
 			}
-			
-			HomeGUI homeGUI = new HomeGUI();
-			homeGUI.setVisible(true);
-			view.dispose();
+			HomeBUS home = new HomeBUS(new HomeGUI());
+			view.dispose();			
 			
 		} catch (Exception e) {
-			view.showError(e);
+            e.printStackTrace();
 		}
 	}
 
@@ -72,8 +72,10 @@ public class LoginBUS {
 		view.getLblForgotPassword().addMouseListener(new java.awt.event.MouseAdapter() {
 			@Override
 			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				view.showError("Chưa hỗ trợ!");
+				new ShowDiaLog("Chưa hỗ trợ!", 3);
 			}
 		});
+
 	}
+
 }

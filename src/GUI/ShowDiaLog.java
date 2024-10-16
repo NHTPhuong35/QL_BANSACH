@@ -2,16 +2,23 @@ package GUI;
 
 import static GUI.BASE.createResizedIcon;
 import static GUI.BASE.font;
+import static java.awt.Color.white;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
-import static java.awt.Color.white;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.*;
+
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class ShowDiaLog extends JDialog {
     private String text = "Đăng ký thành công";
@@ -134,5 +141,7 @@ public class ShowDiaLog extends JDialog {
     
     public static void main(String[] args) {
         new ShowDiaLog("thànhh công", ShowDiaLog.INFO_DIALOG);
+//        new ShowDiaLog("thànhh công", ShowDiaLog.SUCCESS_DIALOG);
+//        new ShowDiaLog("thànhh công", ShowDiaLog.ERROR_DIALOG);
     }
 }
