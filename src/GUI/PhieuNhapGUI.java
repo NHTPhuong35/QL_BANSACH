@@ -43,8 +43,14 @@ public class PhieuNhapGUI extends JPanel {
                 JFrame taoPhieuNhapFrame = new JFrame("Tạo Phiếu Nhập");
                 taoPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 taoPhieuNhapFrame.setSize(800, 600);
+                
+                TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap();
+                taoPhieuNhapPanel.setMaNV("NV01");
+
+
                 taoPhieuNhapFrame.add(new TaoPhieuNhap()); // Assuming TaoPhieuNhap is a JPanel
                 taoPhieuNhapFrame.setVisible(true);
+
             }
         });
 

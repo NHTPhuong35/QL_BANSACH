@@ -18,9 +18,9 @@ import BUS.SanPhamBUS;
 public class SuaPhieuNhap extends JPanel {
     private JTextField maPhieuNhapField, ngayField, maNhanVienField;
     private JComboBox<String> nhaCungCapComboBox;
-    private String[] suppliers = { "NCC01", "NCC02", "NCC03", "NCC04" };
+    private List<String> suppliers = PhieuNhapBUS.getAllMaNCC();
     private JTable bookTable;
-    private JButton xacNhanButton, huyButton, chonSachButton;
+    private JButton xacNhanButton, huyButton;
     private ArrayList<String> befoArrayList = new ArrayList<>();
     private ArrayList<String> afterArrayList = new ArrayList<>();
 
@@ -73,7 +73,7 @@ public class SuaPhieuNhap extends JPanel {
 
         // Nhà cung cấp
         addLabel("Nhà cung cấp:", 2, 1, gbc);
-        nhaCungCapComboBox = new JComboBox<>(suppliers);
+        nhaCungCapComboBox = new JComboBox<String>(suppliers.toArray(new String[0]));
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
