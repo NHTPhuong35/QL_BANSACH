@@ -116,6 +116,8 @@ public class NhaCungCapBUS {
     }
     
     public static void main(String[] agrs) {
-        NhaCungCapBUS nccBUS = new NhaCungCapBUS();         
+        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
     }
+    
+    
 }

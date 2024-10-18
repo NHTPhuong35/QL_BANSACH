@@ -1,5 +1,6 @@
 package BUS;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,11 +41,10 @@ public class PhieuNhapBUS {
             }
         }
     }
-    
+
     public void ThemPhieuNhap(String maPN, String maNCC, String tenDN, Date ngayNhap, double tongTien, int trangThai) {
         PhieuNhapDAO dao = new PhieuNhapDAO();
-        PhieuNhapDTO phieuNhap = new PhieuNhapDTO(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
-        if (dao.ThemPhieuNhap(phieuNhap)) {
+        if (dao.ThemPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai)) {
             JOptionPane.showMessageDialog(null, "Thêm phiếu nhập thành công!");
         } else {
             JOptionPane.showMessageDialog(null, "Thêm phiếu nhập thất bại!");
@@ -67,8 +67,7 @@ public class PhieuNhapBUS {
 
     public void ThemChiTietPhieuNhap(String maPN, String maSP, int soLuong, double tongTien, double giaNhap) {
         PhieuNhapDAO dao = new PhieuNhapDAO();
-        ChiTietPhieuNhapDTO ctpn = new ChiTietPhieuNhapDTO();
-        if (dao.ThemChiTietPhieuNhap(ctpn)) {
+        if (dao.ThemChiTietPhieuNhap(maPN, maSP, soLuong, tongTien, giaNhap)) {
             JOptionPane.showMessageDialog(null, "Thêm chi tiết phiếu nhập thành công!");
         } else {
             JOptionPane.showMessageDialog(null, "Thêm chi tiết phiếu nhập thất bại!");
@@ -85,7 +84,6 @@ public class PhieuNhapBUS {
         }
     }
 
-
     public static int getSoLuongSP(String maSP) {
         PhieuNhapDAO dao = new PhieuNhapDAO();
         int soLuong = dao.getSoLuongSP(maSP);
@@ -100,4 +98,37 @@ public class PhieuNhapBUS {
             JOptionPane.showMessageDialog(null, "Cập nhật chi tiết phiếu nhập thất bại!");
         }
     }
+
+    public static String getLatestMaPN() {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        String latestPhieuNhap = dao.getLatestMaPN();
+        return latestPhieuNhap != null ? latestPhieuNhap : null;
+    }
+
+    public static List<String> getAllMaNCC() {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        return dao.getAllMaNCC();
+    }
+
+    public static List<String> getAllTenSach() {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        return dao.getAllTenSach();
+    }
+
+    public static String getMaSachFromTenSach(String tenSach) throws SQLException {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        return dao.getMaSachFromTenSach(tenSach);
+    }
+
+    public boolean ThemChiTietPhieuNhapByTenSach(String maPN, String tenSach, int soLuong, double tongTien, double giaNhap) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        if (dao.ThemChiTietPhieuNhapByTenSach(maPN, tenSach, soLuong, tongTien, giaNhap)) {
+            JOptionPane.showMessageDialog(null, "Thêm chi tiết phiếu nhập thành công!");
+            return true;
+        } else {
+            JOptionPane.showMessageDialog(null, "Thêm chi tiết phiếu nhập thất bại!");
+            return false;
+        }
+    }
+
 }

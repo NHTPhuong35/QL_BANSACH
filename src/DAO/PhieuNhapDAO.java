@@ -68,30 +68,40 @@ public class PhieuNhapDAO {
         return ds;
     }
 
-    public boolean ThemPhieuNhap(PhieuNhapDTO pn) {
+    public String getLatestMaPN() {
+        String latestMaPN = null;
         try {
             conn.connect();
-            // Get the latest MAPN and increment by 1
-            String getMaxMapnSql = "SELECT MAX(MAPN) AS maxMapn FROM phieunhap";
-            PreparedStatement getMaxMapnPre = conn.getConn().prepareStatement(getMaxMapnSql);
-            ResultSet rs = getMaxMapnPre.executeQuery();
-            String newMapn = "PN01"; // Default value if no records exist
+            String sql = "SELECT MAPN FROM phieunhap ORDER BY NGAYNHAP DESC LIMIT 1";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
             if (rs.next()) {
-                String maxMapn = rs.getString("maxMapn");
-                if (maxMapn != null) {
-                    int newMapnInt = Integer.parseInt(maxMapn.substring(2)) + 1;
-                    newMapn = "PN" + String.format("%d", newMapnInt);
-                }
+                latestMaPN = rs.getString("MAPN");
             }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (latestMaPN != null) {
+            String prefix = latestMaPN.substring(0, 2); // Extract "PN"
+            int number = Integer.parseInt(latestMaPN.substring(2)); // Extract and parse the number part
+            int newNumber = number + 1; // Increment the number
+            return prefix + String.format("%02d", newNumber); // Combine prefix with new number, zero-padded
+        }
+        return null;
+    }
 
+    public boolean ThemPhieuNhap(String maPN, String maNCC, String tenDN, java.util.Date ngayNhap, double tongTien, int trangThai) {
+        try {
+            conn.connect();
             String sql = "INSERT INTO phieunhap(MAPN, MANCC, TENDN, NGAYNHAP, TONGTIEN, TRANGTHAI) VALUES(?, ?, ?, ?, ?, ?)";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
-            pre.setString(1, newMapn);
-            pre.setString(2, pn.getMaNCC());
-            pre.setString(3, pn.getTenDN());
-            pre.setDate(4, new java.sql.Date(pn.getNgayNhap().getTime()));
-            pre.setDouble(5, pn.getTongTien());
-            pre.setInt(6, pn.getTrangThai());
+            pre.setString(1, maPN);
+            pre.setString(2, maNCC);
+            pre.setString(3, tenDN);
+            pre.setDate(4, new java.sql.Date(ngayNhap.getTime()));
+            pre.setDouble(5, tongTien);
+            pre.setInt(6, trangThai);
             pre.executeUpdate();
             conn.disconnect();
             return true;
@@ -101,16 +111,16 @@ public class PhieuNhapDAO {
         }
     }
 
-    public boolean ThemChiTietPhieuNhap(ChiTietPhieuNhapDTO chiTietPhieuNhap) {
+    public boolean ThemChiTietPhieuNhap(String maPN, String maSP, int soLuong, double tongTien, double giaNhap) {
         try {
             conn.connect();
             String sql = "INSERT INTO chitietphieunhap(MAPN, MASACH, GIANHAP, SOLUONG, TONGTIEN) VALUES(?, ?, ?, ?, ?)";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
-            pre.setString(1, chiTietPhieuNhap.getMAPN());
-            pre.setString(2, chiTietPhieuNhap.getMASACH());
-            pre.setDouble(3, chiTietPhieuNhap.getGIANHAP());
-            pre.setInt(4, chiTietPhieuNhap.getSOLUONG());
-            pre.setDouble(5, chiTietPhieuNhap.getTONGTIEN());
+            pre.setString(1, maPN);
+            pre.setString(2, maSP);
+            pre.setDouble(3, giaNhap);
+            pre.setInt(4, soLuong);
+            pre.setDouble(5, tongTien);
             pre.executeUpdate();
             conn.disconnect();
             return true;
@@ -175,7 +185,6 @@ public class PhieuNhapDAO {
         }
     }
 
-
     public int getSoLuongSP(String maSP) {
         int soLuong = 0;
         try {
@@ -194,12 +203,10 @@ public class PhieuNhapDAO {
         return soLuong;
     }
 
-    
-
     public boolean capNhatChiTietPhieuNhap(String maPN, String maSP, int soLuongDiff) {
         try {
             conn.connect();
-            
+
             // Query to get the price of the product
             String getGiaNhapSql = "SELECT GIANHAP FROM chitietphieunhap WHERE MAPN = ? AND MASACH = ?";
             PreparedStatement getGiaNhapPre = conn.getConn().prepareStatement(getGiaNhapSql);
@@ -210,8 +217,9 @@ public class PhieuNhapDAO {
             if (giaNhapRs.next()) {
                 giaSP = giaNhapRs.getDouble("GIANHAP");
             }
-            
-            // Query to get the quantity of the product in ChiTietPhieuNhap with maPN and maSP
+
+            // Query to get the quantity of the product in ChiTietPhieuNhap with maPN and
+            // maSP
             String getSoLuongSql = "SELECT SOLUONG FROM chitietphieunhap WHERE MAPN = ? AND MASACH = ?";
             PreparedStatement getSoLuongPre = conn.getConn().prepareStatement(getSoLuongSql);
             getSoLuongPre.setString(1, maPN);
@@ -231,7 +239,7 @@ public class PhieuNhapDAO {
             if (soLuongSPRs.next()) {
                 soLuongSP = soLuongSPRs.getInt("SOLUONG");
             }
-            
+
             // Check if the new quantity is valid
             if (soLuongSP + soLuongDiff < 0 || soLuongHienTai + soLuongDiff < 0) {
                 throw new SQLException("Quantity cannot be negative.");
@@ -243,7 +251,7 @@ public class PhieuNhapDAO {
             updatePre.setInt(1, soLuongSP - soLuongDiff);
             updatePre.setString(2, maSP);
             updatePre.executeUpdate();
-            
+
             // Update the quantity in the ChiTietPhieuNhap table
             String updateChiTietPhieuNhapSql = "UPDATE chitietphieunhap SET SOLUONG = ? WHERE MAPN = ? AND MASACH = ?";
             PreparedStatement updateChiTietPhieuNhapPre = conn.getConn().prepareStatement(updateChiTietPhieuNhapSql);
@@ -274,6 +282,85 @@ public class PhieuNhapDAO {
             return false;
         }
     }
+
+    public ArrayList<String> getAllMaNCC() {
+        ArrayList<String> dsMaNCC = new ArrayList<>();
+        try {
+            conn.connect();
+            String sql = "SELECT MANCC FROM nhacungcap";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                dsMaNCC.add(rs.getString("MANCC"));
+            }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dsMaNCC;
+    }
+
+    public ArrayList<String> getAllTenSach() {
+        ArrayList<String> dsTenSach = new ArrayList<>();
+        try {
+            conn.connect();
+            String sql = "SELECT TENSACH FROM sach";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            ResultSet rs = pre.executeQuery();
+            while (rs.next()) {
+                dsTenSach.add(rs.getString("TENSACH"));
+            }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return dsTenSach;
+    }
+    
+    public String getMaSachFromTenSach(String tenSach) {
+        String maSach = null;
+        try {
+            
+            conn.connect();
+            String sql = "SELECT MASACH FROM sach WHERE TENSACH = ?";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1,tenSach);
+            ResultSet rs = pre.executeQuery();
+        
+            if (rs.next()) {
+                maSach = rs.getString("MASACH");
+            } else {
+                throw new SQLException("Cannot find MASACH for TENSACH: " + tenSach);
+            }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return maSach;
+    }
+    
+
+    public boolean ThemChiTietPhieuNhapByTenSach(String maPN, String tenSach, int soLuong, double tongTien, double giaNhap) {
+        try {
+            conn.connect();
+            
+            // Get the MASACH from TENSACH
+            String maSP = getMaSachFromTenSach(tenSach);
+
+            String sql = "INSERT INTO chitietphieunhap(MAPN, MASACH, GIANHAP, SOLUONG, TONGTIEN) VALUES(?, ?, ?, ?, ?)";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1, maPN);
+            pre.setString(2, maSP);
+            pre.setDouble(3, giaNhap);
+            pre.setInt(4, soLuong);
+            pre.setDouble(5, tongTien);
+            pre.executeUpdate();
+            conn.disconnect();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
-
-
