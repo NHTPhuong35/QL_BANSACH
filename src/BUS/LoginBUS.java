@@ -33,8 +33,12 @@ public class LoginBUS {
 		String username = view.getTxtUsername().getText();
 		String password = new String(view.getTxtPassword().getPassword());
 		try {
-			TaiKhoanDTO taikhoan = TkDAO.timTaiKhoan(username);
-
+			TaiKhoanDTO taikhoan = TkDAO.timTaiKhoan(username);		  
+			// Kiểm tra nếu username hoặc password là rỗng hoặc null
+			if (username == null || username.trim().isEmpty()||password == null || password.trim().isEmpty()) {
+				new ShowDiaLog("Không được để trống!", 1);
+				return;
+			}
 			if (taikhoan == null) {
 				new ShowDiaLog("Không tồn tại tài khoản!", 1);
 				return;
@@ -67,12 +71,6 @@ public class LoginBUS {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
 				login();
-			}
-		});
-		view.getLblForgotPassword().addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				new ShowDiaLog("Chưa hỗ trợ!", 3);
 			}
 		});
 
