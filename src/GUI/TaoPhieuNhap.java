@@ -57,7 +57,7 @@ public class TaoPhieuNhap extends JPanel {
         add(chonSachButton, gbc);
 
         // Book table
-        String[] columnNames = { "Tên sách", "Số lượng", "Giá nhập", "Thành tiền", "" };
+        String[] columnNames = { "Mã sách", "Số lượng", "Giá nhập", "Thành tiền", "" };
         DefaultTableModel model = new DefaultTableModel(columnNames, 0);
         bookTable = new JTable(model);
         bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
@@ -95,42 +95,8 @@ public class TaoPhieuNhap extends JPanel {
 
         // Event listeners
         chonSachButton.addActionListener(e -> {
-            JPanel panel = new JPanel(new GridLayout(3, 2));
-            JTextField soLuongField = new JTextField();
-            JTextField donGiaField = new JTextField();
-
-            panel.add(new JLabel("Tên sách:"));
-            JComboBox<String> tenSachComboBox = new JComboBox<>(PhieuNhapBUS.getAllTenSach().toArray(new String[0]));
-            panel.add(tenSachComboBox);
-            panel.add(new JLabel("Số lượng:"));
-            panel.add(soLuongField);
-            panel.add(new JLabel("Đơn giá:"));
-            panel.add(donGiaField);
-
-            int result = JOptionPane.showConfirmDialog(null, panel, "Thêm sách", JOptionPane.OK_CANCEL_OPTION,
-                    JOptionPane.PLAIN_MESSAGE);
-            if (result == JOptionPane.OK_OPTION) {
-                try {
-                    String tenSach = (String) tenSachComboBox.getSelectedItem();
-                    int soLuong = Integer.parseInt(soLuongField.getText());
-                    float donGia = Float.parseFloat(donGiaField.getText());
-
-                    if (tenSach == null || tenSach.isEmpty() || soLuong <= 0 || donGia <= 0) {
-                        throw new NumberFormatException();
-                    }
-
-                    float thanhTien = soLuong * donGia;
-                    model.addRow(new Object[] { tenSach, soLuong, donGia, thanhTien, "Xóa" });
-
-                    // Update tổng tiền
-                    float tongTien = Float.parseFloat(tongTienField.getText());
-                    tongTien += thanhTien;
-                    tongTienField.setText(String.valueOf(tongTien));
-                } catch (NumberFormatException ex) {
-                    JOptionPane.showMessageDialog(null, "Vui lòng nhập đúng thông tin và các giá trị phải lớn hơn 0",
-                            "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
-                }
-            }
+            ChonSanPhamPhieuNhapGUI chonSanPhamPhieuNhapGUI = new ChonSanPhamPhieuNhapGUI(this);
+            chonSanPhamPhieuNhapGUI.setVisible(true);
         });
 
         xacNhanButton.addActionListener(e -> {
@@ -143,6 +109,7 @@ public class TaoPhieuNhap extends JPanel {
             int trangThai = 1;
 
             PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+            phieuNhapBUS.ThemPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
 
             for (int i = 0; i < model.getRowCount(); i++) {
                 String tenSach = (String) model.getValueAt(i, 0);
@@ -150,9 +117,9 @@ public class TaoPhieuNhap extends JPanel {
                 float donGia = (float) model.getValueAt(i, 2);
                 float thanhTien = (float) model.getValueAt(i, 3);
 
-                phieuNhapBUS.ThemChiTietPhieuNhapByTenSach(maPN, tenSach, soLuong, thanhTien, donGia);
+                phieuNhapBUS.ThemChiTietPhieuNhap(maPN, tenSach, soLuong, thanhTien, donGia);
             }
-            phieuNhapBUS.ThemPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
+            
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
@@ -201,11 +168,8 @@ public class TaoPhieuNhap extends JPanel {
     class ButtonEditor extends DefaultCellEditor {
         private String label;
         private JButton button;
-        private DefaultTableModel model;
-
         public ButtonEditor(JCheckBox checkBox, DefaultTableModel model) {
             super(checkBox);
-            this.model = model;
             button = new JButton();
             button.setOpaque(true);
             button.addActionListener(e -> {
@@ -239,9 +203,23 @@ public class TaoPhieuNhap extends JPanel {
         public Object getCellEditorValue() {
             return label;
         }
-    }
+        }
 
-    public static void main(String[] args) {
+        public void receiveSelectedProduct(String maSach, int soLuong, float donGia) {
+        // Calculate total price for the selected product
+        float thanhTien = soLuong * donGia;
+
+        // Add the selected book details to the table
+        DefaultTableModel model = (DefaultTableModel) bookTable.getModel();
+        model.addRow(new Object[] { maSach, soLuong, donGia, thanhTien, "Xóa" });
+
+        // Update tổng tiền (total amount)
+        float tongTien = Float.parseFloat(tongTienField.getText());
+        tongTien += thanhTien;
+        tongTienField.setText(String.valueOf(tongTien));
+        }
+
+        public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tạo Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -250,4 +228,6 @@ public class TaoPhieuNhap extends JPanel {
             frame.setVisible(true);
         });
     }
+
+    
 }

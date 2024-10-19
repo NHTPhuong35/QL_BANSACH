@@ -122,6 +122,14 @@ public class PhieuNhapDAO {
             pre.setInt(4, soLuong);
             pre.setDouble(5, tongTien);
             pre.executeUpdate();
+
+            // Update the quantity in the sach table
+            String updateSachSql = "UPDATE sach SET SOLUONG = SOLUONG + ? WHERE MASACH = ?";
+            PreparedStatement updateSachPre = conn.getConn().prepareStatement(updateSachSql);
+            updateSachPre.setInt(1, soLuong);
+            updateSachPre.setString(2, maSP);
+            updateSachPre.executeUpdate();
+
             conn.disconnect();
             return true;
         } catch (SQLException e) {
@@ -248,7 +256,7 @@ public class PhieuNhapDAO {
             // Update the quantity in the database
             String updateSql = "UPDATE sach SET SOLUONG = ? WHERE MASACH = ?";
             PreparedStatement updatePre = conn.getConn().prepareStatement(updateSql);
-            updatePre.setInt(1, soLuongSP - soLuongDiff);
+            updatePre.setInt(1, soLuongSP + soLuongDiff);
             updatePre.setString(2, maSP);
             updatePre.executeUpdate();
 
@@ -317,50 +325,5 @@ public class PhieuNhapDAO {
         return dsTenSach;
     }
     
-    public String getMaSachFromTenSach(String tenSach) {
-        String maSach = null;
-        try {
-            
-            conn.connect();
-            String sql = "SELECT MASACH FROM sach WHERE TENSACH = ?";
-            PreparedStatement pre = conn.getConn().prepareStatement(sql);
-            pre.setString(1,tenSach);
-            ResultSet rs = pre.executeQuery();
-        
-            if (rs.next()) {
-                maSach = rs.getString("MASACH");
-            } else {
-                throw new SQLException("Cannot find MASACH for TENSACH: " + tenSach);
-            }
-            conn.disconnect();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return maSach;
-    }
-    
-
-    public boolean ThemChiTietPhieuNhapByTenSach(String maPN, String tenSach, int soLuong, double tongTien, double giaNhap) {
-        try {
-            conn.connect();
-            
-            // Get the MASACH from TENSACH
-            String maSP = getMaSachFromTenSach(tenSach);
-
-            String sql = "INSERT INTO chitietphieunhap(MAPN, MASACH, GIANHAP, SOLUONG, TONGTIEN) VALUES(?, ?, ?, ?, ?)";
-            PreparedStatement pre = conn.getConn().prepareStatement(sql);
-            pre.setString(1, maPN);
-            pre.setString(2, maSP);
-            pre.setDouble(3, giaNhap);
-            pre.setInt(4, soLuong);
-            pre.setDouble(5, tongTien);
-            pre.executeUpdate();
-            conn.disconnect();
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
 
 }

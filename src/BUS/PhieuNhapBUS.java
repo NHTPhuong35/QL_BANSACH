@@ -110,25 +110,5 @@ public class PhieuNhapBUS {
         return dao.getAllMaNCC();
     }
 
-    public static List<String> getAllTenSach() {
-        PhieuNhapDAO dao = new PhieuNhapDAO();
-        return dao.getAllTenSach();
-    }
-
-    public static String getMaSachFromTenSach(String tenSach) throws SQLException {
-        PhieuNhapDAO dao = new PhieuNhapDAO();
-        return dao.getMaSachFromTenSach(tenSach);
-    }
-
-    public boolean ThemChiTietPhieuNhapByTenSach(String maPN, String tenSach, int soLuong, double tongTien, double giaNhap) {
-        PhieuNhapDAO dao = new PhieuNhapDAO();
-        if (dao.ThemChiTietPhieuNhapByTenSach(maPN, tenSach, soLuong, tongTien, giaNhap)) {
-            JOptionPane.showMessageDialog(null, "Thêm chi tiết phiếu nhập thành công!");
-            return true;
-        } else {
-            JOptionPane.showMessageDialog(null, "Thêm chi tiết phiếu nhập thất bại!");
-            return false;
-        }
-    }
 
 }
