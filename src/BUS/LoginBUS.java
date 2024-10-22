@@ -8,6 +8,7 @@ import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
 import GUI.HomeGUI;
 import GUI.LoginGUI;
+import GUI.ShowDiaLog;
 
 public class LoginBUS {
 	
@@ -32,23 +33,26 @@ public class LoginBUS {
 		String username = view.getTxtUsername().getText();
 		String password = new String(view.getTxtPassword().getPassword());
 		try {
-			TaiKhoanDTO taikhoan = TkDAO.timTaiKhoan(username);
-
+			TaiKhoanDTO taikhoan = TkDAO.timTaiKhoan(username);		  
+			// Kiểm tra nếu username hoặc password là rỗng hoặc null
+			if (username == null || username.trim().isEmpty()||password == null || password.trim().isEmpty()) {
+				new ShowDiaLog("Không được để trống!", 1);
+				return;
+			}
 			if (taikhoan == null) {
-				view.showError("Không tồn tại tài khoản!");
+				new ShowDiaLog("Không tồn tại tài khoản!", 1);
 				return;
 			}
 			if (!taikhoan.checkPassword(password)) {
-				view.showError("Mật khẩu sai");
+				new ShowDiaLog("Mật khẩu sai!", 1);
+			
 				return;
 			}
-			
-			HomeGUI homeGUI = new HomeGUI();
-			homeGUI.setVisible(true);
-			view.dispose();
+			HomeBUS home = new HomeBUS(new HomeGUI());
+			view.dispose();			
 			
 		} catch (Exception e) {
-			view.showError(e);
+            e.printStackTrace();
 		}
 	}
 
@@ -69,11 +73,7 @@ public class LoginBUS {
 				login();
 			}
 		});
-		view.getLblForgotPassword().addMouseListener(new java.awt.event.MouseAdapter() {
-			@Override
-			public void mouseClicked(java.awt.event.MouseEvent evt) {
-				view.showError("Chưa hỗ trợ!");
-			}
-		});
+
 	}
+
 }

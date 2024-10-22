@@ -2,16 +2,28 @@ package GUI;
 
 import javax.swing.*;
 import java.awt.*;
-// import java.awt.event.*; // Removed unused import
+import java.util.List;
+
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+import BUS.PhieuNhapBUS;
+import DTO.PhieuNhapDTO;
 
 public class TaoPhieuNhap extends JPanel {
     private JTextField maPhieuNhapField, ngayField, maNhanVienField;
     private JComboBox<String> nhaCungCapComboBox;
-    private String[] suppliers = { "Supplier 1", "Supplier 2", "Supplier 3" };
+    private List<String> suppliers = PhieuNhapBUS.getAllMaNCC();
     private JTable bookTable;
     private JTextField tongTienField;
     private JButton xacNhanButton, huyButton, chonSachButton;
+
+    PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO();
+
+    public void setMaNV(String maNV) {
+        phieuNhapDTO.setTenDN(maNV);
+        maNhanVienField.setText(maNV);
+    }
 
     public TaoPhieuNhap() {
         setLayout(new GridBagLayout());
@@ -20,18 +32,19 @@ public class TaoPhieuNhap extends JPanel {
 
         // Mã phiếu nhập
         addLabel("Mã phiếu nhập:", 0, 0, gbc);
-        maPhieuNhapField = addTextField("PN03", 1, 0, gbc);
+        maPhieuNhapField = addTextField(PhieuNhapBUS.getLatestMaPN(), 1, 0, gbc);
 
         // Ngày
         addLabel("Ngày:", 2, 0, gbc);
-        ngayField = addTextField("22-09-2024", 3, 0, gbc);
+        ngayField = addTextField(java.time.LocalDate.now().toString(), 3, 0, gbc);
 
         // Mã nhân viên
         addLabel("Mã nhân viên:", 0, 1, gbc);
         maNhanVienField = addTextField("NV01", 1, 1, gbc);
 
         // Nhà cung cấp
-        nhaCungCapComboBox = new JComboBox<>(suppliers);
+        addLabel("Nhà cung cấp:", 2, 1, gbc);
+        nhaCungCapComboBox = new JComboBox<String>(suppliers.toArray(new String[0]));
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
@@ -44,16 +57,12 @@ public class TaoPhieuNhap extends JPanel {
         add(chonSachButton, gbc);
 
         // Book table
-        String[] columnNames = {"Tên sách", "Số lượng", "Giá nhập", "Thành tiền", ""};
-        Object[][] data = {
-            {"Đắc nhân tâm", "Số lượng", "Giá nhập", "Thành tiền: 0", "Xóa"},
-            {"Muôn kiếp nhân sinh", "Số lượng", "Giá nhập", "Thành tiền: 0", "Xóa"}
-        };
-        bookTable = new JTable(data, columnNames); // Initialize bookTable with data and columnNames
+        String[] columnNames = { "Mã sách", "Số lượng", "Giá nhập", "Thành tiền", "" };
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+        bookTable = new JTable(model);
         bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-        bookTable.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
-        bookTable.getColumn("").setCellRenderer(new ButtonRenderer());
-        bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
+        bookTable.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), model));
+        bookTable.setRowHeight(40);
         JScrollPane scrollPane = new JScrollPane(bookTable);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -83,6 +92,44 @@ public class TaoPhieuNhap extends JPanel {
         gbc.gridy = 4;
         gbc.gridwidth = 5;
         add(buttonPanel, gbc);
+
+        // Event listeners
+        chonSachButton.addActionListener(e -> {
+            ChonSanPhamPhieuNhapGUI chonSanPhamPhieuNhapGUI = new ChonSanPhamPhieuNhapGUI(this);
+            chonSanPhamPhieuNhapGUI.setVisible(true);
+        });
+
+        xacNhanButton.addActionListener(e -> {
+            String maPN = PhieuNhapBUS.getLatestMaPN();
+            String maNCC = (String) nhaCungCapComboBox.getSelectedItem();
+            String tenDN = maNhanVienField.getText();
+            String ngayNhapStr = ngayField.getText();
+            java.util.Date ngayNhap = java.sql.Date.valueOf(ngayNhapStr);
+            double tongTien = Double.parseDouble(tongTienField.getText());
+            int trangThai = 1;
+
+            PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+            phieuNhapBUS.ThemPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
+
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String tenSach = (String) model.getValueAt(i, 0);
+                int soLuong = (int) model.getValueAt(i, 1);
+                float donGia = (float) model.getValueAt(i, 2);
+                float thanhTien = (float) model.getValueAt(i, 3);
+
+                phieuNhapBUS.ThemChiTietPhieuNhap(maPN, tenSach, soLuong, thanhTien, donGia);
+            }
+            
+
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
+        });
+
+        huyButton.addActionListener(e -> {
+            JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
+            topFrame.dispose();
+        });
+
     }
 
     private void addLabel(String text, int x, int y, GridBagConstraints gbc) {
@@ -121,12 +168,24 @@ public class TaoPhieuNhap extends JPanel {
     class ButtonEditor extends DefaultCellEditor {
         private String label;
         private JButton button;
-
-        public ButtonEditor(JCheckBox checkBox) {
+        public ButtonEditor(JCheckBox checkBox, DefaultTableModel model) {
             super(checkBox);
             button = new JButton();
             button.setOpaque(true);
-            button.addActionListener(e -> fireEditingStopped());
+            button.addActionListener(e -> {
+                int row = bookTable.getSelectedRow();
+                if (row != -1) {
+                    // Update tổng tiền
+                    float thanhTien = (float) model.getValueAt(row, 3);
+                    float tongTien = Float.parseFloat(tongTienField.getText());
+                    tongTien -= thanhTien;
+                    tongTienField.setText(String.valueOf(tongTien));
+
+                    // Remove row
+                    model.removeRow(row);
+                }
+                fireEditingStopped();
+            });
         }
 
         public Component getTableCellEditorComponent(JTable table, Object value,
@@ -144,9 +203,23 @@ public class TaoPhieuNhap extends JPanel {
         public Object getCellEditorValue() {
             return label;
         }
-    }
+        }
 
-    public static void main(String[] args) {
+        public void receiveSelectedProduct(String maSach, int soLuong, float donGia) {
+        // Calculate total price for the selected product
+        float thanhTien = soLuong * donGia;
+
+        // Add the selected book details to the table
+        DefaultTableModel model = (DefaultTableModel) bookTable.getModel();
+        model.addRow(new Object[] { maSach, soLuong, donGia, thanhTien, "Xóa" });
+
+        // Update tổng tiền (total amount)
+        float tongTien = Float.parseFloat(tongTienField.getText());
+        tongTien += thanhTien;
+        tongTienField.setText(String.valueOf(tongTien));
+        }
+
+        public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tạo Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -155,4 +228,6 @@ public class TaoPhieuNhap extends JPanel {
             frame.setVisible(true);
         });
     }
+
+    
 }

@@ -7,19 +7,22 @@ package GUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import BUS.ErrorPopup;
 import GUI.renderers.RoundJButton;
 import GUI.renderers.RoundJPasswordField;
 import GUI.renderers.RoundJTextField;
@@ -31,7 +34,7 @@ import GUI.renderers.RoundJTextField;
 public class LoginGUI extends JFrame {
 
     private JPanel loginContainer;
-    private JButton turnoffButton;
+//    private JButton turnoffButton;
     private JPanel inputLoginPanel;
     private JLabel applogo;
     private JLabel appname;
@@ -41,37 +44,28 @@ public class LoginGUI extends JFrame {
     private JPasswordField inputpassword;
     private JLabel matkhau;
     private JPanel matkhauPanel;
-    private JLabel quenmatkhau;
+
     private JButton dangnhapButton;
+    private JCheckBox showPass;
+    
 
     public LoginGUI() {
+    	
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         getContentPane().setBackground(Color.white);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setTitle("Đăng nhập");
         setBackground(Color.white);
-
-        turnoffButton = new JButton();
-        turnoffButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
-        turnoffButton.setBorderPainted(false);
-        turnoffButton.setBackground(Color.white);
-        
+    
         inputLoginPanel = new JPanel();
         inputLoginPanel.setBackground(Color.decode("#98DCE2"));
 
         loginContainer = new JPanel();
         loginContainer.setBackground(Color.white);
         loginContainer.setLayout(new GridBagLayout());
-        loginContainer.setSize(394, 377);
+        loginContainer.setSize(394, 402);
         GridBagConstraints loginContainergbc = new GridBagConstraints();
-
-        loginContainergbc.gridx = 0;
-        loginContainergbc.gridy = 0;
-        loginContainergbc.weightx = 1;
-        loginContainergbc.weighty = 1;
-        loginContainergbc.anchor = GridBagConstraints.EAST;
-        loginContainer.add(turnoffButton, loginContainergbc);
 
         loginContainergbc.gridx = 0;
         loginContainergbc.gridy = 1;
@@ -90,33 +84,60 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.gridy = 0;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
-        inputLoginPanelrgbc.insets = new Insets(10, 0, 0, 0);
+        inputLoginPanelrgbc.insets = new Insets(20, 0, 0, 0);
         inputLoginPanel.add(applogo, inputLoginPanelrgbc);
 
         appname = new JLabel("Hãy đăng nhập vào cửa hàng");
+        appname.setFont(new Font("Roboto", Font.BOLD, 16));
         inputLoginPanelrgbc.gridx = 0;
         inputLoginPanelrgbc.gridy = 1;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
+        inputLoginPanelrgbc.insets = new Insets(15, 0, 15, 0);
         inputLoginPanel.add(appname, inputLoginPanelrgbc);
 
-        dangnhapPanel = new JPanel();
-        dangnhapPanel.setLayout(new BorderLayout());
+        dangnhapPanel = new JPanel(new BorderLayout());
         dangnhapPanel.setBackground(Color.decode("#98DCE2"));
-        tendangnhap = new JLabel("Tên đăng nhập");
-        inputtendangnhap = new RoundJTextField(30, 30, 30);
+        tendangnhap = new JLabel("User Name");
+        tendangnhap.setFont(new Font("Roboto", Font.PLAIN, 14));
+        inputtendangnhap = new RoundJTextField(25, 25, 25);
+        inputtendangnhap.setFont(new Font("Roboto", Font.PLAIN, 14));
         inputtendangnhap.setPreferredSize(new Dimension(370, 25));
+        
         dangnhapPanel.add(tendangnhap, BorderLayout.NORTH);
         dangnhapPanel.add(inputtendangnhap, BorderLayout.SOUTH);
 
-        matkhauPanel = new JPanel();
-        matkhauPanel.setLayout(new BorderLayout());
+        matkhauPanel = new JPanel(new BorderLayout());
         matkhauPanel.setBackground(Color.decode("#98DCE2"));
-        matkhau = new JLabel("Mật khẩu");
-        inputpassword = new RoundJPasswordField(30, 30, 30);
+        matkhau = new JLabel("Password");
+        matkhau.setFont(new Font("Roboto", Font.PLAIN, 14));
+        inputpassword = new RoundJPasswordField(25, 25, 25);
+        inputpassword.setFont(new Font("Roboto", Font.PLAIN, 14));
         inputpassword.setPreferredSize(new Dimension(370, 25));
+       
+        showPass = new JCheckBox();
+        showPass.setIcon(new ImageIcon(getClass().getResource("/Image/eye_hide.png")));
+        showPass.setBackground(Color.decode("#98DCE2"));
+        showPass.addActionListener(new ActionListener() {
+            @Override
+	            public void actionPerformed(ActionEvent e) {
+	                if (showPass.isSelected()) {
+	                	
+	                		inputpassword.setEchoChar((char) 0);
+	                        showPass.setIcon(new ImageIcon(getClass().getResource("/Image/eye.png")));
+	                } 
+	                else {
+	            		inputpassword.setEchoChar('•');
+                        showPass.setIcon(new ImageIcon(getClass().getResource("/Image/eye_hide.png")));
+	                }
+	        	}
+	        });  
+                    
+            
         matkhauPanel.add(matkhau, BorderLayout.NORTH);
-        matkhauPanel.add(inputpassword, BorderLayout.SOUTH);
+        matkhauPanel.add(inputpassword, BorderLayout.WEST);
+        matkhauPanel.add(showPass, BorderLayout.EAST);
+        
 
         inputLoginPanelrgbc.gridx = 0;
         inputLoginPanelrgbc.gridy = 2;
@@ -134,45 +155,31 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.insets = new Insets(0, 14, 0, 14);
         inputLoginPanel.add(matkhauPanel, inputLoginPanelrgbc);
 
-        quenmatkhau = new JLabel("Quên mật khẩu");
-        inputLoginPanelrgbc.gridx = 0;
-        inputLoginPanelrgbc.gridy = 4;
-        inputLoginPanelrgbc.weightx = 1;
-        inputLoginPanelrgbc.weighty = 1;
-        inputLoginPanelrgbc.insets = new Insets(10, 0, 10, 0);
-        inputLoginPanel.add(quenmatkhau, inputLoginPanelrgbc);
-
-        dangnhapButton = new RoundJButton("Đăng nhập", 30, 30);
+        dangnhapButton = new RoundJButton("Log In", 30, 30);
+        dangnhapButton.setFont(new Font("Roboto", Font.BOLD, 15));
         dangnhapButton.setBorderPainted(false);
         dangnhapButton.setBackground(Color.decode("#56B7C0"));
 
         inputLoginPanelrgbc.gridx = 0;
-        inputLoginPanelrgbc.gridy = 5;
+        inputLoginPanelrgbc.gridy = 4;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
         inputLoginPanelrgbc.fill = GridBagConstraints.BOTH;
-        inputLoginPanelrgbc.insets = new Insets(10, 0, 10, 0);
+        inputLoginPanelrgbc.insets = new Insets(20, 14, 30, 39);
         inputLoginPanel.add(dangnhapButton, inputLoginPanelrgbc);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0.2;
-        gbc.insets = new Insets(14, 15, 14, 15);
+        gbc.insets = new Insets(10, 10, 10, 10);
         add(loginContainer, gbc);
 
-        setSize(412, 431);
+        setSize(412, 410);
         setVisible(true);
         setLocationRelativeTo(null);
         
     }
     
-	public void showError(String message) {
-		ErrorPopup.show(new Exception(message));
-	}
-	
-	public void showError(Exception e) {
-		ErrorPopup.show(e);
-	}
     
 	public JPasswordField getTxtPassword() {
 		return inputpassword;
@@ -184,15 +191,9 @@ public class LoginGUI extends JFrame {
 	
 	public JButton getBtnLogin() {
 		return dangnhapButton;
-	}
-	
-	public JLabel getLblForgotPassword() {
-		return quenmatkhau;
-	}
+	}	
 
     public static void main(String args[]) {
         new LoginGUI();
     }
-
-
 }
