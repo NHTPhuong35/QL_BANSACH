@@ -4,12 +4,14 @@
  */
 package GUI;
 
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-    import java.awt.event.MouseAdapter;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,7 +32,7 @@ public class HoaDonGUI extends JPanel {
         pnHeader = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         JPanel pnBanHang = new JPanel(new BorderLayout());
-        pnBanHang.setBackground(BASE.color_heaer);
+        pnBanHang.setBackground(Color.decode("#44904D"));
         pnBanHang.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnBanHang.setPreferredSize(new Dimension(150, 30));
         pnBanHang.setMaximumSize(new Dimension(150, 30));
@@ -39,7 +41,7 @@ public class HoaDonGUI extends JPanel {
         pnBanHang.add(lblBanHang, BorderLayout.CENTER);
 
         JPanel pnHD = new JPanel(new BorderLayout());
-        pnHD.setBackground(BASE.color_heaer);
+        pnHD.setBackground(Color.decode("#44904D"));
         pnHD.setCursor(new Cursor(Cursor.HAND_CURSOR));
         pnHD.setPreferredSize(new Dimension(150, 30));
         pnHD.setMaximumSize(new Dimension(150, 30));
@@ -51,8 +53,10 @@ public class HoaDonGUI extends JPanel {
         pnHeader.add(pnHD);
 
         CardLayout cardLayout = new CardLayout();
-        JPanel banHang = new BanHangGUI();
-        JPanel thongTinHD = new ThongTinHDGUI();
+//        JPanel banHang = new SalesGUI();
+//        JPanel thongTinHD = new BillHistoryGUI();
+        JPanel banHang = new SalesGUI();
+        JPanel thongTinHD = new  BillHistoryGUI();
 
         pnMain = new JPanel(cardLayout);
         pnMain.add(banHang, "banhang");

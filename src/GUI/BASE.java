@@ -10,10 +10,6 @@ import java.awt.Image;
 import java.net.URL;
 import javax.swing.ImageIcon;
 
-/**
- *
- * @author Admin
- */
 public class BASE {
     public static Color btnThem = Color.decode("#A6E3A1");
     public static Color btnSua = Color.decode("#B4BEFE");
@@ -27,6 +23,18 @@ public class BASE {
     public static Font font = new Font("typeface", Font.PLAIN, 15);
     public static Color color_table_header;
     
+    public static Color color_header_tbl = Color.decode("#E0AC69");
+    public static Color color_main = Color.decode("#C68642");
+    public static Color color_btTim = Color.decode("#8B5E2E");
+    public static Color color_btLamMoi = Color.decode("#6DA06F");
+    public static Color color_btLamXoa = Color.decode("#E57373");
+    public static Color color_btBFD = Color.decode("#FF8963");
+    public static Color color_header = Color.decode("#F1C27D");
+    public static Color color_btAdd = Color.decode("#5DADE2");
+    public static Color color_btEdit = Color.decode("#F4D03F");
+    public static Color color_btXacNhan = Color.decode("#6BCBDF");
+    public static Color color_btHuy = Color.decode("#FD7E14");
+    
     public static ImageIcon createResizedIcon(Class<?> clazz, String imagePath, int width, int height) {
         URL imageURL = clazz.getResource(imagePath);
         if (imageURL == null) {
@@ -38,3 +46,4 @@ public class BASE {
         return new ImageIcon(scaledImage);
     }
 }
+

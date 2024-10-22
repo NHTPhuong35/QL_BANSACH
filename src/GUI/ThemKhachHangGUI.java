@@ -33,6 +33,7 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
     private JPanel btnXacNhan, btnHuy;
     private KhachHangGUI KHGUI;
     private BanHangGUI banHangGUI;
+    private SalesGUI SalesGUI;
     
     
     public ThemKhachHangGUI(KhachHangGUI KHGUI) {
@@ -42,6 +43,15 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
     
     public ThemKhachHangGUI(BanHangGUI banHangGUI) {
         this.banHangGUI = banHangGUI;
+        init();
+    }
+    
+    public ThemKhachHangGUI() {
+        init();
+    }
+    
+    public ThemKhachHangGUI(SalesGUI SalesGUI) {
+        this.SalesGUI = SalesGUI;
         init();
     }
     
@@ -58,7 +68,7 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
         JLabel titleGUI = new JLabel("Thêm Khách Hàng", JLabel.CENTER);
         titleGUI.setFont(BASE.font_header);
         titleGUI_wrap.add(titleGUI, BorderLayout.CENTER);
-        titleGUI_wrap.setBackground(BASE.color_table_heaer);
+        titleGUI_wrap.setBackground(BASE.color_header_tbl);
         
         add(titleGUI_wrap, BorderLayout.NORTH);
         
@@ -93,12 +103,12 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
 //        pnBTN.setBackground(Color.WHITE);
         btnXacNhan = new JPanel();
         btnXacNhan.setPreferredSize(new Dimension(120, 30));
-        cssBtn(btnXacNhan, "Xác nhận", "btnXacNhan");
+        cssBtn(btnXacNhan, "Xác nhận", "btnXacNhan", BASE.color_btXacNhan);
         btnXacNhan.addMouseListener(this);
         
         btnHuy = new JPanel();
         btnHuy.setPreferredSize(new Dimension(120, 30));
-        cssBtn(btnHuy, "Hủy", "btnHuy");
+        cssBtn(btnHuy, "Hủy", "btnHuy", BASE.color_btHuy);
         btnHuy.addMouseListener(this);
         
         pnTenKH.add(lbTen);
@@ -124,10 +134,10 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
         setVisible(true);
     }
     
-    private void cssBtn(JPanel b, String text, String name) {
+    private void cssBtn(JPanel b, String text, String name, Color color) {
         JLabel t = new JLabel(text, JLabel.CENTER);
 //        t.setForeground(java.awt.Color.WHITE);  // Đảm bảo chữ trắng để nổi bật
-        b.setBackground(BASE.color_table_heaer);
+        b.setBackground(color);
         b.setName(name);
         b.add(t);
         b.setPreferredSize(new Dimension(100, (int) b.getPreferredSize().getHeight()));
@@ -155,8 +165,9 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
                     if (khBUS.ThemKhachHang(kh)) {
 //                        KHGUI.addRow(kh);
 //                        System.out.println(kh.getMaKh());
-                        banHangGUI.getTfMaKH().setText(kh.getMaKh());
-                        dispose();
+//                        banHangGUI.getTfMaKH().setText(kh.getMaKh());
+                        SalesGUI.getTfMaKH().setText(kh.getMaKh());
+                        dispose();                      
                     }
                     break;
             }
@@ -165,9 +176,9 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
         }
     }
     
-    public String getMaKH() {
-        return MaKH;
-    }
+//    public String getMaKH() {
+//        return MaKH;
+//    }
     
     @Override
     public void mousePressed(MouseEvent e) {
@@ -179,24 +190,24 @@ public class ThemKhachHangGUI extends JFrame implements MouseListener {
     
     @Override
     public void mouseEntered(MouseEvent e) {
-        try {
-            JPanel btn = (JPanel) e.getSource();
-            btn.setBackground(BASE.color_table_heaer);
-            btn.setOpaque(true);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+//        try {
+//            JPanel btn = (JPanel) e.getSource();
+//            btn.setBackground(BASE.color_table_heaer);
+//            btn.setOpaque(true);
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
     
     @Override
     public void mouseExited(MouseEvent e) {
-        try {
-            JPanel btn = (JPanel) e.getSource();
-            btn.setBackground(BASE.color_heaer);
-            btn.setOpaque(true);
-        } catch (Exception ex) {
-            System.out.println(ex.getMessage());
-        }
+//        try {
+//            JPanel btn = (JPanel) e.getSource();
+//            btn.setBackground(BASE.color_heaer);
+//            btn.setOpaque(true);
+//        } catch (Exception ex) {
+//            System.out.println(ex.getMessage());
+//        }
     }
     
     public static void main(String[] args) {

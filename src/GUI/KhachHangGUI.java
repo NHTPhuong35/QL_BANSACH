@@ -8,10 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -22,22 +19,26 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
 import BUS.KhachHangBUS;
 import DTO.KhachHangDTO;
+import java.awt.Image;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.border.EmptyBorder;
 
-public class KhachHangGUI extends JPanel implements ActionListener {
+public class KhachHangGUI extends JPanel {
 
     private JTable tbl;
     private DefaultTableModel dtm;
     private JPanel pnHeader, pnMain;
     private JButton btnthem, btnSua;
+    private JPanel btAdd, btEdit;
     private JTextField tfTimKiem;
 
     public KhachHangGUI() {
@@ -50,10 +51,9 @@ public class KhachHangGUI extends JPanel implements ActionListener {
     public void init() {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(1000, 600));
-        
+
         pnHeader = new JPanel(new BorderLayout());
-        pnHeader.setBackground(Color.WHITE);
-        pnHeader.setPreferredSize(new Dimension(0, 50));
+        pnHeader.setPreferredSize(new Dimension(0, 80));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
 
         pnMain = new JPanel(new BorderLayout());
@@ -62,33 +62,35 @@ public class KhachHangGUI extends JPanel implements ActionListener {
     }
 
     public void initComponents() {
-        btnthem = createBtn("Thêm khách hàng", "#A6E3A1", "btnThem");
-        btnthem.addActionListener(this);
 
-        btnSua = createBtn("Sửa khách hàng", "#B4BEFE", "btnSua");
-        btnSua.addActionListener(this);
         JPanel pnBtn = new JPanel();
         pnBtn.setLayout(new BoxLayout(pnBtn, BoxLayout.X_AXIS));
-        pnBtn.setBackground(Color.WHITE);
 
-        pnBtn.add(btnthem);
-        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-        pnBtn.add(btnSua);
+        MouseAdapter commonMouseListener = createCommonMouseListener();
+
+        btAdd = new JPanel();
+        btAdd = createButton(btAdd, "Thêm", "btAdd.png", BASE.color_btAdd, 100, 50);
+        btAdd.addMouseListener(commonMouseListener);
+        
+        btEdit = new JPanel();
+        btEdit = createButton(btEdit, "Sửa", "btEdit.png", BASE.color_btEdit, 100, 50);
+        btEdit.addMouseListener(commonMouseListener);
+
+        pnBtn.add(btAdd);
+        pnBtn.add(Box.createHorizontalStrut(30));
+        pnBtn.add(btEdit);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
-        lblTimKiem.setFont(BASE.font);
+        lblTimKiem.setFont(BASE.font_header);
         tfTimKiem = new JTextField();
         tfTimKiem.setPreferredSize(new Dimension(150, 30));
+        tfTimKiem.setMaximumSize(new Dimension(200, 30));
 
         JPanel pnFind = new JPanel();
         pnFind.setPreferredSize(new Dimension(250, 30));
         pnFind.setLayout(new BoxLayout(pnFind, BoxLayout.X_AXIS));
-        pnFind.add(Box.createRigidArea(new Dimension(20, 0)));
-        Border outerBorder = BorderFactory.createLineBorder(Color.BLACK);
-        Border innerBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
-        pnFind.setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
         pnFind.add(lblTimKiem);
-        pnFind.add(Box.createRigidArea(new Dimension(5, 0)));
+        pnFind.add(Box.createHorizontalStrut(5));
         pnFind.add(tfTimKiem);
 
         pnHeader.add(pnBtn, BorderLayout.WEST);
@@ -127,7 +129,7 @@ public class KhachHangGUI extends JPanel implements ActionListener {
 
     private void styleTable(JTable table) {
         JTableHeader header = table.getTableHeader();
-        header.setBackground(BASE.color_table_heaer);
+        header.setBackground(BASE.color_header_tbl);
         header.setForeground(BASE.color_text);
         header.setFont(BASE.font_header);
         header.setPreferredSize(new Dimension(header.getWidth(), 40));
@@ -138,20 +140,6 @@ public class KhachHangGUI extends JPanel implements ActionListener {
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         table.setDefaultRenderer(Object.class, centerRenderer);
-    }
-
-    private JButton createBtn(String text, String color, String name) {
-        JButton btn = new JButton();
-        btn.setPreferredSize(new Dimension(170, 30));
-        btn.setMaximumSize(new Dimension(170, 30));
-        btn.setName(name);
-        btn.setText(text);
-        btn.setBackground(Color.decode(color));
-        btn.setFont(BASE.font);
-        btn.setOpaque(true);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        return btn;
     }
 
     public void reload(ArrayList<KhachHangDTO> ds) {
@@ -191,34 +179,76 @@ public class KhachHangGUI extends JPanel implements ActionListener {
         reload(ds);
     }
 
+    private JPanel createButton(JPanel btn, String text, String url, Color color, int width, int height) {
+        btn.setLayout(new BoxLayout(btn, BoxLayout.X_AXIS));
+        btn.setBackground(color);
+        btn.setBorder(new EmptyBorder(0, 10, 0, 10));
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.setPreferredSize(new Dimension(width, height));
+        btn.setMaximumSize(new Dimension(width, height));
+
+        JLabel lblText = new JLabel(text);
+        lblText.setFont(BASE.font_header);
+
+        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
+        Image img = Icon.getImage();
+        Image scaledImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImg);
+
+        JLabel lblImage = new JLabel(scaledIcon);      
+        btn.add(lblImage);
+        btn.add(Box.createHorizontalStrut(10));
+        btn.add(lblText);
+        return btn;
+    }
+
+
+    private MouseAdapter createCommonMouseListener() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getSource() instanceof JPanel) {
+                    JPanel clickedPanel = (JPanel) e.getSource();
+                    if (clickedPanel == btEdit) {
+                        int selectedRow = tbl.getSelectedRow();
+                        if (selectedRow != -1) {
+                            String maKhachHang = (String) dtm.getValueAt(selectedRow, 0);
+
+                            KhachHangBUS khBUS = new KhachHangBUS();
+                            KhachHangDTO kh = khBUS.layKHTheoMa(maKhachHang);
+
+                            new SuaKhachHangGUI(kh, KhachHangGUI.this);
+                        } else {
+                            new ShowDiaLog("Vui lòng chọn một khách hàng để sửa", ShowDiaLog.ERROR_DIALOG);
+                        }
+                    } else if(clickedPanel == btAdd){
+                        ThemKhachHangGUI khGUI = new ThemKhachHangGUI();
+                    }
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (e.getSource() instanceof JPanel) {
+
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (e.getSource() instanceof JPanel) {
+
+                }
+            }
+        };
+    }
+    
     public static void main(String[] agrs) {
         JFrame f = new JFrame();
         f.setSize(1000, 800);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.setLocationRelativeTo(null); 	
+        f.setLocationRelativeTo(null);
         f.add(new KhachHangGUI());
         f.setVisible(true);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        JButton source = (JButton) e.getSource();
-
-        if (source.getName().equals("btnThem")) {
-//            BanHangGUI banHangGUI = new BanHangGUI();
-//            ThemKhachHangGUI kh = new ThemKhachHangGUI();
-        } else if (source.getName().equals("btnSua")) {
-            int selectedRow = tbl.getSelectedRow();
-            if (selectedRow != -1) {
-                String maKhachHang = (String) dtm.getValueAt(selectedRow, 0);
-
-                KhachHangBUS khBUS = new KhachHangBUS();
-                KhachHangDTO kh = khBUS.layKHTheoMa(maKhachHang);
-
-                new SuaKhachHangGUI(kh, KhachHangGUI.this);
-            } else {
-                new ShowDiaLog("Vui lòng chọn một khách hàng để sửa", ShowDiaLog.ERROR_DIALOG);
-            }
-        }
     }
 }

@@ -37,7 +37,6 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
 
     private ArrayList<SanPhamDTO> dsSP;
     private ArrayList<ChiTietHoaDonDTO> SelectedListSP = new ArrayList<>();
-    private Map<SanPhamDTO, JButton> productButtons = new HashMap<>(); // Lưu trữ nút "Chọn" cho từng sản phẩm
     private ArrayList<SanPhamDTO> dsHD = new ArrayList<>();
     private JPanel pnHeader, pnContent, pnTimKiem;
     private JPanel[] product;
@@ -46,6 +45,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     private JLabel productPrice;
     private int width = 900, height = 781;
     private BanHangGUI BanHangGUI;
+    private SalesGUI SalesGUI;
 
     private DecimalFormat FormatInt = new DecimalFormat("#,###");
 
@@ -63,6 +63,15 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     public ChonSanPhamGUI(BanHangGUI BanHangGUI) {
         this.BanHangGUI = BanHangGUI;
         this.SelectedListSP = BanHangGUI.getCtHoaDon();
+        SanPhamBUS spBUS = new SanPhamBUS();
+        dsSP = spBUS.getDanhSachBan();
+
+        init();
+    }
+
+    public ChonSanPhamGUI(SalesGUI SalesGUI) {
+        this.SalesGUI = SalesGUI;
+        this.SelectedListSP = SalesGUI.getBillList();
         SanPhamBUS spBUS = new SanPhamBUS();
         dsSP = spBUS.getDanhSachBan();
 
@@ -183,7 +192,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         btnChon.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
 
-        productButtons.put(sp, btnChon);
+//        productButtons.put(sp, btnChon);
         btnChon.setActionCommand(sp.getMaSach());
         btnChon.addActionListener(new ActionListener() {
             @Override
@@ -231,14 +240,23 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
             BanHangGUI.DSHD(SelectedListSP);
             BanHangGUI.setCtHoaDon(SelectedListSP);
         }
+        if (SalesGUI != null) {
+            SalesGUI.reLoadData(SelectedListSP);
+            SalesGUI.setBillList(SelectedListSP);
+        }
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        JLabel lbl = (JLabel) e.getSource();
-        if (lbl == exit) {
-            sendSelectedProducts();
-            this.dispose();
+        Component source = (Component) e.getSource();
+
+        if (source instanceof JLabel) {
+            JLabel lbl = (JLabel) source;
+
+            if (lbl == exit) {
+                sendSelectedProducts();
+                this.dispose();
+            }
         }
     }
 
