@@ -1,15 +1,18 @@
 package GUI;
 
 import BUS.PhieuNhapBUS; // Import the PhieuNhapBUS class
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.PhieuNhapDTO; // Import the PhieuNhapDTO class
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class PhieuNhapGUI extends JPanel {
@@ -47,10 +50,8 @@ public class PhieuNhapGUI extends JPanel {
                 TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap();
                 taoPhieuNhapPanel.setMaNV("NV01");
 
-
                 taoPhieuNhapFrame.add(new TaoPhieuNhap()); // Assuming TaoPhieuNhap is a JPanel
                 taoPhieuNhapFrame.setVisible(true);
-
             }
         });
 
@@ -58,19 +59,19 @@ public class PhieuNhapGUI extends JPanel {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow != -1) {
-                // Get data from the selected row
-                String maPN = (String) table.getValueAt(selectedRow, 0);
-                String tenNV = (String) table.getValueAt(selectedRow, 1);
-                String nhaCC = (String) table.getValueAt(selectedRow, 2);
-                Date ngayLap = (Date) table.getValueAt(selectedRow, 3);
-                Double tongTien = (Double) table.getValueAt(selectedRow, 4);
+                int selectedRow = table.getSelectedRow();
+                if (selectedRow != -1) {
+                    // Get data from the selected row
+                    String maPN = (String) table.getValueAt(selectedRow, 0);
+                    String tenNV = (String) table.getValueAt(selectedRow, 1);
+                    String nhaCC = (String) table.getValueAt(selectedRow, 2);
+                    Date ngayLap = (Date) table.getValueAt(selectedRow, 3);
+                    Double tongTien = (Double) table.getValueAt(selectedRow, 4);
 
-                // Show the SuaPhieuNhap panel with data
-                JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
-                suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                suaPhieuNhapFrame.setSize(800, 600);
+                    // Show the SuaPhieuNhap panel with data
+                    JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
+                    suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                    suaPhieuNhapFrame.setSize(800, 600);
                     SuaPhieuNhap suaPhieuNhapPanel = new SuaPhieuNhap();
                     suaPhieuNhapPanel.setMaPhieuNhap(maPN);
                     suaPhieuNhapPanel.setMaNhanVien(tenNV);
@@ -84,12 +85,11 @@ public class PhieuNhapGUI extends JPanel {
                     suaPhieuNhapPanel.setNgay(ngayLap);
                     suaPhieuNhapPanel.setTongTien(tongTien);
 
-                
-                suaPhieuNhapFrame.add(suaPhieuNhapPanel);
-                suaPhieuNhapFrame.setVisible(true);
-            } else {
-                JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để sửa.");
-            }
+                    suaPhieuNhapFrame.add(suaPhieuNhapPanel);
+                    suaPhieuNhapFrame.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để sửa.");
+                }
             }
         });
 
@@ -111,30 +111,19 @@ public class PhieuNhapGUI extends JPanel {
                 }
             }
         });
+
         String[] columns = { "Mã PN", "Tên nhân viên", "Nhà cung cấp", "Ngày lập", "Tổng tiền", "Chi tiết" };
         model = new DefaultTableModel(columns, 0);
         table = new JTable(model) {
-            // Custom render cho cột nút "XEM"
             @Override
             public boolean isCellEditable(int row, int column) {
-                return column == 5; // Chỉ cho phép cột cuối cùng là có thể nhấn nút
-            }
-
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component comp = super.prepareRenderer(renderer, row, column);
-                if (column == 5) {
-                    JButton button = new JButton("XEM");
-                    button.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent e) {
-                            JOptionPane.showMessageDialog(null, "Xem chi tiết cho dòng: " + (row + 1));
-                        }
-                    });
-                    return button;
-                }
-                return comp;
+                return column == 5; // Only the "Chi tiết" column is editable
             }
         };
+
+        // Custom renderer and editor for the "Chi tiết" column
+        table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
 
         // Load data into the table
         loadData();
@@ -192,6 +181,108 @@ public class PhieuNhapGUI extends JPanel {
                     phieuNhap.getTongTien(),
                     "XEM"
             });
+        }
+    }
+
+    // Custom renderer for the button
+    class ButtonRenderer extends JButton implements TableCellRenderer {
+        public ButtonRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            setText((value == null) ? "" : value.toString());
+            return this;
+        }
+    }
+
+    // Custom editor for the button
+    class ButtonEditor extends DefaultCellEditor {
+        private JButton button;
+        private String label;
+        private boolean isPushed;
+
+        public ButtonEditor(JCheckBox checkBox) {
+            super(checkBox);
+            button = new JButton();
+            button.setOpaque(true);
+            button.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    fireEditingStopped();
+                }
+            });
+        }
+
+        @Override
+        public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+            label = (value == null) ? "" : value.toString();
+            button.setText(label);
+            isPushed = true;
+            return button;
+        }
+
+        @Override
+        public Object getCellEditorValue() {
+            if (isPushed) {
+            // Show the description in a new table
+            int selectedRow = table.getSelectedRow();
+            String maPN = (String) table.getValueAt(selectedRow, 0);
+            PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+            ArrayList<ChiTietPhieuNhapDTO> phieuNhap = phieuNhapBUS.LayChiTietPhieuNhap(maPN);
+
+            // Create a new frame to show the details
+            JFrame detailsFrame = new JFrame("Chi Tiết Phiếu Nhập");
+            detailsFrame.setSize(600, 400);
+            detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+            // Create a table to display the details
+            String[] detailColumns = { "Mã Sách", "Số Lượng", "Thành Tiền" };
+            DefaultTableModel detailModel = new DefaultTableModel(detailColumns, 0);
+            JTable detailTable = new JTable(detailModel);
+
+            // Add data to the detail table
+            for (ChiTietPhieuNhapDTO chiTiet : phieuNhap) {
+                detailModel.addRow(new Object[] {
+                        chiTiet.getMASACH(),
+                        chiTiet.getSOLUONG(), // Assuming getGiaNhap() is the correct method
+                        chiTiet.getTONGTIEN()
+                });
+            }
+            
+            // Add a "Xong" button to close the frame
+            JButton closeButton = new JButton("Xong");
+            closeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    detailsFrame.dispose();
+                }
+            });
+
+            // Add the close button to the frame
+            detailsFrame.add(closeButton, BorderLayout.SOUTH);
+
+            // Add the detail table to a scroll pane
+            JScrollPane scrollPane = new JScrollPane(detailTable);
+            detailsFrame.add(scrollPane);
+
+            // Show the details frame
+            detailsFrame.setVisible(true);
+            }
+            isPushed = false;
+            return label;
+        }
+
+        @Override
+        public boolean stopCellEditing() {
+            isPushed = false;
+            return super.stopCellEditing();
+        }
+
+        @Override
+        protected void fireEditingStopped() {
+            super.fireEditingStopped();
         }
     }
 }
