@@ -110,5 +110,14 @@ public class PhieuNhapBUS {
         return dao.getAllMaNCC();
     }
 
+    public static double getGiaBia(String maSP) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        return dao.getGiaBia(maSP);
+    }
+
+    public static void checkGiaBan(String maSP, double giaBan) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        dao.checkGiaBan(maSP, giaBan);
+    }
 
 }

@@ -25,6 +25,7 @@ public class TaoPhieuNhap extends JPanel {
         maNhanVienField.setText(maNV);
     }
 
+    @SuppressWarnings("static-access")
     public TaoPhieuNhap() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -109,6 +110,7 @@ public class TaoPhieuNhap extends JPanel {
             int trangThai = 1;
 
             PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+
             phieuNhapBUS.ThemPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
 
             for (int i = 0; i < model.getRowCount(); i++) {
@@ -116,7 +118,7 @@ public class TaoPhieuNhap extends JPanel {
                 int soLuong = (int) model.getValueAt(i, 1);
                 float donGia = (float) model.getValueAt(i, 2);
                 float thanhTien = (float) model.getValueAt(i, 3);
-
+                phieuNhapBUS.checkGiaBan(tenSach, donGia);
                 phieuNhapBUS.ThemChiTietPhieuNhap(maPN, tenSach, soLuong, thanhTien, donGia);
             }
             
@@ -176,11 +178,10 @@ public class TaoPhieuNhap extends JPanel {
                 int row = bookTable.getSelectedRow();
                 if (row != -1) {
                     // Update tổng tiền
-                    float thanhTien = (float) model.getValueAt(row, 3);
-                    float tongTien = Float.parseFloat(tongTienField.getText());
+                    double thanhTien = (double) model.getValueAt(row, 3);
+                    double tongTien = Double.parseDouble(tongTienField.getText());
                     tongTien -= thanhTien;
                     tongTienField.setText(String.valueOf(tongTien));
-
                     // Remove row
                     model.removeRow(row);
                 }
@@ -205,9 +206,9 @@ public class TaoPhieuNhap extends JPanel {
         }
         }
 
-        public void receiveSelectedProduct(String maSach, int soLuong, float donGia) {
+        public void receiveSelectedProduct(String maSach, int soLuong, double donGia) {
         // Calculate total price for the selected product
-        float thanhTien = soLuong * donGia;
+        double thanhTien = soLuong * donGia;
 
         // Add the selected book details to the table
         DefaultTableModel model = (DefaultTableModel) bookTable.getModel();

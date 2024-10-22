@@ -324,6 +324,61 @@ public class PhieuNhapDAO {
         }
         return dsTenSach;
     }
+
+    public double getGiaBia(String maSach) {
+        double giaBia = 0;
+        try {
+            conn.connect();
+            String sql = "SELECT GIABIA FROM sach WHERE MASACH = ?";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1, maSach);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                giaBia = rs.getDouble("GIABIA");
+            }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return giaBia;
+    }
+
+    public void checkGiaBan(String maSach, double donGia) {
+        try {
+            conn.connect();
+            String sql = "SELECT GIABAN FROM sach WHERE MASACH = ?";
+            PreparedStatement pre = conn.getConn().prepareStatement(sql);
+            pre.setString(1, maSach);
+            ResultSet rs = pre.executeQuery();
+            if (rs.next()) {
+                double giaBan = rs.getDouble("GIABAN");
+                if (giaBan != donGia) {
+                    // Ask to change GiaBan to donGia
+                    int response = javax.swing.JOptionPane.showConfirmDialog(null, 
+                        "Giá bán hiện tại của sản phẩm khác với đơn giá của phiếu nhập! Bạn có muốn cập nhật giá bán thành " + donGia + "?", 
+                        "Cập Nhật Giá Bán", 
+                        javax.swing.JOptionPane.YES_NO_OPTION);
+                    if (response == javax.swing.JOptionPane.YES_OPTION) {
+                        // Assuming user input is handled elsewhere and the decision is made to update
+                        String updateSql = "UPDATE sach SET GIABAN = ? WHERE MASACH = ?";
+                        PreparedStatement updatePre = conn.getConn().prepareStatement(updateSql);
+                        updatePre.setDouble(1, donGia);
+                        updatePre.setString(2, maSach);
+                        updatePre.executeUpdate();
+                    }
+                    // Assuming user input is handled elsewhere and the decision is made to update
+                    String updateSql = "UPDATE sach SET GIABAN = ? WHERE MASACH = ?";
+                    PreparedStatement updatePre = conn.getConn().prepareStatement(updateSql);
+                    updatePre.setDouble(1, donGia);
+                    updatePre.setString(2, maSach);
+                    updatePre.executeUpdate();
+                }
+            }
+            conn.disconnect();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     
 
 }

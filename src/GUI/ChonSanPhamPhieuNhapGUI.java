@@ -163,9 +163,9 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         btnChon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            // Create a new JFrame to input soLuong and donGia
-            JFrame inputFrame = new JFrame("Nhập số lượng và đơn giá");
-            inputFrame.setSize(300, 200);
+            // Create a new JFrame to input soLuong, giaNhap, and loiNhuan
+            JFrame inputFrame = new JFrame("Nhập số lượng, giá nhập và lợi nhuận");
+            inputFrame.setSize(300, 250);
             inputFrame.setLayout(new BorderLayout());
             inputFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -176,14 +176,20 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
             JLabel lblSoLuong = new JLabel("Số lượng:");
             JTextField txtSoLuong = new JTextField(10);
 
-            JLabel lblDonGia = new JLabel("Đơn giá:");
-            JTextField txtDonGia = new JTextField(10);
+            JLabel lblGiaNhap = new JLabel("Giá nhập:");
+            JTextField txtGiaNhap = new JTextField(10);
+
+            JLabel lblLoiNhuan = new JLabel("Lợi nhuận (%):");
+            JTextField txtLoiNhuan = new JTextField(10);
 
             inputPanel.add(lblSoLuong);
             inputPanel.add(txtSoLuong);
             inputPanel.add(Box.createVerticalStrut(10));
-            inputPanel.add(lblDonGia);
-            inputPanel.add(txtDonGia);
+            inputPanel.add(lblGiaNhap);
+            inputPanel.add(txtGiaNhap);
+            inputPanel.add(Box.createVerticalStrut(10));
+            inputPanel.add(lblLoiNhuan);
+            inputPanel.add(txtLoiNhuan);
 
             JButton btnSubmit = new JButton("Xác nhận");
             btnSubmit.addActionListener(new ActionListener() {
@@ -191,7 +197,15 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
                 public void actionPerformed(ActionEvent e) {
                 try {
                     int soLuong = Integer.parseInt(txtSoLuong.getText());
-                    float donGia = Float.parseFloat(txtDonGia.getText());
+                    double giaNhap = Double.parseDouble(txtGiaNhap.getText());
+                    double loiNhuan = Double.parseDouble(txtLoiNhuan.getText()) / 100;
+
+                    // Calculate donGia
+                            double donGia = giaNhap * (1 + loiNhuan);
+                            double giaBia = sp.getGiaBia();
+                            if (donGia > giaBia) {
+                                donGia = giaBia;
+                            }
 
                     // Notify TaoPhieuNhap with the selected product details
                     taoPhieuNhap.receiveSelectedProduct(sp.getMaSach(), soLuong, donGia);
