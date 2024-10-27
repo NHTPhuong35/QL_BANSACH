@@ -11,6 +11,7 @@ import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,21 +23,22 @@ public class PhieuNhapGUI extends JPanel {
 
     public PhieuNhapGUI() {
         // Tạo các nút chức năng với màu sắc như trong hình
-        JButton addButton = new JButton("+ Thêm phiếu nhập");
-        addButton.setBackground(BASE.btnThem); // Màu xanh lá
+        JButton addButton = new JButton("+ THÊM");
+        addButton.setBackground(BASE.btnThem);
 
-        JButton editButton = new JButton("+ Sửa phiếu nhập");
-        editButton.setBackground(BASE.btnSua); // Màu tím
+        JButton editButton = new JButton("+ SỬA");
+        editButton.setBackground(BASE.btnSua);
 
-        JButton deleteButton = new JButton("+ Xóa phiếu nhập");
-        deleteButton.setBackground(BASE.btnXoa); // Màu đỏ
+        JButton deleteButton = new JButton("+ XÓA");
+        deleteButton.setBackground(BASE.btnXoa);
 
         // Bố trí các nút theo dạng FlowLayout (căn ngang)
         JPanel toolBar = new JPanel();
         toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Căn trái và có khoảng cách
         toolBar.add(addButton);
-        toolBar.add(editButton);
         toolBar.add(deleteButton);
+        toolBar.add(editButton);
+        
 
         // Add action listener to the addButton
         addButton.addActionListener(new ActionListener() {
@@ -59,37 +61,45 @@ public class PhieuNhapGUI extends JPanel {
         editButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    // Get data from the selected row
-                    String maPN = (String) table.getValueAt(selectedRow, 0);
-                    String tenNV = (String) table.getValueAt(selectedRow, 1);
-                    String nhaCC = (String) table.getValueAt(selectedRow, 2);
-                    Date ngayLap = (Date) table.getValueAt(selectedRow, 3);
-                    Double tongTien = (Double) table.getValueAt(selectedRow, 4);
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                // Get data from the selected row
+                String maPN = (String) table.getValueAt(selectedRow, 0);
+                String tenNV = (String) table.getValueAt(selectedRow, 1);
+                String nhaCC = (String) table.getValueAt(selectedRow, 2);
+                Date ngayLap = (Date) table.getValueAt(selectedRow, 3);
+                Double tongTien = (Double) table.getValueAt(selectedRow, 4);
 
-                    // Show the SuaPhieuNhap panel with data
-                    JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
-                    suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                    suaPhieuNhapFrame.setSize(800, 600);
-                    SuaPhieuNhap suaPhieuNhapPanel = new SuaPhieuNhap();
-                    suaPhieuNhapPanel.setMaPhieuNhap(maPN);
-                    suaPhieuNhapPanel.setMaNhanVien(tenNV);
-                    suaPhieuNhapPanel.setNhaCungCap(nhaCC);
-                    suaPhieuNhapFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                        @Override
-                        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-                            loadData(); // Reload the table data after closing the SuaPhieuNhap frame
-                        }
-                    });
-                    suaPhieuNhapPanel.setNgay(ngayLap);
-                    suaPhieuNhapPanel.setTongTien(tongTien);
+                // Check if today is the same day as ngayLap
+                    String today = java.time.LocalDate.now().toString();
+                System.out.println("Ngày lập: " + ngayLap.toString());
+                System.out.println("Hôm nay: " + today);
+                if (ngayLap.toString() == today) {
+                // Show the SuaPhieuNhap panel with data
+                JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
+                suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                suaPhieuNhapFrame.setSize(800, 600);
+                SuaPhieuNhap suaPhieuNhapPanel = new SuaPhieuNhap();
+                suaPhieuNhapPanel.setMaPhieuNhap(maPN);
+                suaPhieuNhapPanel.setMaNhanVien(tenNV);
+                suaPhieuNhapPanel.setNhaCungCap(nhaCC);
+                suaPhieuNhapFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                    loadData(); // Reload the table data after closing the SuaPhieuNhap frame
+                    }
+                });
+                suaPhieuNhapPanel.setNgay(ngayLap);
+                suaPhieuNhapPanel.setTongTien(tongTien);
 
-                    suaPhieuNhapFrame.add(suaPhieuNhapPanel);
-                    suaPhieuNhapFrame.setVisible(true);
+                suaPhieuNhapFrame.add(suaPhieuNhapPanel);
+                suaPhieuNhapFrame.setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để sửa.");
+                JOptionPane.showMessageDialog(null, "Chỉ có thể sửa phiếu nhập trong ngày.");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để sửa.");
+            }
             }
         });
 
@@ -143,8 +153,8 @@ public class PhieuNhapGUI extends JPanel {
         // Tạo bảng cuộn cho bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(table);
 
-        table.getTableHeader().setBackground(BASE.color_table_header); // Màu xanh tiêu đề bảng
-        table.getTableHeader().setBackground(BASE.color_table_heaer); // Màu xanh tiêu đề bảng
+
+        table.getTableHeader().setBackground(BASE.color_table_heaer);
         table.setBackground(Color.WHITE);
         table.setFont(BASE.font);
         table.setRowHeight(40); // thiết lập chiều cao các cột
@@ -239,7 +249,12 @@ public class PhieuNhapGUI extends JPanel {
 
             // Create a table to display the details
             String[] detailColumns = { "Mã Sách", "Số Lượng", "Thành Tiền" };
-            DefaultTableModel detailModel = new DefaultTableModel(detailColumns, 0);
+            DefaultTableModel detailModel = new DefaultTableModel(detailColumns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Make the detail table not editable
+            }
+            };
             JTable detailTable = new JTable(detailModel);
 
             // Add data to the detail table
@@ -251,13 +266,21 @@ public class PhieuNhapGUI extends JPanel {
                 });
             }
             
+            // Set the table to auto resize all columns
+            detailTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+            // Custom table header and table appearance
+            detailTable.getTableHeader().setBackground(BASE.color_table_heaer);
+            detailTable.setBackground(Color.WHITE);
+            detailTable.setFont(BASE.font);
+            detailTable.setRowHeight(40); // Set row height
+            
             // Add a "Xong" button to close the frame
             JButton closeButton = new JButton("Xong");
             closeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    detailsFrame.dispose();
-                }
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                detailsFrame.dispose();
+            }
             });
 
             // Add the close button to the frame

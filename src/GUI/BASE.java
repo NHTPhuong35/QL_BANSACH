@@ -11,10 +11,10 @@ import java.net.URL;
 import javax.swing.ImageIcon;
 
 public class BASE {
-    public static Color btnThem = Color.decode("#A6E3A1");
-    public static Color btnSua = Color.decode("#B4BEFE");
-    public static Color btnXoa = Color.decode("#EBA0AC");
-    public static Color color_table_heaer = Color.decode("#6BD7E1");
+    public static Color btnThem = Color.decode("#5DADE2");
+    public static Color btnSua = Color.decode("#F4D03F");
+    public static Color btnXoa = Color.decode("#E57373");
+    public static Color color_table_heaer = Color.decode("#E0AC69");
     public static Color color_heaer = Color.decode("#57B8C1");
     public static Color color_text = Color.decode("#0A0F0F");
     public static String typeface = "typeface";

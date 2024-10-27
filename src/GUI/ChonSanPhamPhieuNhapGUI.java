@@ -163,72 +163,11 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         btnChon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            // Create a new JFrame to input soLuong, giaNhap, and loiNhuan
-            JFrame inputFrame = new JFrame("Nhập số lượng, giá nhập và lợi nhuận");
-            inputFrame.setSize(300, 250);
-            inputFrame.setLayout(new BorderLayout());
-            inputFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                // Notify TaoPhieuNhap with the selected product details
+                taoPhieuNhap.receiveSelectedProduct(sp.getMaSach(), 0, 0);
 
-            JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
-            inputPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-            JLabel lblSoLuong = new JLabel("Số lượng:");
-            JTextField txtSoLuong = new JTextField(10);
-
-            JLabel lblGiaNhap = new JLabel("Giá nhập:");
-            JTextField txtGiaNhap = new JTextField(10);
-
-            JLabel lblLoiNhuan = new JLabel("Lợi nhuận (%):");
-            JTextField txtLoiNhuan = new JTextField(10);
-
-            inputPanel.add(lblSoLuong);
-            inputPanel.add(txtSoLuong);
-            inputPanel.add(Box.createVerticalStrut(10));
-            inputPanel.add(lblGiaNhap);
-            inputPanel.add(txtGiaNhap);
-            inputPanel.add(Box.createVerticalStrut(10));
-            inputPanel.add(lblLoiNhuan);
-            inputPanel.add(txtLoiNhuan);
-
-            JButton btnSubmit = new JButton("Xác nhận");
-            btnSubmit.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                try {
-                    int soLuong = Integer.parseInt(txtSoLuong.getText());
-                    double giaNhap = Double.parseDouble(txtGiaNhap.getText());
-                    double loiNhuan = Double.parseDouble(txtLoiNhuan.getText()) / 100;
-
-                    // Calculate donGia
-                            double donGia = giaNhap * (1 + loiNhuan);
-                            double giaBia = sp.getGiaBia();
-                            if (donGia > giaBia) {
-                                donGia = giaBia;
-                            }
-
-                    // Notify TaoPhieuNhap with the selected product details
-                    taoPhieuNhap.receiveSelectedProduct(sp.getMaSach(), soLuong, donGia);
-
-                    // Close the input frame and the product selection window
-                    inputFrame.dispose();
-                    dispose();
-                } catch (NumberFormatException ex) {
-                    // Handle invalid input
-                    System.err.println("Invalid input: " + ex.getMessage());
-                }
-                }
-            });
-
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-            buttonPanel.add(btnSubmit);
-
-            inputFrame.add(inputPanel, BorderLayout.CENTER);
-            inputFrame.add(buttonPanel, BorderLayout.SOUTH);
-
-            inputFrame.setLocationRelativeTo(null);
-            inputFrame.setVisible(true);
+                // Close the product selection window
+                dispose();
             }
         });
 
@@ -243,7 +182,6 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
 
         return productPanel;
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {
