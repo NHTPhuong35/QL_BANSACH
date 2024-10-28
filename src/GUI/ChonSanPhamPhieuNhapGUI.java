@@ -163,58 +163,11 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         btnChon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            // Create a new JFrame to input soLuong and donGia
-            JFrame inputFrame = new JFrame("Nhập số lượng và đơn giá");
-            inputFrame.setSize(300, 200);
-            inputFrame.setLayout(new BorderLayout());
-            inputFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                // Notify TaoPhieuNhap with the selected product details
+                taoPhieuNhap.receiveSelectedProduct(sp.getMaSach(), 0, 0);
 
-            JPanel inputPanel = new JPanel();
-            inputPanel.setLayout(new BoxLayout(inputPanel, BoxLayout.Y_AXIS));
-            inputPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-            JLabel lblSoLuong = new JLabel("Số lượng:");
-            JTextField txtSoLuong = new JTextField(10);
-
-            JLabel lblDonGia = new JLabel("Đơn giá:");
-            JTextField txtDonGia = new JTextField(10);
-
-            inputPanel.add(lblSoLuong);
-            inputPanel.add(txtSoLuong);
-            inputPanel.add(Box.createVerticalStrut(10));
-            inputPanel.add(lblDonGia);
-            inputPanel.add(txtDonGia);
-
-            JButton btnSubmit = new JButton("Xác nhận");
-            btnSubmit.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                try {
-                    int soLuong = Integer.parseInt(txtSoLuong.getText());
-                    float donGia = Float.parseFloat(txtDonGia.getText());
-
-                    // Notify TaoPhieuNhap with the selected product details
-                    taoPhieuNhap.receiveSelectedProduct(sp.getMaSach(), soLuong, donGia);
-
-                    // Close the input frame and the product selection window
-                    inputFrame.dispose();
-                    dispose();
-                } catch (NumberFormatException ex) {
-                    // Handle invalid input
-                    System.err.println("Invalid input: " + ex.getMessage());
-                }
-                }
-            });
-
-            JPanel buttonPanel = new JPanel();
-            buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-            buttonPanel.add(btnSubmit);
-
-            inputFrame.add(inputPanel, BorderLayout.CENTER);
-            inputFrame.add(buttonPanel, BorderLayout.SOUTH);
-
-            inputFrame.setLocationRelativeTo(null);
-            inputFrame.setVisible(true);
+                // Close the product selection window
+                dispose();
             }
         });
 
@@ -229,7 +182,6 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
 
         return productPanel;
     }
-
 
     @Override
     public void mouseClicked(MouseEvent e) {
