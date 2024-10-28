@@ -57,7 +57,7 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); // Sửa lại để dùng getContentPane
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(new Dimension(width, height));
-//        this.setUndecorated(true);
+        this.setUndecorated(true);
 
         lblHeader = new JLabel("Thêm tài khoản", JLabel.CENTER);
         lblHeader.setPreferredSize(new Dimension(width, 36));

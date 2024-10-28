@@ -480,7 +480,7 @@ public class HomeGUI extends JFrame implements MouseListener {
         if (btn == sanphamButton) {
             int panelWidth = showPanel.getWidth();
             int panelHeight = showPanel.getHeight();
-            SanPhamGUI spGUI = new SanPhamGUI(panelWidth, panelHeight);
+            SanPhamGUI spGUI = new SanPhamGUI();
             showPanel.removeAll();
             showPanel.add(spGUI, BorderLayout.CENTER);
             spGUI.setVisible(true);

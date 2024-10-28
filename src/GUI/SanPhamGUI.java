@@ -54,7 +54,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     private JTable tbSanPham;
     private JScrollPane jpSanPham;
     private DefaultTableModel df;
-    private int width, height;
+    private int width = 1000, height = 800;
     private ArrayList<LoaiDTO> loai; //Danh sách loại
     private ArrayList<SanPhamDTO> dsSP; //Danh sách sản phẩm
     SanPhamDTO selectedSP = new SanPhamDTO();
@@ -63,12 +63,6 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     DecimalFormat FormatInt = new DecimalFormat("#,###");
 
     public SanPhamGUI() {
-    }
-
-    public SanPhamGUI(int width, int height) {
-        this.width = width;
-        this.height = height;
-
         spBUS = new SanPhamBUS();
         dsSP = spBUS.getDsSP();
 
@@ -104,9 +98,9 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         ImageIcon editIcon = new ImageIcon("./src/image/btEdit.png");
         Image editImage = editIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         editIcon = new ImageIcon(editImage);
-        btnSua = new JButton("Sửa",editIcon);
+        btnSua = new JButton("Sửa", editIcon);
         btnSua.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnSua.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnSua.setVerticalTextPosition(SwingConstants.CENTER);
         btnSua.setPreferredSize(new Dimension(100, 35));
         btnSua.setMaximumSize(new Dimension(100, 35));
         btnSua.setBackground(BASE.color_btEdit);
@@ -119,9 +113,9 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         ImageIcon deleteIcon = new ImageIcon("./src/image/bin.png");
         Image deleteImage = deleteIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         deleteIcon = new ImageIcon(deleteImage);
-        btnXoa = new JButton("Xoá",deleteIcon);
+        btnXoa = new JButton("Xoá", deleteIcon);
         btnXoa.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnXoa.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnXoa.setVerticalTextPosition(SwingConstants.CENTER);
         btnXoa.setPreferredSize(new Dimension(100, 35));
         btnXoa.setMaximumSize(new Dimension(100, 35));
         btnXoa.setBackground(BASE.color_btLamXoa);
@@ -335,6 +329,8 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnAnh = new JPanel();
+        pnAnh.setPreferredSize(new Dimension(300, 300));
+        pnAnh.setMaximumSize(new Dimension(300, 300));
         pnAnh.setLayout(new BoxLayout(pnAnh, BoxLayout.Y_AXIS)); // Sắp xếp theo chiều dọc
         pnAnh.setAlignmentY(Component.TOP_ALIGNMENT);
 
@@ -380,23 +376,24 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BoxLayout(pnThongTin, BoxLayout.Y_AXIS));
         pnThongTin.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnThongTin.setAlignmentY(Component.TOP_ALIGNMENT);
         pnThongTin.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 10));
 
         // Xử lý tên sách
         String tenSach = sp.getTenSach();
         if (tenSach.length() >= 22) {
             int index = tenSach.lastIndexOf(" ", 22); // Tìm khoảng trắng gần nhất trước vị trí 30
-            if(index != -1){
+            if (index != -1) {
                 tenSach = tenSach.substring(0, index) + "<br>" + tenSach.substring(index + 1);
-                
+
             } else {
                 tenSach = tenSach.substring(0, 22) + "<br>" + tenSach.substring(23);
-            }          
+            }
         }
-        JLabel tenSP = new JLabel("<html>" + tenSach + "</html>",JLabel.CENTER);
+        JLabel tenSP = new JLabel("<html>" + tenSach + "</html>", JLabel.CENTER);
         tenSP.setFont(BASE.font_title);
 
-        JLabel giaBan = new JLabel("<html>Giá: " + FormatInt.format(sp.getGiaBan()) + "đ</html>",JLabel.CENTER); // Giá
+        JLabel giaBan = new JLabel("<html>Giá: " + FormatInt.format(sp.getGiaBan()) + "đ</html>", JLabel.CENTER); // Giá
         giaBan.setFont(BASE.font);
 
         // Xử lý tác giả
@@ -405,7 +402,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
             int index = tenTacGia.lastIndexOf(" ", 22);
             tenTacGia = tenTacGia.substring(0, index) + "<br>" + tenTacGia.substring(index + 1);
         }
-        JLabel tacGia = new JLabel("<html>Tác giả: " + tenTacGia + "</html>",JLabel.CENTER);
+        JLabel tacGia = new JLabel("<html>Tác giả: " + tenTacGia + "</html>", JLabel.CENTER);
         tacGia.setFont(BASE.font);
 
         // Thêm thông tin vào pnThongTin
@@ -476,7 +473,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     public static void main(String[] args) {
 //        String anh[] = {"10-van-cau-hoi-vi-sao.jpg", "damtreodaiduong.jpg", "co-mot-ngay-bo-me-se-gia-di.jpg"};
 //        SanPhamDTO sp = new SanPhamDTO("abc", "Đắc nhân tâm", "TAMLIHOC", "Văn học Nhà Nội", 2024, 10, 1, 500, 500, anh, "a,b,c");
-        SanPhamGUI t = new SanPhamGUI(800, 500);
+        SanPhamGUI t = new SanPhamGUI();
 //        t.init(sp);
         JFrame f = new JFrame();
         f.add(t);
