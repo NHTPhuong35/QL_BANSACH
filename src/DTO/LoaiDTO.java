@@ -53,4 +53,9 @@ public class LoaiDTO {
         this.TrangThai = TrangThai;
     }
 
+    @Override
+    public String toString() {
+        return  TenLoai;
+    }
+
 }

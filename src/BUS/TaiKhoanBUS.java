@@ -42,6 +42,7 @@ public class TaiKhoanBUS {
         return tkDAO.themTaiKhoan(tk);
     }
 
+    //Sủa tài khoản
     public boolean set(TaiKhoanDTO tk) {
         for (int i = 0; i < dsTK.size(); i++) {
             if (dsTK.get(i).getTenDN().equals(tk.getTenDN())) {

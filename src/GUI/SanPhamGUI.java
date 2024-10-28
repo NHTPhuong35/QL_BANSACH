@@ -1,6 +1,7 @@
 package GUI;
 
 import BUS.SanPhamBUS;
+import BUS.TheLoaiBUS;
 import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
 import DTO.TacGiaDTO;
@@ -45,19 +46,18 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
     private SanPhamBUS spBUS;
     private JPanel pnHeader, pnContent;
-    private JPanel pnChiTietSP, pnThaoTac;
+    private JPanel pnChiTietSP, pnRight;
     private JButton btnThem, btnSua, btnXoa, btnLamMoi, btnExport;
     private JPanel pnTimKiem;
     private JTextField txtTimKiem;
-    private JComboBox<String> cbxLoai;
+    private JComboBox<LoaiDTO> cbxLoai;
     private JTable tbSanPham;
     private JScrollPane jpSanPham;
     private DefaultTableModel df;
     private int width, height;
-    private ArrayList<String> loai; //Danh sách loại
+    private ArrayList<LoaiDTO> loai; //Danh sách loại
     private ArrayList<SanPhamDTO> dsSP; //Danh sách sản phẩm
     SanPhamDTO selectedSP = new SanPhamDTO();
-    SanPhamDTO spMacDinh; //sản phẩm hiển thị mặc định khi chưa chọn sản phẩm
 
     // Định dạng sử dụng dấu phân cách hàng nghìn
     DecimalFormat FormatInt = new DecimalFormat("#,###");
@@ -73,10 +73,8 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         dsSP = spBUS.getDsSP();
 
         loai = new ArrayList<>();
-        loai.add("Tất cả");
-        loai.add("Kỹ năng sống");
-        loai.add("Tâm lý học");
-        loai.add("Quản trị - lãnh đạo");
+        TheLoaiBUS loaiBUS = new TheLoaiBUS();
+        loai = loaiBUS.getDs();
         init();
     }
 
@@ -85,93 +83,99 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         this.setPreferredSize(new Dimension(width, height));
 
         pnHeader = new JPanel();
-        pnHeader.setLayout(new BorderLayout());
+        pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 0));
 
-        spMacDinh = new SanPhamDTO("SP00", "Tên sách", "NXB", 0, 0, 0, 0, 0, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
-
-        pnChiTietSP = initChiTietSP(spMacDinh);
-
-        pnThaoTac = new JPanel(); //Thao tác thêm, sửa, xoá, import, export excel
-        pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
-
-        JPanel pnLeft = new JPanel(); //thêm sửa xoá
-        pnLeft.setLayout(new BoxLayout(pnLeft, BoxLayout.Y_AXIS));
-
-        btnThem = new JButton("+ Thêm sách");
-        btnThem.setPreferredSize(new Dimension(130, 30));
-        btnThem.setMaximumSize(new Dimension(130, 30));
-        btnThem.setBackground(BASE.btnThem);
+        ImageIcon addIcon = new ImageIcon("./src/image/btAdd.png");
+        Image addImage = addIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        addIcon = new ImageIcon(addImage);
+        btnThem = new JButton("Thêm", addIcon);
+        btnThem.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
+        btnThem.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
+        btnThem.setPreferredSize(new Dimension(100, 35));
+        btnThem.setMaximumSize(new Dimension(100, 35));
+        btnThem.setBackground(BASE.color_btAdd);
         btnThem.setFont(BASE.font);
         btnThem.setOpaque(true);
         btnThem.setFocusPainted(false);
         btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnThem.addMouseListener(this);
 
-        btnSua = new JButton("+ Sửa sách");
-        btnSua.setPreferredSize(new Dimension(130, 30));
-        btnSua.setMaximumSize(new Dimension(130, 30));
-        btnSua.setBackground(BASE.btnSua);
+        ImageIcon editIcon = new ImageIcon("./src/image/btEdit.png");
+        Image editImage = editIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        editIcon = new ImageIcon(editImage);
+        btnSua = new JButton("Sửa",editIcon);
+        btnSua.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnSua.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnSua.setPreferredSize(new Dimension(100, 35));
+        btnSua.setMaximumSize(new Dimension(100, 35));
+        btnSua.setBackground(BASE.color_btEdit);
         btnSua.setFont(BASE.font);
         btnSua.setOpaque(true);
         btnSua.setFocusPainted(false);
         btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSua.addMouseListener(this);
 
-        btnXoa = new JButton("+ Xoá sách");
-        btnXoa.setPreferredSize(new Dimension(130, 30));
-        btnXoa.setMaximumSize(new Dimension(130, 30));
-        btnXoa.setBackground(BASE.btnXoa);
+        ImageIcon deleteIcon = new ImageIcon("./src/image/bin.png");
+        Image deleteImage = deleteIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        deleteIcon = new ImageIcon(deleteImage);
+        btnXoa = new JButton("Xoá",deleteIcon);
+        btnXoa.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnXoa.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnXoa.setPreferredSize(new Dimension(100, 35));
+        btnXoa.setMaximumSize(new Dimension(100, 35));
+        btnXoa.setBackground(BASE.color_btLamXoa);
         btnXoa.setFont(BASE.font);
         btnXoa.setOpaque(true);
         btnXoa.setFocusPainted(false);
         btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXoa.addMouseListener(this);
-        pnLeft.add(btnThem);
-        pnLeft.add(Box.createVerticalStrut(20));
-        pnLeft.add(btnSua);
-        pnLeft.add(Box.createVerticalStrut(20));
-        pnLeft.add(btnXoa);
-
-        JPanel pnRight = new JPanel();
-        pnRight.setLayout(new BoxLayout(pnRight, BoxLayout.Y_AXIS));
 
         ImageIcon exportIcon = new ImageIcon("./src/image/export_icon.jpg");
-        Image exportImage = exportIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        Image exportImage = exportIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         exportIcon = new ImageIcon(exportImage);
-        btnExport = new JButton("Export Excel", exportIcon);
-        btnExport.setVerticalTextPosition(SwingConstants.BOTTOM);
-        btnExport.setHorizontalTextPosition(SwingConstants.CENTER);
-        btnExport.setPreferredSize(new Dimension(120, 80));
-        btnExport.setMaximumSize(new Dimension(120, 80));
+        btnExport = new JButton("Xuất Excel", exportIcon);
+        btnExport.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnExport.setVerticalTextPosition(SwingConstants.CENTER);
+        btnExport.setPreferredSize(new Dimension(130, 35));
+        btnExport.setMaximumSize(new Dimension(130, 35));
         btnExport.setBackground(Color.decode("#FFE4B5"));
         btnExport.setFont(BASE.font);
         btnExport.setOpaque(true);
         btnExport.setFocusPainted(false);
         btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExport.addMouseListener(this);
-        pnRight.add(Box.createVerticalStrut(20));
-        pnRight.add(btnExport);
 
-        pnThaoTac.add(pnLeft);
-        pnThaoTac.add(Box.createHorizontalStrut(50));
-        pnThaoTac.add(pnRight);
-
-        pnHeader.add(pnChiTietSP, BorderLayout.WEST);
-        pnHeader.add(pnThaoTac, BorderLayout.EAST);
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 250));
+        pnHeader.add(btnThem);
+        pnHeader.add(Box.createHorizontalStrut(20));
+        pnHeader.add(btnSua);
+        pnHeader.add(Box.createHorizontalStrut(20));
+        pnHeader.add(btnXoa);
+        pnHeader.add(Box.createHorizontalStrut(20));
+        pnHeader.add(btnExport);
 
         //Content
         pnContent = new JPanel();
         pnContent.setLayout(new BorderLayout());
 
+        //Chi tiết sản phẩm
+        pnChiTietSP = new JPanel();
+
+        //Bảng danh sách sản phẩm bao gồm tìm kiếm
+        pnRight = new JPanel();
+        pnRight.setLayout(new BorderLayout());
+
         //thanh Tìm kiếm
         pnTimKiem = new JPanel();
-        pnTimKiem.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        pnTimKiem.setLayout(new BoxLayout(pnTimKiem, BoxLayout.X_AXIS));
+        pnTimKiem.setBorder(BorderFactory.createEmptyBorder(0, 20, 20, 0));
+
         JLabel lblTimKiem = new JLabel("Tìm kiếm", JLabel.CENTER);
         lblTimKiem.setFont(BASE.font);
         txtTimKiem = new JTextField();
         txtTimKiem.setFont(BASE.font);
         txtTimKiem.setPreferredSize(new Dimension(150, 25));
+        txtTimKiem.setMaximumSize(new Dimension(150, 25));
         txtTimKiem.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -194,23 +198,27 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         lblLoai.setFont(BASE.font);
         cbxLoai = new JComboBox<>();
         cbxLoai.setFont(BASE.font);
-        cbxLoai.setPreferredSize(new Dimension(100, 25));
+        cbxLoai.setPreferredSize(new Dimension(120, 25));
+        cbxLoai.setMaximumSize(new Dimension(120, 25));
         cbxLoai.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        cbxLoai.addItem(new LoaiDTO("L00", "Tất cả"));
         for (int i = 0; i < loai.size(); i++) {
             cbxLoai.addItem(loai.get(i));
         }
+
         cbxLoai.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 selectedSP = new SanPhamDTO();
-                String selected = (String) cbxLoai.getSelectedItem();
+                LoaiDTO selected = (LoaiDTO) cbxLoai.getSelectedItem();
 
                 ArrayList<SanPhamDTO> dsTimKiem = new ArrayList<>();
-                // Thực hiện tìm kiếm theo giá trị đã chọn
-                if (!selected.equals("Tất cả")) {
+                // Thực hiện tìm kiếm theo giá trị đã chọn (Lấy mã loại để tìm)
+                if (!selected.getMaLoai().equals("L00")) {
                     for (int i = 0; i < dsSP.size(); i++) {
                         for (LoaiDTO loai : dsSP.get(i).getLoai()) {
-                            if (loai.getTenLoai().equals(selected)) {
+                            if (loai.getMaLoai().equals(selected.getMaLoai())) {
                                 dsTimKiem.add(dsSP.get(i));
                                 break;
                             }
@@ -225,29 +233,35 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         });
 
         btnLamMoi = new JButton("Làm mới");
-        btnLamMoi.setBackground(BASE.color_heaer);
+        btnLamMoi.setBackground(BASE.color_btLamMoi);
         btnLamMoi.setFont(BASE.font);
         btnLamMoi.setOpaque(true);
         btnLamMoi.setBorderPainted(false);
         btnLamMoi.setFocusPainted(false);
         btnLamMoi.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnLamMoi.setPreferredSize(new Dimension(100, 25));
+        btnLamMoi.setMaximumSize(new Dimension(100, 25));
         btnLamMoi.addMouseListener(this);
 
-        pnTimKiem.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 100));
         pnTimKiem.add(lblTimKiem);
+        pnTimKiem.add(Box.createHorizontalStrut(10));
         pnTimKiem.add(txtTimKiem);
+        pnTimKiem.add(Box.createHorizontalStrut(40));
         pnTimKiem.add(lblLoai);
+        pnTimKiem.add(Box.createHorizontalStrut(10));
         pnTimKiem.add(cbxLoai);
-        pnTimKiem.add(Box.createRigidArea(new Dimension(10, 0)));
+        pnTimKiem.add(Box.createHorizontalStrut(70));
         pnTimKiem.add(btnLamMoi);
 
         //Bảng danh sách sản phẩm
         tbSanPham = initContent(dsSP);
         jpSanPham = new JScrollPane(tbSanPham);
 
-        pnContent.add(pnTimKiem, BorderLayout.NORTH);
-        pnContent.add(jpSanPham, BorderLayout.CENTER);
+        pnRight.add(pnTimKiem, BorderLayout.NORTH);
+        pnRight.add(jpSanPham, BorderLayout.CENTER);
+
+        pnContent.add(pnChiTietSP, BorderLayout.WEST);
+        pnContent.add(pnRight, BorderLayout.CENTER);
 
         this.add(pnHeader, BorderLayout.NORTH);
         this.add(pnContent, BorderLayout.CENTER);
@@ -289,7 +303,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         table.setShowVerticalLines(false);
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setPreferredSize(new Dimension(tableHeader.getPreferredSize().width, 30));
-        tableHeader.setBackground(BASE.color_table_heaer);  // Đặt màu nền cho tiêu đề là màu xám nhạt
+        tableHeader.setBackground(BASE.color_header_tbl);
         tableHeader.setFont(BASE.font_header);
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -302,6 +316,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                     selectedSP = dsSP.get(row);
 
                     // Cập nhật panel chi tiết sản phẩm
+                    pnChiTietSP.setVisible(true);
                     pnChiTietSP.removeAll();
                     pnChiTietSP.add(initChiTietSP(selectedSP)); // Thêm nội dung mới
                     pnChiTietSP.revalidate();
@@ -314,89 +329,97 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
     public JPanel initChiTietSP(SanPhamDTO sp) {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-//        panel.setPreferredSize(new Dimension(650, 300));
-//        panel.setMaximumSize(new Dimension(650, 500));
-        panel.add(Box.createHorizontalStrut(20));
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setPreferredSize(new Dimension(300, height));
+        panel.setMaximumSize(new Dimension(300, height));
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel pnAnh = new JPanel();
-        pnAnh.setLayout(new BoxLayout(pnAnh, BoxLayout.Y_AXIS));
-        pnAnh.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        pnAnh.setLayout(new BoxLayout(pnAnh, BoxLayout.Y_AXIS)); // Sắp xếp theo chiều dọc
+        pnAnh.setAlignmentY(Component.TOP_ALIGNMENT);
+
         JPanel pnAnhNho = new JPanel();
         pnAnhNho.setLayout(new FlowLayout());
 
         // Hình ảnh của sản phẩm
+        ImageIcon icon;
         if (sp.getTenHinh() == null || sp.getTenHinh().isEmpty()) {
-            ImageIcon icon = new ImageIcon("./src/image/iconBook.jpg");
-            Image scaledImage = icon.getImage().getScaledInstance(190, 250, Image.SCALE_SMOOTH);
-
-            JLabel lblAnhLon = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
-            lblAnhLon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
-            pnAnh.add(lblAnhLon);
+            icon = new ImageIcon("./src/image/iconBook.jpg");
         } else {
-            ImageIcon icon = new ImageIcon("./src/image/" + sp.getTenHinh().get(0));
-            Image scaledImage = icon.getImage().getScaledInstance(190, 250, Image.SCALE_SMOOTH);
-            JLabel lblAnhLon = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
-            lblAnhLon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
-            pnAnh.add(lblAnhLon);
-            if (sp.getTenHinh().size() > 1) {
-                for (int i = 0; i < sp.getTenHinh().size(); i++) {
-                    icon = new ImageIcon("./src/image/" + sp.getTenHinh().get(i));
-                    scaledImage = icon.getImage().getScaledInstance(40, 30, Image.SCALE_SMOOTH);
-                    JLabel lblAnhNho = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
-                    pnAnhNho.add(lblAnhNho);
+            icon = new ImageIcon("./src/image/" + sp.getTenHinh().get(0));
+        }
+        Image scaledImage = icon.getImage().getScaledInstance(190, 250, Image.SCALE_SMOOTH);
+        JLabel lblAnhLon = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
+        lblAnhLon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
+        pnAnh.add(lblAnhLon);
 
-                    // Thêm sự kiện cho ảnh nhỏ
-                    final String imagePath = sp.getTenHinh().get(i);
-                    lblAnhNho.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseClicked(MouseEvent e) {
-                            ImageIcon newIcon = new ImageIcon("./src/image/" + imagePath);
-                            Image newScaledImage = newIcon.getImage().getScaledInstance(190, 250, Image.SCALE_SMOOTH);
-                            lblAnhLon.setIcon(new ImageIcon(newScaledImage));
-                        }
-                    });
-                }
+        // Thêm ảnh nhỏ nếu có
+        if (sp.getTenHinh() != null && sp.getTenHinh().size() > 1) {
+            for (int i = 1; i < sp.getTenHinh().size(); i++) { // Bắt đầu từ 1 để tránh hình lớn
+                icon = new ImageIcon("./src/image/" + sp.getTenHinh().get(i));
+                scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                JLabel lblAnhNho = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
+                pnAnhNho.add(lblAnhNho);
+
+                // Thêm sự kiện cho ảnh nhỏ
+                final String imagePath = sp.getTenHinh().get(i);
+                lblAnhNho.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        ImageIcon newIcon = new ImageIcon("./src/image/" + imagePath);
+                        Image newScaledImage = newIcon.getImage().getScaledInstance(190, 250, Image.SCALE_SMOOTH);
+                        lblAnhLon.setIcon(new ImageIcon(newScaledImage));
+                    }
+                });
             }
         }
 
-        pnAnh.add(Box.createVerticalStrut(10));
-        pnAnh.add(pnAnhNho);
+        pnAnh.add(Box.createVerticalStrut(10)); // Khoảng cách giữa ảnh lớn và ảnh nhỏ
+        pnAnh.add(pnAnhNho); // Thêm pnAnhNho vào pnAnh
 
         JPanel pnThongTin = new JPanel();
         pnThongTin.setLayout(new BoxLayout(pnThongTin, BoxLayout.Y_AXIS));
+        pnThongTin.setAlignmentX(Component.CENTER_ALIGNMENT);
+        pnThongTin.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 10));
 
+        // Xử lý tên sách
         String tenSach = sp.getTenSach();
-        if (sp.getTenSach().length() >= 30) {
-            int index = tenSach.lastIndexOf(" ", 30); // Tìm khoảng trắng gần nhất trước vị trí 30
-            tenSach = tenSach.substring(0, index) + "<br>" + tenSach.substring(index + 1);
+        if (tenSach.length() >= 22) {
+            int index = tenSach.lastIndexOf(" ", 22); // Tìm khoảng trắng gần nhất trước vị trí 30
+            if(index != -1){
+                tenSach = tenSach.substring(0, index) + "<br>" + tenSach.substring(index + 1);
+                
+            } else {
+                tenSach = tenSach.substring(0, 22) + "<br>" + tenSach.substring(23);
+            }          
         }
-        JLabel tenSP = new JLabel("<html>" + tenSach + "</html>");
+        JLabel tenSP = new JLabel("<html>" + tenSach + "</html>",JLabel.CENTER);
         tenSP.setFont(BASE.font_title);
 
-        JLabel giaBan = new JLabel("Giá: " + FormatInt.format(sp.getGiaBan()) + "đ"); //Giá
+        JLabel giaBan = new JLabel("<html>Giá: " + FormatInt.format(sp.getGiaBan()) + "đ</html>",JLabel.CENTER); // Giá
         giaBan.setFont(BASE.font);
 
-        String tenTacGia = sp.getTacGiaToString(); //Tác giả
-        if (sp.getTacGiaToString().length() >= 30) {
-            int index = tenTacGia.lastIndexOf(" ", 30);
+        // Xử lý tác giả
+        String tenTacGia = sp.getTacGiaToString(); // Tác giả
+        if (tenTacGia.length() >= 22) {
+            int index = tenTacGia.lastIndexOf(" ", 22);
             tenTacGia = tenTacGia.substring(0, index) + "<br>" + tenTacGia.substring(index + 1);
         }
-        JLabel tacGia = new JLabel("<html>Tác giả: " + tenTacGia + "</html>");
-        tacGia.setPreferredSize(new Dimension(100,57));
+        JLabel tacGia = new JLabel("<html>Tác giả: " + tenTacGia + "</html>",JLabel.CENTER);
         tacGia.setFont(BASE.font);
-        
-        pnThongTin.add(Box.createVerticalStrut(20));
+
+        // Thêm thông tin vào pnThongTin
+        pnThongTin.add(Box.createVerticalStrut(20)); // Khoảng cách phía trên
         pnThongTin.add(tenSP);
-        pnThongTin.add(Box.createVerticalStrut(20));
+        pnThongTin.add(Box.createVerticalStrut(20)); // Khoảng cách giữa tên sách và giá
         pnThongTin.add(giaBan);
-        pnThongTin.add(Box.createVerticalStrut(20));
+        pnThongTin.add(Box.createVerticalStrut(20)); // Khoảng cách giữa giá và tác giả
         pnThongTin.add(tacGia);
 
-        pnThongTin.add(Box.createVerticalGlue());
-        panel.add(pnAnh);
-        panel.add(Box.createHorizontalStrut(20));
-        panel.add(pnThongTin);
+        // Thêm các phần vào panel chính
+        panel.add(pnAnh); // Thêm pnAnh vào panel
+        panel.add(Box.createVerticalStrut(10)); // Khoảng cách giữa pnAnh và pnThongTin
+        panel.add(pnThongTin); // Thêm pnThongTin vào panel
 
         return panel;
     }
@@ -418,23 +441,24 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     public void reset() {
         txtTimKiem.setText("");
         cbxLoai.setSelectedIndex(0);
-        pnContent.remove(jpSanPham);
-        tbSanPham = initContent(dsSP);
-        jpSanPham = new JScrollPane(tbSanPham);
-        pnContent.add(jpSanPham, BorderLayout.CENTER);
-        pnContent.revalidate();
-        pnContent.repaint();
+        pnRight.revalidate();
+        pnRight.repaint();
+    }
+
+    public void reload(ArrayList<SanPhamDTO> dsSP) {
+        df.setRowCount(0);
+
+        for (SanPhamDTO row : dsSP) {
+            String giaBia = FormatInt.format(row.getGiaBia());
+            Object[] data = {row.getTenSach(), row.getLoaiToString(), row.getNxb(), row.getNamXB(), row.getSoLuong(), giaBia};
+            df.addRow(data);
+        }
     }
 
     public void AddSP(SanPhamDTO sp) {
         if (spBUS.add(sp)) {
             new ShowDiaLog("Thêm sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
-            pnContent.remove(jpSanPham);
-            tbSanPham = initContent(dsSP);
-            jpSanPham = new JScrollPane(tbSanPham);
-            pnContent.add(jpSanPham, BorderLayout.CENTER);
-            pnContent.revalidate();
-            pnContent.repaint();
+            reload(dsSP);
         } else {
             new ShowDiaLog("Thêm sản phẩm thất bại!", ShowDiaLog.ERROR_DIALOG);
         }
@@ -443,12 +467,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     public void EditSP(SanPhamDTO sp) {
         if (spBUS.set(sp)) {
             new ShowDiaLog("Sửa sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
-            pnContent.remove(jpSanPham);
-            tbSanPham = initContent(dsSP);
-            jpSanPham = new JScrollPane(tbSanPham);
-            pnContent.add(jpSanPham, BorderLayout.CENTER);
-            pnContent.revalidate();
-            pnContent.repaint();
+            reload(dsSP);
         } else {
             new ShowDiaLog("Sửa sản phẩm thất bại!", ShowDiaLog.ERROR_DIALOG);
         }
@@ -499,18 +518,12 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                 if (result == JOptionPane.YES_OPTION) {
                     if (spBUS.delete(selectedSP.getMaSach(), false)) {
                         new ShowDiaLog("Đã xoá sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
-                        dsSP.remove(selectedSP);
-                        tbSanPham.clearSelection();
-                        selectedSP = new SanPhamDTO();
-                        pnContent.remove(jpSanPham);
-                        tbSanPham = initContent(dsSP);
-                        jpSanPham = new JScrollPane(tbSanPham);
-                        pnContent.add(jpSanPham, BorderLayout.CENTER);
+                        reload(dsSP);
 
                         // Cập nhật panel chi tiết sản phẩm
                         selectedSP = new SanPhamDTO();
                         pnChiTietSP.removeAll();
-                        pnChiTietSP.add(initChiTietSP(spMacDinh));
+                        pnChiTietSP.setVisible(false);
                         pnChiTietSP.revalidate();
                         pnChiTietSP.repaint();
                         pnContent.revalidate();

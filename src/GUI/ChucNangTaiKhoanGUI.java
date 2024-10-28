@@ -63,7 +63,7 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         lblHeader.setPreferredSize(new Dimension(width, 36));
         lblHeader.setMaximumSize(new Dimension(width, 36));
         lblHeader.setFont(BASE.font_title);
-        lblHeader.setBackground(BASE.color_heaer);
+        lblHeader.setBackground(BASE.color_header_tbl);
         lblHeader.setOpaque(true);
         lblHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -125,21 +125,21 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
 
         //-------------------- các nút xác nhận, lưu, huỷ --------------------------
         btnXacNhan = new JButton("Xác nhận");
-        btnXacNhan.setBackground(BASE.color_heaer);
+        btnXacNhan.setBackground(BASE.color_header_tbl);
         btnXacNhan.setOpaque(true);
         btnXacNhan.setFocusPainted(false);
         btnXacNhan.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXacNhan.addMouseListener(this);
 
         btnHuy = new JButton("Huỷ");
-        btnHuy.setBackground(BASE.color_heaer);
+        btnHuy.setBackground(BASE.color_header_tbl);
         btnHuy.setOpaque(true);
         btnHuy.setFocusPainted(false);
         btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnHuy.addMouseListener(this);
 
         btnLuu = new JButton("Lưu");
-        btnLuu.setBackground(BASE.color_heaer);
+        btnLuu.setBackground(BASE.color_header_tbl);
         btnLuu.setOpaque(true);
         btnLuu.setFocusPainted(false);
         btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -195,16 +195,16 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         if (!xuLyKiemTraDiaChi(txtDiaChi.getText())) {
             return;
         }
-        if(!xuLyKiemTraSDT(txtSDT.getText())){
+        if (!xuLyKiemTraSDT(txtSDT.getText())) {
             return;
         }
-        if(!xuLyKiemTraEmail(txtEmail.getText())){
+        if (!xuLyKiemTraEmail(txtEmail.getText())) {
             return;
         }
-        if(!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))){
+        if (!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))) {
             return;
         }
-        if(!txtNhapLaiMK.equals(txtMatKhau)){
+        if (!txtNhapLaiMK.equals(txtMatKhau)) {
             new ShowDiaLog("<html>Mật khẩu nhập lại phải giống với mật khẩu!</html>", ShowDiaLog.ERROR_DIALOG);
             return;
         }
@@ -223,13 +223,15 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         if (!xuLyKiemTraDiaChi(txtDiaChi.getText())) {
             return;
         }
-        if(!xuLyKiemTraSDT(txtSDT.getText())){
+        if (!txtSDT.getText().equals(tkGUI.selectedTK.getSDT())) {
+            if (!xuLyKiemTraSDT(txtSDT.getText())) {
+                return;
+            }
+        }
+        if (!xuLyKiemTraEmail(txtEmail.getText())) {
             return;
         }
-        if(!xuLyKiemTraEmail(txtEmail.getText())){
-            return;
-        }
-        if(!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))){
+        if (!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))) {
             return;
         }
         TaiKhoanDTO tk = new TaiKhoanDTO(tkGUI.selectedTK.getTenDN(), txtTenNV.getText(),

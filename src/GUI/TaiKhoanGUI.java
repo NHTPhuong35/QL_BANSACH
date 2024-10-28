@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.PhanQuyenBUS;
 import BUS.TaiKhoanBUS;
 import DTO.QuyenDTO;
 import DTO.TaiKhoanDTO;
@@ -12,15 +13,18 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -48,17 +52,34 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     private JTextField txtTimKiem;
     private JComboBox<String> cbxQuyen;
     private int width = 1000, height = 500;
-    private ArrayList<QuyenDTO> dsQuyen;
+    private String[] dsQuyen;
     private ArrayList<TaiKhoanDTO> dsTK;
     TaiKhoanDTO selectedTK = new TaiKhoanDTO();
     private boolean isPasswordVisible = false; //Xem mật khẩu (false: ẩn)
     private TaiKhoanBUS tkBUS;
+    private TaiKhoanDTO tkUSER;
+
+    public TaiKhoanGUI(TaiKhoanDTO tkUSER) {
+        this.tkUSER = tkUSER;
+        PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
+        dsQuyen = quyenBUS.getTenPhanQuyenList();
+
+        tkBUS = new TaiKhoanBUS();
+        dsTK = new ArrayList<>();
+        dsTK = tkBUS.getDsTK();
+
+        for (int i = 0; i < dsTK.size(); i++) {
+            if (dsTK.get(i).getTenDN().equals(tkUSER.getTenDN())) {
+                dsTK.remove(i);
+            }
+        }
+
+        init();
+    }
 
     public TaiKhoanGUI() {
-        dsQuyen = new ArrayList<>();
-        dsQuyen.add(new QuyenDTO("Admin", "Admin"));
-        dsQuyen.add(new QuyenDTO("QL", "Quản lý"));
-        dsQuyen.add(new QuyenDTO("QNV", "Nhân Viên"));
+        PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
+        dsQuyen = quyenBUS.getTenPhanQuyenList();
 
         tkBUS = new TaiKhoanBUS();
         dsTK = new ArrayList<>();
@@ -77,10 +98,16 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         //thanh thao tác thêm, sửa, xoá
         JPanel pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
-        btnThem = new JButton("+ Thêm tài khoản");
-        btnThem.setPreferredSize(new Dimension(150, 30));
-        btnThem.setMaximumSize(new Dimension(150, 30));
-        btnThem.setBackground(BASE.btnThem);
+
+        ImageIcon addIcon = new ImageIcon("./src/image/btAdd.png");
+        Image addImage = addIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        addIcon = new ImageIcon(addImage);
+        btnThem = new JButton("Thêm", addIcon);
+        btnThem.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
+        btnThem.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
+        btnThem.setPreferredSize(new Dimension(100, 35));
+        btnThem.setMaximumSize(new Dimension(100, 35));
+        btnThem.setBackground(BASE.color_btAdd);
         btnThem.setFont(BASE.font);
         btnThem.setOpaque(true);
         btnThem.setBorderPainted(false);
@@ -88,10 +115,15 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnThem.addMouseListener(this);
 
-        btnSua = new JButton("+ Sửa tài khoản");
-        btnSua.setPreferredSize(new Dimension(150, 30));
-        btnSua.setMaximumSize(new Dimension(150, 30));
-        btnSua.setBackground(BASE.btnSua);
+        ImageIcon editIcon = new ImageIcon("./src/image/btEdit.png");
+        Image editImage = editIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        editIcon = new ImageIcon(editImage);
+        btnSua = new JButton("Sửa",editIcon);
+        btnSua.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnSua.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnSua.setPreferredSize(new Dimension(100, 35));
+        btnSua.setMaximumSize(new Dimension(100, 35));
+        btnSua.setBackground(BASE.color_btEdit);
         btnSua.setFont(BASE.font);
         btnSua.setOpaque(true);
         btnSua.setBorderPainted(false);
@@ -99,10 +131,15 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSua.addMouseListener(this);
 
-        btnXoa = new JButton("+ Xoá tài khoản");
-        btnXoa.setPreferredSize(new Dimension(150, 30));
-        btnXoa.setMaximumSize(new Dimension(150, 30));
-        btnXoa.setBackground(BASE.btnXoa);
+        ImageIcon deleteIcon = new ImageIcon("./src/image/bin.png");
+        Image deleteImage = deleteIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        deleteIcon = new ImageIcon(deleteImage);
+        btnXoa = new JButton("Xoá",deleteIcon);
+        btnXoa.setHorizontalTextPosition(SwingConstants.RIGHT);
+        btnXoa.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnXoa.setPreferredSize(new Dimension(100, 35));
+        btnXoa.setMaximumSize(new Dimension(100, 35));
+        btnXoa.setBackground(BASE.color_btLamXoa);
         btnXoa.setFont(BASE.font);
         btnXoa.setOpaque(true);
         btnXoa.setBorderPainted(false);
@@ -151,8 +188,8 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         cbxQuyen.setPreferredSize(new Dimension(150, 25));
         cbxQuyen.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cbxQuyen.addItem("Tất cả");
-        for (int i = 0; i < dsQuyen.size(); i++) {
-            cbxQuyen.addItem(dsQuyen.get(i).getTenQuyen());
+        for (int i = 0; i < dsQuyen.length; i++) {
+            cbxQuyen.addItem(dsQuyen[i]);
         }
 
         cbxQuyen.addActionListener(new ActionListener() {
@@ -210,6 +247,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
             if (row.getTrangThai() == 0) {
                 trangThai = "Nghỉ việc";
             }
+
             Object[] data = {row.getTenDN(), row.getTenNV(), row.getQuyen().getTenQuyen(), "********", trangThai};
             df.addRow(data);
         }
@@ -226,7 +264,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         table.setShowVerticalLines(false);
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setPreferredSize(new Dimension(tableHeader.getPreferredSize().width, 30));
-        tableHeader.setBackground(BASE.color_table_heaer);  // Đặt màu nền cho tiêu đề là màu xám nhạt
+        tableHeader.setBackground(BASE.color_header_tbl);
         tableHeader.setFont(BASE.font_header);
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -284,13 +322,13 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
     public void reload(ArrayList<TaiKhoanDTO> dsTaiKhoan) {
         df.setRowCount(0);
-        
-        for(TaiKhoanDTO tk : dsTaiKhoan){
+
+        for (TaiKhoanDTO tk : dsTaiKhoan) {
             String trangThai = "Đang làm việc";
             if (tk.getTrangThai() == 0) {
                 trangThai = "Nghỉ việc";
             }
-            df.addRow(new Object[]{tk.getTenDN(), tk.getTenNV(), tk.getQuyen().getTenQuyen(),"********", trangThai});
+            df.addRow(new Object[]{tk.getTenDN(), tk.getTenNV(), tk.getQuyen().getTenQuyen(), "********", trangThai});
         }
     }
 
@@ -304,13 +342,13 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     }
 
     public void suaTaiKhoan(TaiKhoanDTO tk) {
-        if(tkBUS.set(tk)){
+        if (tkBUS.set(tk)) {
             new ShowDiaLog("Sửa tài khoản thành công!", ShowDiaLog.SUCCESS_DIALOG);
             reload(dsTK);
         } else {
             new ShowDiaLog("Sửa tài khoản thất bại!", ShowDiaLog.ERROR_DIALOG);
         }
-        
+
     }
 
     public static void main(String[] args) {

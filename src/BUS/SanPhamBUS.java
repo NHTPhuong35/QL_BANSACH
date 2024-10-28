@@ -122,8 +122,8 @@ public class SanPhamBUS {
         }
 
         // Kiểm tra tên sách có độ dài từ 3 đến 50 ký tự
-        if (tenSach.length() < 3 || tenSach.length() > 50) {
-            return "<html>Tên sách phải có độ dài từ 3 đến 50 ký tự.</html>"; // Lỗi: Độ dài không hợp lệ
+        if (tenSach.length() < 3 || tenSach.length() > 40) {
+            return "<html>Tên sách phải có độ dài từ 3 đến 40 ký tự.</html>"; // Lỗi: Độ dài không hợp lệ
         }
 
         // Kiểm tra tên sách không chứa khoảng trắng ở đầu hoặc cuối

@@ -6,6 +6,7 @@
 
 package  GUI;
 
+import DTO.TaiKhoanDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -52,8 +53,19 @@ public class HomeGUI extends JFrame implements MouseListener {
     private JLabel headAppName;
     private JLabel logoApp;
     private JPanel showPanel;
+    
+    public static TaiKhoanDTO tkUSER;
+    
+    public HomeGUI(TaiKhoanDTO tkUSER){
+        this.tkUSER = tkUSER;
+        init();
+    }
 
     public HomeGUI() {
+        init();
+    }
+    
+    public void init() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Trang chủ");
         setLayout(new GridBagLayout());
@@ -495,7 +507,11 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == nhanvienButton) {
-            //Nhân viên
+            TaiKhoanDN tkDN = new TaiKhoanDN(tkUSER);
+            showPanel.removeAll();
+            showPanel.add(tkDN, BorderLayout.CENTER);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
         if(btn == thongkeButton){
             ThongKeGUI tkGUI = new ThongKeGUI();
@@ -531,10 +547,14 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.repaint();
         }
         if (btn == nhacungcapButton) {
-            //Nhà cung cấp
+            NhaCungCapGUI nccGUI = new NhaCungCapGUI();
+            showPanel.removeAll();
+            showPanel.add(nccGUI, BorderLayout.CENTER);
+            showPanel.revalidate();
+            showPanel.repaint();
         }
         if (btn == taikhoanButton) {
-            TaiKhoanGUI tkGUI = new TaiKhoanGUI();
+            TaiKhoanGUI tkGUI = new TaiKhoanGUI(tkUSER);
             showPanel.removeAll();
             showPanel.add(tkGUI, BorderLayout.CENTER);
             showPanel.revalidate();

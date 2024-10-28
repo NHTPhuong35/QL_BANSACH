@@ -48,7 +48,10 @@ public class LoginBUS {
 			
 				return;
 			}
-			HomeBUS home = new HomeBUS(new HomeGUI());
+                        HomeGUI homeGUI = new HomeGUI(taikhoan); 
+			HomeBUS home = new HomeBUS(homeGUI);
+                        TaiKhoanDTO tk = homeGUI.tkUSER;
+                        System.out.println("login: "+ tk.getTenDN()+", Mật khẩu: "+ tk.getMatKhau());
 			view.dispose();			
 			
 		} catch (Exception e) {
