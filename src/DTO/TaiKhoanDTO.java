@@ -4,6 +4,7 @@
  */
 package DTO;
 
+import DAO.QuyenDAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -30,7 +31,7 @@ public class TaiKhoanDTO {
     public QuyenDTO getQuyen() {
         return quyen;
     }
-
+    
     public void setQuyen(QuyenDTO quyen) {
         this.quyen = quyen;
     }
@@ -97,9 +98,13 @@ public class TaiKhoanDTO {
 	
 	public static TaiKhoanDTO getFromResultSet(ResultSet rs) throws SQLException {
 		TaiKhoanDTO tk = new TaiKhoanDTO();
+                QuyenDTO quyen = new QuyenDTO();
+                QuyenDAO quyendao = new QuyenDAO();
+                quyen = quyendao.getquyen(rs.getString("MAQUYEN"));
 		tk.setTenDN(rs.getString("TENDN"));
 		tk.setTenNV(rs.getString("TENNV"));
 		tk.setDiaChi(rs.getString("DIACHI"));
+                tk.setQuyen(quyen);
 		tk.setSDT(rs.getString("SDT"));
 		tk.setEmail(rs.getString("EMAIL"));
 		tk.setMatKhau(rs.getString("MATKHAU"));

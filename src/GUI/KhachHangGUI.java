@@ -36,7 +36,7 @@ public class KhachHangGUI extends JPanel {
 
     private JTable tbl;
     private DefaultTableModel dtm;
-    private JPanel pnHeader, pnMain;
+    private JPanel pnHeader, pnMain, pnBtn;
     private JButton btnthem, btnSua;
     private JPanel btAdd, btEdit;
     private JTextField tfTimKiem;
@@ -63,7 +63,7 @@ public class KhachHangGUI extends JPanel {
 
     public void initComponents() {
 
-        JPanel pnBtn = new JPanel();
+        pnBtn = new JPanel();
         pnBtn.setLayout(new BoxLayout(pnBtn, BoxLayout.X_AXIS));
 
         MouseAdapter commonMouseListener = createCommonMouseListener();
@@ -76,9 +76,9 @@ public class KhachHangGUI extends JPanel {
         btEdit = createButton(btEdit, "Sửa", "btEdit.png", BASE.color_btEdit, 100, 50);
         btEdit.addMouseListener(commonMouseListener);
 
-        pnBtn.add(btAdd);
-        pnBtn.add(Box.createHorizontalStrut(30));
-        pnBtn.add(btEdit);
+//        pnBtn.add(btAdd);
+//        pnBtn.add(Box.createHorizontalStrut(30));
+//        pnBtn.add(btEdit);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
         lblTimKiem.setFont(BASE.font_header);
@@ -243,6 +243,16 @@ public class KhachHangGUI extends JPanel {
         };
     }
     
+    public JPanel getPnAdd(){
+       return btAdd; 
+    }
+    
+    public JPanel getPnEdit(){
+        return btEdit;
+    }
+    public JPanel getPnBtn(){
+        return pnBtn;
+    }
     public static void main(String[] agrs) {
         JFrame f = new JFrame();
         f.setSize(1000, 800);

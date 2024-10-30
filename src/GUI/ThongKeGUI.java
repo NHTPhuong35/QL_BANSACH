@@ -10,6 +10,11 @@ import java.awt.*;
 import javax.swing.table.TableCellRenderer;
 import GUI.expands.DateRangePickerPanel;
 import BUS.BangThongKeBUS;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
 import utils.MoneyFormatter;
 
 /**
@@ -19,11 +24,14 @@ import utils.MoneyFormatter;
 
 public class ThongKeGUI extends JPanel{
     private double totalincome;
-    private double totalimportprice;
+    private int totalreturn;
     private int totalbooks;
     private int totalHoaDon;
     private JPanel pickdayPanel;
     private JButton tim;
+    private JLabel chitietbutton;
+    private JTable ThongKeTable;
+    private DefaultTableModel tableModel;
     
     public ThongKeGUI(){
         JPanel setDatePanel = new JPanel();
@@ -48,80 +56,89 @@ public class ThongKeGUI extends JPanel{
         //Quan trọng
         DateRangePickerPanel datepickerpanel = new DateRangePickerPanel(); //Tạo ngày
         BangThongKeBUS bangthongkebus = new BangThongKeBUS();//Controller
+     
+//        totalincome = bangthongkebus.getTotalIncome(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
+//        totalreturn = bangthongkebus.getSoHoaDonHuy(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
+//        totalbooks = bangthongkebus.getTotalBooks(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
+//        totalHoaDon = bangthongkebus.getTotalHoaDon(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
         
-        totalincome = bangthongkebus.getTotalIncome(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
-        totalimportprice = bangthongkebus.getTotalImportPrice(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
-        totalbooks = bangthongkebus.getTotalBooks(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
-        totalHoaDon = bangthongkebus.getTotalHoaDon(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
-        
-        
-        tongtienbanduoc = new JLabel("Tổng tiền: " + MoneyFormatter.formatToVND(totalincome));
-        tongtienbanduoc.setPreferredSize(new Dimension(120, 20));
-        
-        tongtiennhaphang = new JLabel("Tổng tiền nhập: " + MoneyFormatter.formatToVND(totalimportprice));
-        tongtiennhaphang.setPreferredSize(new Dimension(120, 20));
+        JPanel tongtienbanduocpanel = new JPanel();
+        tongtienbanduocpanel.setBackground(Color.decode("#A3B4B5"));
+        tongtienbanduocpanel.setLayout(new BoxLayout(tongtienbanduocpanel, BoxLayout.Y_AXIS));
+        JLabel tongtienbanduocTitle = new JLabel("Tổng doanh thu:");
+        JLabel tongtienbanduocTotal = new JLabel(MoneyFormatter.formatToVND(totalincome));
+        tongtienbanduocpanel.add(tongtienbanduocTitle);
+        tongtienbanduocpanel.add(tongtienbanduocTotal);
 
-        tienlai = new JLabel("Tiền lãi: " + MoneyFormatter.formatToVND(totalincome - totalimportprice));
-        tienlai.setPreferredSize(new Dimension(120, 20));
+        JPanel trahangpanel = new JPanel();
+        trahangpanel.setBackground(Color.decode("#A3B4B5"));
+        trahangpanel.setLayout(new BoxLayout(trahangpanel, BoxLayout.Y_AXIS));
+        JLabel trahangTitle = new JLabel("Trả hàng:");
+        JLabel trahangTotal = new JLabel(String.valueOf(totalreturn));
+        trahangpanel.add(trahangTitle);
+        trahangpanel.add(trahangTotal);
 
-        sosachbanduoc = new JLabel("Số sách bán: " + totalbooks);
-        sosachbanduoc.setPreferredSize(new Dimension(120, 20));
-
-        sohoadon = new JLabel("Số hóa đơn: " + totalHoaDon);
-        sohoadon.setPreferredSize(new Dimension(120, 20));
+        JPanel sosachbanduocpanel = new JPanel();
+        sosachbanduocpanel.setBackground(Color.decode("#A3B4B5"));
+        sosachbanduocpanel.setLayout(new BoxLayout(sosachbanduocpanel, BoxLayout.Y_AXIS));
+        JLabel sosachbanduocTitle = new JLabel("Số sách bán:");
+        JLabel sosachbanduocTotal = new JLabel(String.valueOf(totalbooks));
+        sosachbanduocpanel.add(sosachbanduocTitle);
+        sosachbanduocpanel.add(sosachbanduocTotal);
+        
+        JPanel sohoadonpanel = new JPanel();
+        sohoadonpanel.setBackground(Color.decode("#A3B4B5"));
+        sohoadonpanel.setLayout(new BoxLayout(sohoadonpanel, BoxLayout.Y_AXIS));
+        JLabel sohoadonTitle = new JLabel("Số hóa đơn:");
+        JLabel sohoadonTotal = new JLabel(String.valueOf(totalHoaDon));
+        sohoadonpanel.add(sohoadonTitle);
+        sohoadonpanel.add(sohoadonTotal);
         
         JPanel sohoadontext = new JPanel();
                 sohoadontext.setLayout(new FlowLayout(FlowLayout.CENTER));
-                sohoadontext.setBackground(Color.decode("#E0E0E0"));
+                sohoadontext.setBackground(Color.decode("#A3B4B5"));
         JPanel tongtienbanduoctext = new JPanel();
                 tongtienbanduoctext.setLayout(new FlowLayout(FlowLayout.CENTER));
-                tongtienbanduoctext.setBackground(Color.decode("#E0E0E0"));
-        JPanel tongtiennhaphangtext = new JPanel();
-                tongtiennhaphangtext.setLayout(new FlowLayout(FlowLayout.CENTER));
-                tongtiennhaphangtext.setBackground(Color.decode("#E0E0E0"));
-        JPanel tienlaitext = new JPanel();
-                tienlaitext.setLayout(new FlowLayout(FlowLayout.CENTER));
-                tienlaitext.setBackground(Color.decode("#E0E0E0"));
+                tongtienbanduoctext.setBackground(Color.decode("#A3B4B5"));
+        JPanel trahangtext = new JPanel();
+                trahangtext.setLayout(new FlowLayout(FlowLayout.CENTER));
+                trahangtext.setBackground(Color.decode("#A3B4B5"));
         JPanel sosachbanduoctext = new JPanel();
                 sosachbanduoctext.setLayout(new FlowLayout(FlowLayout.CENTER));
-                sosachbanduoctext.setBackground(Color.decode("#E0E0E0"));
+                sosachbanduoctext.setBackground(Color.decode("#A3B4B5"));
 
         
         JPanel sohoadonimage = new JPanel();
-        sohoadonimage.setBackground(Color.decode("#A4D6E1"));
-        JPanel tongtienbanduocimage = new JPanel();
-        tongtienbanduocimage.setBackground(Color.decode("#B3E5B3"));
-        JPanel tongtiennhaphangimage = new JPanel();
-        tongtiennhaphangimage.setBackground(Color.decode("#EAB8E4"));
-        JPanel tienlaiimage = new JPanel();
-        tienlaiimage.setBackground(Color.decode("#FFCCB3"));
-        JPanel sosachbanduocimage = new JPanel();
-        sosachbanduocimage.setBackground(Color.decode("#FFB3A8"));
+        sohoadonimage.setBackground(Color.decode("#A3B4B5"));
         
-        sohoadontext.add(sohoadon);
-        tongtienbanduoctext.add(tongtienbanduoc);
-        tongtiennhaphangtext.add(tongtiennhaphang);
-        tienlaitext.add(tienlai);
-        sosachbanduoctext.add(sosachbanduoc);
+        JPanel tongtienbanduocimage = new JPanel();
+        tongtienbanduocimage.setBackground(Color.decode("#A3B4B5"));
+        
+        JPanel trahangimage = new JPanel();
+        trahangimage.setBackground(Color.decode("#A3B4B5"));
+        
+        JPanel sosachbanduocimage = new JPanel();
+        sosachbanduocimage.setBackground(Color.decode("#A3B4B5"));
+        
+        sohoadontext.add(sohoadonpanel);
+        tongtienbanduoctext.add(tongtienbanduocpanel);
+        trahangtext.add(trahangpanel);
+        sosachbanduoctext.add(sosachbanduocpanel);
         
         JLabel logosohoadon = new JLabel();
-        logosohoadon.setIcon(new ImageIcon(getClass().getResource("/Image/money_50px.png")));
+        logosohoadon.setIcon(new ImageIcon(getClass().getResource("/Image/bill2.png")));
         
         
         JLabel logotongtienbanduoc = new JLabel();
-        logotongtienbanduoc.setIcon(new ImageIcon(getClass().getResource("/Image/bill_50px.png")));
+        logotongtienbanduoc.setIcon(new ImageIcon(getClass().getResource("/Image/money.png")));
+    
         
-        
-        JLabel logotongtiennhaphang = new JLabel();
-        logotongtiennhaphang.setIcon(new ImageIcon(getClass().getResource("/Image/money_50px.png")));
-        
-        
-        JLabel logotienlai = new JLabel();
-        logotienlai.setIcon(new ImageIcon(getClass().getResource("/Image/money_50px.png")));
+        JLabel logotrahang = new JLabel();
+        logotrahang.setIcon(new ImageIcon(getClass().getResource("/Image/undo.png")));
         
         
         JLabel logososachbanduoc = new JLabel();
-        logososachbanduoc.setIcon(new ImageIcon(getClass().getResource("/Image/money_50px.png")));
+        logososachbanduoc.setIcon(new ImageIcon(getClass().getResource("/Image/book-tk.png")));
         
         
         sohoadonPanel.setLayout(new GridBagLayout());
@@ -131,11 +148,7 @@ public class ThongKeGUI extends JPanel{
         tongtienbanduocPanel.setLayout(new GridBagLayout());
         tongtienbanduocPanel.setBackground(Color.WHITE);
         GridBagConstraints tongtienbanduocPanelgbc = new GridBagConstraints();
-        
-        tongtiennhaphangPanel.setLayout(new GridBagLayout());
-        tongtiennhaphangPanel.setBackground(Color.WHITE);
-        GridBagConstraints tongtiennhaphangPanelgbc = new GridBagConstraints();
-        
+     
         tienlaiPanel.setLayout(new GridBagLayout());
         tienlaiPanel.setBackground(Color.WHITE);
         GridBagConstraints tienlaiPanelgbc = new GridBagConstraints();
@@ -146,8 +159,7 @@ public class ThongKeGUI extends JPanel{
         
         sohoadonimage.add(logosohoadon);
         tongtienbanduocimage.add(logotongtienbanduoc);
-        tongtiennhaphangimage.add(logotongtiennhaphang);
-        tienlaiimage.add(logotienlai);
+        trahangimage.add(logotrahang);
         sosachbanduocimage.add(logososachbanduoc);
         
         //số hóa đơn
@@ -189,28 +201,8 @@ public class ThongKeGUI extends JPanel{
         tongtienbanduocPanelgbc.weighty = 1;
         tongtienbanduocPanelgbc.fill = GridBagConstraints.BOTH;
         tongtienbanduocPanel.add(tongtienbanduoctext, tongtienbanduocPanelgbc);
-        
-        //Tổng tiền nhập hàng
-        tongtiennhaphangPanelgbc.gridx = 0;
-        tongtiennhaphangPanelgbc.gridy = 0; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        tongtiennhaphangPanelgbc.weightx = 0.4; 
-        tongtiennhaphangPanelgbc.weighty = 1; 
-        tongtiennhaphangPanelgbc.fill = GridBagConstraints.BOTH;
-        tongtiennhaphangPanelgbc.anchor = GridBagConstraints.CENTER;
-        tongtiennhaphangPanel.add(tongtiennhaphangimage, tongtiennhaphangPanelgbc);
-        
-        tongtiennhaphangPanelgbc.gridx = 1;
-        tongtiennhaphangPanelgbc.gridy = 0; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        tongtiennhaphangPanelgbc.weightx = 1; 
-        tongtiennhaphangPanelgbc.weighty = 1; 
-        tongtiennhaphangPanelgbc.fill = GridBagConstraints.BOTH;
-        tongtiennhaphangPanel.add(tongtiennhaphangtext, tongtiennhaphangPanelgbc);
-        
-        //Tiền lãi
+          
+        //Trả hàng
         tienlaiPanelgbc.gridx = 0;
         tienlaiPanelgbc.gridy = 0; 
 //        gbc.gridwidth = 1;
@@ -219,7 +211,7 @@ public class ThongKeGUI extends JPanel{
         tienlaiPanelgbc.weighty = 1;
         tienlaiPanelgbc.fill = GridBagConstraints.BOTH;
         tienlaiPanelgbc.anchor = GridBagConstraints.CENTER;
-        tienlaiPanel.add(tienlaiimage, tienlaiPanelgbc);
+        tienlaiPanel.add(trahangimage, tienlaiPanelgbc);
         
         tienlaiPanelgbc.gridx = 1;
         tienlaiPanelgbc.gridy = 0; 
@@ -228,7 +220,7 @@ public class ThongKeGUI extends JPanel{
         tienlaiPanelgbc.weightx = 1; 
         tienlaiPanelgbc.weighty = 1;
         tienlaiPanelgbc.fill = GridBagConstraints.BOTH;
-        tienlaiPanel.add(tienlaitext, tienlaiPanelgbc);
+        tienlaiPanel.add(trahangtext, tienlaiPanelgbc);
         
         //Số sách bán được
         sosachbanduocPanelgbc.gridx = 0;
@@ -253,56 +245,25 @@ public class ThongKeGUI extends JPanel{
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         
-        setDatePanel.setBackground(Color.RED);
-        thongkePanel.setBackground(Color.YELLOW);
-        bangthongtinPanel.setBackground(Color.GREEN);
-        
         bangthongtinPanel.setLayout(new GridBagLayout());
         GridBagConstraints bangthongtinPanelgbc = new GridBagConstraints();
          
-        bangthongtinPanelgbc.gridx = 0;
-        bangthongtinPanelgbc.gridy = 0; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        bangthongtinPanelgbc.weightx = 1; 
-        bangthongtinPanelgbc.weighty = 1; 
+        bangthongtinPanelgbc.insets = new Insets(5, 10, 5, 10);
+        bangthongtinPanelgbc.weightx = 1;
+        bangthongtinPanelgbc.weighty = 1;
         bangthongtinPanelgbc.fill = GridBagConstraints.BOTH;
+
+        bangthongtinPanelgbc.gridx = 0;
+        bangthongtinPanelgbc.gridy = 0;
         bangthongtinPanel.add(tongtienbanduocPanel, bangthongtinPanelgbc);
-        
-        bangthongtinPanelgbc.gridx = 0;
-        bangthongtinPanelgbc.gridy = 1; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        bangthongtinPanelgbc.weightx = 1; 
-        bangthongtinPanelgbc.weighty = 1; 
-        bangthongtinPanelgbc.fill = GridBagConstraints.BOTH;
-        bangthongtinPanel.add(tongtiennhaphangPanel, bangthongtinPanelgbc);
-        
-        bangthongtinPanelgbc.gridx = 0;
-        bangthongtinPanelgbc.gridy = 2; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        bangthongtinPanelgbc.weightx = 1; 
-        bangthongtinPanelgbc.weighty = 1; 
-        bangthongtinPanelgbc.fill = GridBagConstraints.BOTH;
+
+        bangthongtinPanelgbc.gridx = 1;
         bangthongtinPanel.add(tienlaiPanel, bangthongtinPanelgbc);
-        
-        bangthongtinPanelgbc.gridx = 0;
-        bangthongtinPanelgbc.gridy = 3; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        bangthongtinPanelgbc.weightx = 1; 
-        bangthongtinPanelgbc.weighty = 1; 
-        bangthongtinPanelgbc.fill = GridBagConstraints.BOTH;
+
+        bangthongtinPanelgbc.gridx = 2;
         bangthongtinPanel.add(sosachbanduocPanel, bangthongtinPanelgbc);
-        
-        bangthongtinPanelgbc.gridx = 0;
-        bangthongtinPanelgbc.gridy = 4; 
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        bangthongtinPanelgbc.weightx = 1; 
-        bangthongtinPanelgbc.weighty = 1; 
-        bangthongtinPanelgbc.fill = GridBagConstraints.BOTH;
+
+        bangthongtinPanelgbc.gridx = 3;
         bangthongtinPanel.add(sohoadonPanel, bangthongtinPanelgbc);
         
 //        tongtienbanduoc.setVerticalAlignment(SwingConstants.CENTER);
@@ -317,24 +278,153 @@ public class ThongKeGUI extends JPanel{
 //        sosachbanduoc.setHorizontalAlignment(SwingConstants.CENTER);
 //        sohoadon.setHorizontalAlignment(SwingConstants.CENTER);
         
+        JPanel tongquanpanel = new JPanel();
+        tongquanpanel.add(new JLabel("Tổng quan"));
+        chitietbutton = new JLabel("<html><u>Chi tiết</u></html>");
+        chitietbutton.setForeground(Color.decode("#8CC44F"));
+        tongquanpanel.add(chitietbutton);
         
-        gbc.gridx = 1;
-        gbc.gridy = 1; 
+        gbc.gridx = 0;
+        gbc.gridy = 2; 
 //        gbc.gridwidth = 1;
 //        gbc.gridheight = 1;
-        gbc.weightx = 1; 
+        gbc.weightx = 0; 
+        gbc.weighty = 0; 
+        gbc.fill = GridBagConstraints.BOTH;
+        add(tongquanpanel, gbc);
+        
+        ChiTietThongKeGUI chitietthongkegui = new ChiTietThongKeGUI();
+        bangthongkebus.putdschuoithongtin(chitietthongkegui, datepickerpanel.getDateStart(), datepickerpanel.getDateEnd());
+        
+        chitietbutton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(thongkePanel.isVisible()){
+                    thongkePanel.setVisible(false);
+                     
+                    gbc.gridx = 0;
+                    gbc.gridy = 3; 
+            //        gbc.gridwidth = 1;
+            //        gbc.gridheight = 1;
+                    gbc.weightx = 0; 
+                    gbc.weighty = 1; 
+                    gbc.fill = GridBagConstraints.BOTH;
+                    add(chitietthongkegui, gbc);
+                    chitietthongkegui.setVisible(true);
+                    
+                    chitietthongkegui.revalidate(); 
+                    chitietthongkegui.repaint();
+                    
+                }else{
+                    chitietthongkegui.setVisible(false);
+                    
+                    gbc.gridx = 0;
+                    gbc.gridy = 3; 
+            //        gbc.gridwidth = 1;
+            //        gbc.gridheight = 1;
+                    gbc.weightx = 0; 
+                    gbc.weighty = 1; 
+                    gbc.fill = GridBagConstraints.BOTH;
+                    add(thongkePanel, gbc);
+                    thongkePanel.setVisible(true);
+                }
+                revalidate();
+                repaint();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                chitietbutton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        });
+ 
+        gbc.gridx = 0;
+        gbc.gridy = 3; 
+//        gbc.gridwidth = 1;
+//        gbc.gridheight = 1;
+        gbc.weightx = 0; 
         gbc.weighty = 1; 
         gbc.fill = GridBagConstraints.BOTH;
         add(thongkePanel, gbc);
         
         
         
-        bangthongkebus.show(thongkePanel,datepickerpanel.getDateStart(),datepickerpanel.getDateEnd());
-        
+        bangthongkebus.showDateByTheLoai(thongkePanel,datepickerpanel.getDateStart(),datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai());
+        totalincome = bangthongkebus.getTotalIncomeByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
+        totalreturn = bangthongkebus.getTotalHoaDonBiHuyByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
+        totalbooks = bangthongkebus.getTotalBooksByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
+        totalHoaDon = bangthongkebus.getTotalHoaDonByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
+                    
         tim.addActionListener(e -> {
-            bangthongkebus.show(thongkePanel,datepickerpanel.getDateStart(),datepickerpanel.getDateEnd());
-            thongkePanel.revalidate();
-            thongkePanel.repaint();
+            String loaithoigian = datepickerpanel.getLoaiThoiGian();
+            switch(loaithoigian){
+                case "Ngày" -> {
+                    bangthongkebus.showDateByTheLoai(thongkePanel,datepickerpanel.getDateStart(),datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai());
+                    thongkePanel.revalidate();
+                    thongkePanel.repaint();
+                    
+                    totalincome = bangthongkebus.getTotalIncomeByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalreturn = bangthongkebus.getTotalHoaDonBiHuyByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalbooks = bangthongkebus.getTotalBooksByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalHoaDon = bangthongkebus.getTotalHoaDonByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+
+                    tongtienbanduocTotal.setText(MoneyFormatter.formatToVND(totalincome));
+                    trahangTotal.setText(String.valueOf(totalreturn));
+                    sosachbanduocTotal.setText(String.valueOf(totalbooks));
+                    sohoadonTotal.setText(String.valueOf(totalHoaDon));
+                    
+                    ((DefaultTableModel) chitietthongkegui.getTableModel()).setRowCount(0);
+                    bangthongkebus.putdschuoithongtincuatheloai(chitietthongkegui, datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    chitietthongkegui.revalidate(); 
+                    chitietthongkegui.repaint();
+                    
+                    break;
+                }
+                case "Tháng" -> {
+                    bangthongkebus.showMonthByTheLoai(thongkePanel,datepickerpanel.getDateStart(),datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai());
+                    thongkePanel.revalidate();
+                    thongkePanel.repaint();
+                    
+                    totalincome = bangthongkebus.getTotalIncomeByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalreturn = bangthongkebus.getTotalHoaDonBiHuyByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalbooks = bangthongkebus.getTotalBooksByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalHoaDon = bangthongkebus.getTotalHoaDonByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+
+                    tongtienbanduocTotal.setText(MoneyFormatter.formatToVND(totalincome));
+                    trahangTotal.setText(String.valueOf(totalreturn));
+                    sosachbanduocTotal.setText(String.valueOf(totalbooks));
+                    sohoadonTotal.setText(String.valueOf(totalHoaDon));
+                    
+                    ((DefaultTableModel) chitietthongkegui.getTableModel()).setRowCount(0);
+                    bangthongkebus.putdschuoithongtincuatheloai(chitietthongkegui, datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    chitietthongkegui.revalidate(); 
+                    chitietthongkegui.repaint();
+            
+                    break;
+                }
+                case "Năm" -> {
+                    bangthongkebus.showYearByTheLoai(thongkePanel,datepickerpanel.getDateStart(),datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai());
+                    thongkePanel.revalidate();
+                    thongkePanel.repaint();
+                    
+                    totalincome = bangthongkebus.getTotalIncomeByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalreturn = bangthongkebus.getTotalHoaDonBiHuyByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalbooks = bangthongkebus.getTotalBooksByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    totalHoaDon = bangthongkebus.getTotalHoaDonByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+
+                    tongtienbanduocTotal.setText(MoneyFormatter.formatToVND(totalincome));
+                    trahangTotal.setText(String.valueOf(totalreturn));
+                    sosachbanduocTotal.setText(String.valueOf(totalbooks));
+                    sohoadonTotal.setText(String.valueOf(totalHoaDon));
+                    
+                    ((DefaultTableModel) chitietthongkegui.getTableModel()).setRowCount(0);
+                    bangthongkebus.putdschuoithongtincuatheloai(chitietthongkegui, datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), loaithoigian);
+                    chitietthongkegui.revalidate(); 
+                    chitietthongkegui.repaint();
+            
+                    break;
+                }
+            }
         });
   
         //Test ngày
@@ -346,8 +436,8 @@ public class ThongKeGUI extends JPanel{
         gbc.gridy = 1;
 //        gbc.gridwidth = 1; 
 //        gbc.gridheight = 1;
-        gbc.weightx = 0.15; 
-        gbc.weighty = 1;
+        gbc.weightx = 1; 
+        gbc.weighty = 0;
         gbc.fill = GridBagConstraints.BOTH;
         add(bangthongtinPanel, gbc);
         

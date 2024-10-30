@@ -84,7 +84,27 @@ public class KhachHangDAO {
             e.printStackTrace();
         }
     }
+    
+    public String TimTenKhachHangWithId(String makh) {
+        String query = "SELECT TENKH FROM khachhang WHERE MAKH = ?";
+        String tenkh = "";
+        try {
+            conn.connect();
+            PreparedStatement stmt = conn.getConn().prepareStatement(query);
+            stmt.setString(1, makh);
+            ResultSet rs = stmt.executeQuery();
 
+            if (rs.next()) {
+                tenkh = rs.getNString("TENKH");
+            }
+            conn.disconnect();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return tenkh;
+    }
+
+    
     public static void main(String[] agrs) {
         KhachHangDAO dao = new KhachHangDAO();
 //        ArrayList<KhachHangDTO> ds = dao.dsKhachHang();

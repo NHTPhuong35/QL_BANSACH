@@ -19,6 +19,7 @@ public class SanPhamDAO {
     public SanPhamDAO() {
         try {
             conn = new connectDatabase();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,7 +307,36 @@ public class SanPhamDAO {
             e.printStackTrace();
         }
     }
-
+    
+    public SanPhamDTO getTenSachByMaSach(String masach){
+        String query = "SELECT * FROM sach WHERE MASACH = ?";
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        SanPhamDTO sanpham = new SanPhamDTO();
+        try{
+            conn.connect();
+            stmt = conn.getConn().prepareStatement(query);
+            stmt.setNString(1, masach);
+            rs = stmt.executeQuery();
+            if(rs.next()){
+                sanpham.setTenSach(rs.getString("TENSACH"));
+                sanpham.setMaSach(rs.getString("MASACH"));
+                sanpham.setGiaBan(Double.parseDouble(rs.getString("GIABAN")));
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                conn.disconnect();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+        return sanpham;
+    }
+    
     public static void main(String[] args) {
         SanPhamDAO dao = new SanPhamDAO();
         ArrayList<SanPhamDTO> list = dao.DanhSachSanPham();

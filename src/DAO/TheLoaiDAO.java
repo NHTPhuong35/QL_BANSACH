@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import DTO.LoaiDTO;
+import java.sql.Statement;
+import java.util.List;
 
 public class TheLoaiDAO {
 	
@@ -80,7 +82,66 @@ public class TheLoaiDAO {
 			return false;
 		}
 	}
-	
+    
+    public String getTenTheLoaiByMaLoai(String maloai){
+        String query = "SELECT * FROM loai WHERE MALOAI = ?";
+        String tenloai = "";
+        try{
+            conn.connect();
+            PreparedStatement stmt = conn.getConn().prepareStatement(query);
+            stmt.setString(1, maloai);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()){
+                tenloai = rs.getString("TENLOAI");
+            }
+            conn.disconnect();
+        }catch(Exception ex){
+            ex.printStackTrace();
+        }
+        return tenloai;
+    }
+    
+    public ArrayList<LoaiDTO> DanhSachLoai() {
+        ArrayList<LoaiDTO> dsLoai = new ArrayList<>();
+        try {
+            conn.connect();
+            String sql = "SELECT * FROM loai";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+                ResultSet rs = pre.executeQuery();
+                while (rs.next()) {
+                    String maLoai = rs.getString("MALOAI");
+                    String tenLoai = rs.getString("TENLOAI");
+                    int trangThai = rs.getInt("TRANGTHAI");
+
+                    // Tạo đối tượng LoaiDTO và thêm vào danh sách
+                    LoaiDTO loai = new LoaiDTO(maLoai, tenLoai, trangThai);
+                    dsLoai.add(loai);
+                }
+                conn.disconnect();
+            }
+        } catch (Exception e) {
+        }
+        return dsLoai;
+    }
+
+    public String[] DanhSachTenLoai() {
+        String query = "SELECT * FROM `loai`";
+        List<String> dstenloai = new ArrayList<>();
+        try {
+            conn.connect();
+            Statement stmt = conn.getConn().createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            dstenloai.add("Tất cả");
+            while (rs.next()) {
+                dstenloai.add(rs.getNString(2));
+            }
+            conn.disconnect();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return dstenloai.toArray(new String[0]);
+    }
+    
     public static void main(String[] agrs) {
         TheLoaiDAO dao = new TheLoaiDAO();
         ArrayList<LoaiDTO> ds = dao.dsTheLoai();

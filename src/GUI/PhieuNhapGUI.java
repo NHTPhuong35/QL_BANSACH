@@ -20,25 +20,28 @@ public class PhieuNhapGUI extends JPanel {
 
     private JTable table;
     private DefaultTableModel model;
-
+    private JButton addButton;
+    private JButton editButton;
+    private JButton deleteButton;
+    private JPanel toolBar;
+    
     public PhieuNhapGUI() {
         // Tạo các nút chức năng với màu sắc như trong hình
-        JButton addButton = new JButton("+ THÊM");
+        addButton = new JButton("+ THÊM");
         addButton.setBackground(BASE.btnThem);
 
-        JButton editButton = new JButton("+ SỬA");
+        editButton = new JButton("+ SỬA");
         editButton.setBackground(BASE.btnSua);
 
-        JButton deleteButton = new JButton("+ XÓA");
+        deleteButton = new JButton("+ XÓA");
         deleteButton.setBackground(BASE.btnXoa);
 
         // Bố trí các nút theo dạng FlowLayout (căn ngang)
-        JPanel toolBar = new JPanel();
+        toolBar = new JPanel();
         toolBar.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10)); // Căn trái và có khoảng cách
-        toolBar.add(addButton);
-        toolBar.add(deleteButton);
-        toolBar.add(editButton);
-        
+//        toolBar.add(addButton);
+//        toolBar.add(deleteButton);
+//        toolBar.add(editButton);
 
         // Add action listener to the addButton
         addButton.addActionListener(new ActionListener() {
@@ -192,6 +195,22 @@ public class PhieuNhapGUI extends JPanel {
                     "XEM"
             });
         }
+    }
+    
+    public JButton getBtnThem(){
+        return addButton;
+    }
+    
+    public JButton getBtnSua(){
+        return editButton;
+    }
+    
+    public JButton getBtnXoa(){
+        return deleteButton;
+    }
+    
+    public JPanel getToolBar(){
+        return toolBar;
     }
 
     // Custom renderer for the button

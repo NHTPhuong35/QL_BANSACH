@@ -140,12 +140,6 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExport.addMouseListener(this);
 
-        pnHeader.add(btnThem);
-        pnHeader.add(Box.createHorizontalStrut(20));
-        pnHeader.add(btnSua);
-        pnHeader.add(Box.createHorizontalStrut(20));
-        pnHeader.add(btnXoa);
-        pnHeader.add(Box.createHorizontalStrut(20));
         pnHeader.add(btnExport);
 
         //Content
@@ -537,7 +531,22 @@ public class SanPhamGUI extends JPanel implements MouseListener {
             exExcel.xuatExcel(dsSP);
         }
     }
-
+    
+    public JButton getBtnThem(){
+        return btnThem;
+    }
+    
+    public JButton getBtnSua(){
+        return btnSua;
+    }
+    
+    public JButton getBtnXoa(){
+        return btnXoa;
+    }
+    
+    public JPanel getpnHeader(){
+        return pnHeader;
+    }
     @Override
     public void mousePressed(MouseEvent e) {
     }

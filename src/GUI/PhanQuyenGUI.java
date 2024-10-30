@@ -31,6 +31,7 @@ public class PhanQuyenGUI extends JPanel {
     private JButton themquyen;
     private PhanQuyenBUS phanquyenBUS;
     private JComboBox<String> comboBox;
+    private GridBagConstraints headComponentsPanelgbc;
     
     public PhanQuyenGUI(){
         setLayout(new GridBagLayout());
@@ -45,7 +46,7 @@ public class PhanQuyenGUI extends JPanel {
         headComponentsPanel = new JPanel();
         headComponentsPanel.setBackground(Color.white);
         headComponentsPanel.setLayout(new GridBagLayout());
-        GridBagConstraints headComponentsPanelgbc = new GridBagConstraints();
+        headComponentsPanelgbc = new GridBagConstraints();
 
         phanquyenPanel = new JPanel();
         phanquyenPanel.setBackground(Color.yellow);
@@ -107,12 +108,12 @@ public class PhanQuyenGUI extends JPanel {
         headComponentsPanelgbc.insets = new Insets(0, 30, 0, 0); // Margin top left bottom right
         headComponentsPanel.add(comboBox,headComponentsPanelgbc);
         
-        headComponentsPanelgbc.gridx = 2;
-        headComponentsPanelgbc.gridy = 0;
-        headComponentsPanelgbc.weightx = 1;
-        headComponentsPanelgbc.anchor = GridBagConstraints.WEST;
-        headComponentsPanelgbc.insets = new Insets(0, 15, 0, 0); // Margin top left bottom right
-        headComponentsPanel.add(themquyen,headComponentsPanelgbc);
+//        headComponentsPanelgbc.gridx = 2;
+//        headComponentsPanelgbc.gridy = 0;
+//        headComponentsPanelgbc.weightx = 1;
+//        headComponentsPanelgbc.anchor = GridBagConstraints.WEST;
+//        headComponentsPanelgbc.insets = new Insets(0, 15, 0, 0); // Margin top left bottom right
+//        headComponentsPanel.add(themquyen,headComponentsPanelgbc);
         
         headPanelgbc.gridx = 0;
         headPanelgbc.gridy = 0;
@@ -264,7 +265,20 @@ public class PhanQuyenGUI extends JPanel {
         
 //        phanquyenBUS.loadPermissionsFromDatabase(model);
          
-    }  
+    } 
+    
+    public JButton getBtnThemQuyen(){
+        return themquyen;
+    }
+    
+    public JPanel getHeadComponentsPanel(){
+        return headComponentsPanel;
+    }
+    
+    public GridBagConstraints getHeadComponentsPanelgbc(){
+        return headComponentsPanelgbc;
+    }
+    
     public static void main(String[] args) {
         new PhanQuyenGUI();
     }

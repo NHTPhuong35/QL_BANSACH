@@ -52,7 +52,7 @@ import javax.swing.event.DocumentListener;
 
 public class ThongTinHDGUI extends JPanel {
 
-    private JPanel pnControl, pnHD;
+    private JPanel pnControl, pnHD, pnThaoTac;
     private DefaultTableModel dtm;
     private JPanel btnThanhToan;
     private JTable table;
@@ -186,7 +186,7 @@ public class ThongTinHDGUI extends JPanel {
         pnTimkiem.add(pnBtnTim);
         pnTimkiem.setPreferredSize(new Dimension(600, 110));
 
-        JPanel pnThaoTac = new JPanel();
+        pnThaoTac = new JPanel();
         pnThaoTac.setBackground(Color.WHITE);
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
         pnThaoTac.setPreferredSize(new Dimension(240, 110));
@@ -202,8 +202,8 @@ public class ThongTinHDGUI extends JPanel {
         btnHuy = createBtnTT("Huỷ HD", "btnHuy", "/Image/cancel.png");
         btnBDF = createBtnTT("In BDF", "btnBDF", "/Image/bdf.png");
 
-        pnThaoTac.add(btnHuy);
-        pnThaoTac.add(Box.createRigidArea(new Dimension(20, 0)));
+//        pnThaoTac.add(btnHuy);
+//        pnThaoTac.add(Box.createRigidArea(new Dimension(20, 0)));
         pnThaoTac.add(btnBDF);
 
         pnControl.add(pnTimkiem);
@@ -343,7 +343,14 @@ public class ThongTinHDGUI extends JPanel {
         });
 
     }
-
+    
+    public JButton getBtnHuy(){
+        return btnHuy;
+    }
+    
+    public JPanel getPnThaoTac(){
+        return pnThaoTac;
+    }
     private void Reload(ArrayList<HoaDonDTO> ds) {
 
         dtm.setRowCount(0);

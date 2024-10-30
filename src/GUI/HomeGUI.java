@@ -19,6 +19,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.BorderFactory;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -33,7 +34,7 @@ public class HomeGUI extends JFrame implements MouseListener {
     private JButton sanphamButton;
     private JButton hoadonButton;
     private JButton khachhangButton;
-    private JButton nhanvienButton;
+    private JButton canhanButton;
     private JButton thongkeButton;
     private JButton tacgiaButton;
     private JButton phanquyenButton;
@@ -42,6 +43,7 @@ public class HomeGUI extends JFrame implements MouseListener {
     private JButton taikhoanButton;
     private JButton phieunhapButton;
     private JButton logoutButton;
+    private JButton banhangButton;
     private JPanel menuPanel;
     private JPanel headPanel;
     private JPanel logoPanel;
@@ -49,11 +51,11 @@ public class HomeGUI extends JFrame implements MouseListener {
     private JLabel introduceAppName;
     private JLabel introduceUser;
     private JLabel introduceUserRole;
-    private JLabel appName;
     private JLabel headAppName;
-    private JLabel logoApp;
+    private JLabel logoApp, setting;
     private JPanel showPanel;
-    
+    private JPanel logoandrolepanel, roleandsetting;
+    private GridBagConstraints menuPanelgbc;
     public static TaiKhoanDTO tkUSER;
     
     public HomeGUI(TaiKhoanDTO tkUSER){
@@ -73,21 +75,59 @@ public class HomeGUI extends JFrame implements MouseListener {
        
         //**MENU**
         menuPanel = new JPanel();
-        menuPanel.setLayout(new GridLayout(0, 1, 0, 0));
-        menuPanel.setBackground(Color.decode("#98DCE2"));
+        menuPanel.setLayout(new GridBagLayout());
+        menuPanel.setBackground(Color.decode("#C68642"));
+        menuPanelgbc = new GridBagConstraints();
+        menuPanelgbc.fill = GridBagConstraints.BOTH;
+        menuPanelgbc.gridx = 0;
 
-        appName = new JLabel("Cửa hàng bán sách nhóm 2");
-        Font AppNamefont = new Font("Arial", Font.BOLD, 13);
-        appName.setFont(AppNamefont);
-        appName.setHorizontalAlignment(SwingConstants.CENTER);
-        appName.setVerticalAlignment(SwingConstants.CENTER);
+        logoandrolepanel = new JPanel();
+        logoandrolepanel.setLayout(new GridBagLayout());
+        logoandrolepanel.setBackground(Color.decode("#C68642"));
+        GridBagConstraints logoandrolepanelgbc = new GridBagConstraints();
 
+        logoApp = new JLabel(new ImageIcon(getClass().getResource("/Image/Remove-bg.ai_17287239153771.png")));        
+        introduceUser = new JLabel(tkUSER.getTenNV());
+        introduceUser.setFont(new Font("Arial", Font.BOLD, 14));
+        introduceUserRole = new JLabel(tkUSER.getQuyen().getTenQuyen());
+        setting = new JLabel(new ImageIcon(getClass().getResource("/Image/icons8-admin-50.png")));
+        
+        roleandsetting = new JPanel();
+        roleandsetting.add(setting);
+        roleandsetting.add(introduceUserRole);
+        roleandsetting.setBackground(Color.decode("#C68642"));
+        logoandrolepanelgbc.insets = new Insets(7, 7, 7, 7);
+        
+        logoandrolepanelgbc.gridx = 0;
+        logoandrolepanelgbc.gridy = 0;
+        logoandrolepanelgbc.gridheight = 2;
+        logoandrolepanelgbc.anchor = GridBagConstraints.WEST;
+        logoandrolepanel.add(logoApp, logoandrolepanelgbc);
+        
+        logoandrolepanelgbc.gridheight = 1;
+
+        logoandrolepanelgbc.gridx = 1;
+        logoandrolepanelgbc.gridy = 0;
+        logoandrolepanelgbc.anchor = GridBagConstraints.WEST;
+        logoandrolepanel.add(introduceUser, logoandrolepanelgbc);
+        
+        logoandrolepanelgbc.insets = new Insets(0, 0, 11, 0); 
+        logoandrolepanelgbc.gridy = 1;
+        logoandrolepanel.add(roleandsetting, logoandrolepanelgbc);
+        
+        
+        menuPanelgbc.gridy = 0;
+        menuPanelgbc.weighty = 0;
+        menuPanel.add(logoandrolepanel, gbc);
+        menuPanelgbc.fill = GridBagConstraints.HORIZONTAL;
+        
         sanphamButton = new JButton("Sản phẩm");
-        sanphamButton.setIcon(new ImageIcon(getClass().getResource("/Image/product.png")));
+        sanphamButton.setIcon(new ImageIcon(getClass().getResource("/Image/book1.png")));
         sanphamButton.setHorizontalAlignment(SwingConstants.LEFT);
         sanphamButton.setVerticalAlignment(SwingConstants.CENTER);
         sanphamButton.setBorderPainted(false);
-        sanphamButton.setBackground(Color.decode("#98DCE2"));
+        sanphamButton.setBackground(Color.decode("#C68642"));
+        sanphamButton.setFocusPainted(false); 
         sanphamButton.addMouseListener(this);
         sanphamButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -97,7 +137,27 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override	
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                sanphamButton.setBackground(Color.decode("#98DCE2"));
+                sanphamButton.setBackground(Color.decode("#C68642"));
+            }
+        });
+        
+        banhangButton = new JButton("Bán hàng");
+        banhangButton.setIcon(new ImageIcon(getClass().getResource("/Image/banhang.png")));
+        banhangButton.setHorizontalAlignment(SwingConstants.LEFT);
+        banhangButton.setVerticalAlignment(SwingConstants.CENTER);
+        banhangButton.setBorderPainted(false);
+        banhangButton.setBackground(Color.decode("#C68642"));
+        banhangButton.setFocusPainted(false); 
+        banhangButton.addMouseListener(this);
+        banhangButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                banhangButton.setBackground(Color.WHITE);
+            }
+
+            @Override	
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                banhangButton.setBackground(Color.decode("#C68642"));
             }
         });
 
@@ -106,7 +166,8 @@ public class HomeGUI extends JFrame implements MouseListener {
         hoadonButton.setHorizontalAlignment(SwingConstants.LEFT);
         hoadonButton.setVerticalAlignment(SwingConstants.CENTER);
         hoadonButton.setBorderPainted(false);
-        hoadonButton.setBackground(Color.decode("#98DCE2"));
+        hoadonButton.setBackground(Color.decode("#C68642"));
+        hoadonButton.setFocusPainted(false); 
         hoadonButton.addMouseListener(this);
         hoadonButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -116,16 +177,17 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                hoadonButton.setBackground(Color.decode("#98DCE2"));
+                hoadonButton.setBackground(Color.decode("#C68642"));
             }
         });
 
         khachhangButton = new JButton("Khách hàng");
-        khachhangButton.setIcon(new ImageIcon(getClass().getResource("/Image/customer.png")));
+        khachhangButton.setIcon(new ImageIcon(getClass().getResource("/Image/customer2.png")));
         khachhangButton.setHorizontalAlignment(SwingConstants.LEFT);
         khachhangButton.setVerticalAlignment(SwingConstants.CENTER);
         khachhangButton.setBorderPainted(false);
-        khachhangButton.setBackground(Color.decode("#98DCE2"));
+        khachhangButton.setBackground(Color.decode("#C68642"));
+        khachhangButton.setFocusPainted(false); 
         khachhangButton.addMouseListener(this);
         khachhangButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -135,35 +197,37 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                khachhangButton.setBackground(Color.decode("#98DCE2"));
+                khachhangButton.setBackground(Color.decode("#C68642"));
             }
         });
 
-        nhanvienButton = new JButton("Nhân viên");
-        nhanvienButton.setIcon(new ImageIcon(getClass().getResource("/Image/staff.png")));
-        nhanvienButton.setHorizontalAlignment(SwingConstants.LEFT);
-        nhanvienButton.setVerticalAlignment(SwingConstants.CENTER);
-        nhanvienButton.setBorderPainted(false);
-        nhanvienButton.setBackground(Color.decode("#98DCE2"));
-        nhanvienButton.addMouseListener(this);
-        nhanvienButton.addMouseListener(new java.awt.event.MouseAdapter() {
+        canhanButton = new JButton("Cá nhân");
+        canhanButton.setIcon(new ImageIcon(getClass().getResource("/Image/homePage.png")));
+        canhanButton.setHorizontalAlignment(SwingConstants.LEFT);
+        canhanButton.setVerticalAlignment(SwingConstants.CENTER);
+        canhanButton.setBorderPainted(false);
+        canhanButton.setBackground(Color.decode("#C68642"));
+        canhanButton.setFocusPainted(false); 
+        canhanButton.addMouseListener(this);
+        canhanButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                nhanvienButton.setBackground(Color.WHITE);
+                canhanButton.setBackground(Color.WHITE);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                nhanvienButton.setBackground(Color.decode("#98DCE2"));
+                canhanButton.setBackground(Color.decode("#C68642"));
             }
         });
 
         thongkeButton = new JButton("Thống kê");
-        thongkeButton.setIcon(new ImageIcon(getClass().getResource("/Image/statistical.png")));
+        thongkeButton.setIcon(new ImageIcon(getClass().getResource("/Image/statistical2.png")));
         thongkeButton.setHorizontalAlignment(SwingConstants.LEFT);
         thongkeButton.setVerticalAlignment(SwingConstants.CENTER);
         thongkeButton.setBorderPainted(false);
-        thongkeButton.setBackground(Color.decode("#98DCE2"));
+        thongkeButton.setBackground(Color.decode("#C68642"));
+        thongkeButton.setFocusPainted(false);
         thongkeButton.addMouseListener(this);
         thongkeButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -173,7 +237,7 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                thongkeButton.setBackground(Color.decode("#98DCE2"));
+                thongkeButton.setBackground(Color.decode("#C68642"));
             }
         });
 
@@ -182,7 +246,8 @@ public class HomeGUI extends JFrame implements MouseListener {
         tacgiaButton.setHorizontalAlignment(SwingConstants.LEFT);
         tacgiaButton.setVerticalAlignment(SwingConstants.CENTER);
         tacgiaButton.setBorderPainted(false);
-        tacgiaButton.setBackground(Color.decode("#98DCE2"));
+        tacgiaButton.setBackground(Color.decode("#C68642"));
+        tacgiaButton.setFocusPainted(false);
         tacgiaButton.addMouseListener(this);
         tacgiaButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -192,7 +257,7 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                tacgiaButton.setBackground(Color.decode("#98DCE2"));
+                tacgiaButton.setBackground(Color.decode("#C68642"));
             }
         });
 
@@ -201,7 +266,8 @@ public class HomeGUI extends JFrame implements MouseListener {
         phanquyenButton.setHorizontalAlignment(SwingConstants.LEFT);
         phanquyenButton.setVerticalAlignment(SwingConstants.CENTER);
         phanquyenButton.setBorderPainted(false);
-        phanquyenButton.setBackground(Color.decode("#98DCE2"));
+        phanquyenButton.setBackground(Color.decode("#C68642"));
+        phanquyenButton.setFocusPainted(false);
         phanquyenButton.addMouseListener(this);
         phanquyenButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -211,16 +277,17 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                phanquyenButton.setBackground(Color.decode("#98DCE2"));
+                phanquyenButton.setBackground(Color.decode("#C68642"));
             }
         });
 
         theloaiButton = new JButton("Thể loại");
-        theloaiButton.setIcon(new ImageIcon(getClass().getResource("/Image/category.png")));
+        theloaiButton.setIcon(new ImageIcon(getClass().getResource("/Image/category2.png")));
         theloaiButton.setHorizontalAlignment(SwingConstants.LEFT);
         theloaiButton.setVerticalAlignment(SwingConstants.CENTER);
         theloaiButton.setBorderPainted(false);
-        theloaiButton.setBackground(Color.decode("#98DCE2"));
+        theloaiButton.setBackground(Color.decode("#C68642"));
+        theloaiButton.setFocusPainted(false);
         theloaiButton.addMouseListener(this);
         theloaiButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -230,7 +297,7 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                theloaiButton.setBackground(Color.decode("#98DCE2"));
+                theloaiButton.setBackground(Color.decode("#C68642"));
             }
         });
 
@@ -239,7 +306,8 @@ public class HomeGUI extends JFrame implements MouseListener {
         nhacungcapButton.setHorizontalAlignment(SwingConstants.LEFT);
         nhacungcapButton.setVerticalAlignment(SwingConstants.CENTER);
         nhacungcapButton.setBorderPainted(false);
-        nhacungcapButton.setBackground(Color.decode("#98DCE2"));
+        nhacungcapButton.setBackground(Color.decode("#C68642"));
+        nhacungcapButton.setFocusPainted(false);
         nhacungcapButton.addMouseListener(this);
         nhacungcapButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -249,16 +317,17 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                nhacungcapButton.setBackground(Color.decode("#98DCE2"));
+                nhacungcapButton.setBackground(Color.decode("#C68642"));
             }
         });
 
         taikhoanButton = new JButton("Tài khoản");
-        taikhoanButton.setIcon(new ImageIcon(getClass().getResource("/Image/account.png")));
+        taikhoanButton.setIcon(new ImageIcon(getClass().getResource("/Image/account2.png")));
         taikhoanButton.setHorizontalAlignment(SwingConstants.LEFT);
         taikhoanButton.setVerticalAlignment(SwingConstants.CENTER);
         taikhoanButton.setBorderPainted(false);
-        taikhoanButton.setBackground(Color.decode("#98DCE2"));
+        taikhoanButton.setBackground(Color.decode("#C68642"));
+        taikhoanButton.setFocusPainted(false);
         taikhoanButton.addMouseListener(this);
         taikhoanButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -268,16 +337,17 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
 			public void mouseExited(java.awt.event.MouseEvent evt) {
-                taikhoanButton.setBackground(Color.decode("#98DCE2"));
+                taikhoanButton.setBackground(Color.decode("#C68642"));
             }
         });
 
         phieunhapButton = new JButton("Phiếu nhập");
-        phieunhapButton.setIcon(new ImageIcon(getClass().getResource("/Image/goods-receipt.png")));
+        phieunhapButton.setIcon(new ImageIcon(getClass().getResource("/Image/bill.png")));
         phieunhapButton.setHorizontalAlignment(SwingConstants.LEFT);
         phieunhapButton.setVerticalAlignment(SwingConstants.CENTER);
         phieunhapButton.setBorderPainted(false);
-        phieunhapButton.setBackground(Color.decode("#98DCE2"));
+        phieunhapButton.setBackground(Color.decode("#C68642"));
+        phieunhapButton.setFocusPainted(false);
         phieunhapButton.addMouseListener(this);
         phieunhapButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -287,24 +357,39 @@ public class HomeGUI extends JFrame implements MouseListener {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                phieunhapButton.setBackground(Color.decode("#98DCE2"));
+                phieunhapButton.setBackground(Color.decode("#C68642"));
             }
         });
 
+        
         //add into menuPanel
-        menuPanel.add(appName);
-        menuPanel.add(sanphamButton);
-        menuPanel.add(hoadonButton);
-        menuPanel.add(khachhangButton);
-        menuPanel.add(nhanvienButton);
-        menuPanel.add(thongkeButton);
-        menuPanel.add(tacgiaButton);
-        menuPanel.add(phanquyenButton);
-        menuPanel.add(theloaiButton);
-        menuPanel.add(nhacungcapButton);
-        menuPanel.add(taikhoanButton);
-        menuPanel.add(phieunhapButton);
-
+        menuPanelgbc.fill = GridBagConstraints.BOTH;
+        menuPanelgbc.weightx = 1.0;
+        menuPanelgbc.weighty = 1.0;
+        
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(canhanButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(phieunhapButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(sanphamButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(hoadonButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(tacgiaButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(nhacungcapButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(theloaiButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(khachhangButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(taikhoanButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(phanquyenButton, menuPanelgbc);
+//        menuPanelgbc.gridy++;
+//        menuPanel.add(thongkeButton, menuPanelgbc);
+        
         gbc.gridx = 0;
         gbc.gridy = 1;
 //        gbc.gridwidth = 0; 
@@ -318,32 +403,24 @@ public class HomeGUI extends JFrame implements MouseListener {
       
         //**HEADER**
         headPanel = new JPanel();
-        logoPanel = new JPanel();
 
         headPanel.setLayout(new GridBagLayout());
-        headPanel.setBackground(Color.decode("#98DCE2"));
+        headPanel.setBackground(Color.decode("#F1C27D"));
         GridBagConstraints headPanelgbc = new GridBagConstraints();
 
-        headAppName = new JLabel("Cửa hàng bán sách nhóm 2");
+        headAppName = new JLabel("BookStore");
 
         introductionAndexitPanel = new JPanel();
-        introductionAndexitPanel.setBackground(Color.white);
+        introductionAndexitPanel.setBackground(Color.decode("#F1C27D"));
         introductionAndexitPanel.setLayout(new GridBagLayout());
         GridBagConstraints introductionAndexitPanelgbc = new GridBagConstraints();
 
         //Logout Button
         logoutButton = new JButton();
-        logoutButton.setIcon(new ImageIcon(getClass().getResource("/Image/icon-off.png")));
-        logoutButton.setBackground(Color.white);
+        logoutButton.setIcon(new ImageIcon(getClass().getResource("/Image/icons8-power-off-button-501.png")));
+        logoutButton.setBackground(Color.decode("#F1C27D"));
         logoutButton.setBorderPainted(false);
         logoutButton.setSize(30, 30);
-
-        introductionAndexitPanelgbc.gridx = 0;
-        introductionAndexitPanelgbc.gridy = 0;
-        introductionAndexitPanelgbc.weightx = 0.2;
-        introductionAndexitPanelgbc.anchor = GridBagConstraints.WEST;
-        introductionAndexitPanelgbc.insets = new Insets(0, 10, 0, 0); // Margin top left bottom right
-        introductionAndexitPanel.add(headAppName, introductionAndexitPanelgbc);
 
         introductionAndexitPanelgbc.gridx = 1;
         introductionAndexitPanelgbc.gridy = 0;
@@ -351,52 +428,26 @@ public class HomeGUI extends JFrame implements MouseListener {
         introductionAndexitPanelgbc.anchor = GridBagConstraints.EAST;
         introductionAndexitPanel.add(logoutButton, introductionAndexitPanelgbc);
 
-        introduceUser = new JLabel("Xin chào: Admin12345");
-        introduceUserRole = new JLabel("Vai trò: Admin");
-
-        logoApp = new JLabel();
-        logoApp.setIcon(new ImageIcon(getClass().getResource("/Image/icon-main.png")));
-        logoPanel.setBackground(Color.decode("#98DCE2"));
-        logoPanel.add(logoApp);
+        introductionAndexitPanelgbc.gridx = 0;
+        introductionAndexitPanelgbc.gridy = 0;
+        introductionAndexitPanelgbc.insets = new Insets(0, 10 , 0 , 0);
+        introductionAndexitPanelgbc.anchor = GridBagConstraints.WEST;
+        introductionAndexitPanel.add(headAppName, introductionAndexitPanelgbc);
 
         headPanelgbc.gridx = 0;
         headPanelgbc.gridy = 0;
-        headPanelgbc.weightx = 0.2;
-        headPanelgbc.fill = GridBagConstraints.BOTH;
+        headPanelgbc.weightx = 1;
+        headPanelgbc.fill = GridBagConstraints.BOTH;;
         headPanel.add(introductionAndexitPanel, headPanelgbc);
 
-        headPanelgbc.gridx = 0;
-        headPanelgbc.gridy = 1;
-        headPanelgbc.weightx = 0.2;
-        headPanelgbc.fill = GridBagConstraints.BOTH;
-        headPanelgbc.insets = new Insets(20, 40, 0, 0);
-        headPanel.add(introduceUser, headPanelgbc);
-
-        headPanelgbc.gridx = 0;
-        headPanelgbc.gridy = 2;
-        headPanelgbc.weighty = 1;
-        headPanelgbc.fill = GridBagConstraints.BOTH;
-        headPanelgbc.insets = new Insets(0, 40, 0, 0); // Margin top left bottom right
-        headPanel.add(introduceUserRole, headPanelgbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-//        gbc.gridwidth = 1;
-//        gbc.gridheight = 1;
-        gbc.weightx = 0.10;
-        gbc.weighty = 0.10;
-        gbc.fill = GridBagConstraints.BOTH;
-        add(logoPanel, gbc);
-
-        gbc.gridx = 1;  // Column 1
+        gbc.gridx = 0;  // Column 1
         gbc.gridy = 0;  // Row 0
-//        gbc.gridwidth = 1; // Take 1 Column
+        gbc.gridwidth = 2; // Take 1 Column
 //        gbc.gridheight = 1; // Take 1 Row
-        gbc.weightx = 0.90; //Length of component in a column
-        gbc.weighty = 0.15; //Width of component in a row
+        gbc.weightx = 1; //Length of component in a column
+        gbc.weighty = 0; //Width of component in a row
         gbc.fill = GridBagConstraints.BOTH; //Full fill empty space
         add(headPanel, gbc);
-
         //***
         
         //**SHOW PANEL**
@@ -409,12 +460,12 @@ public class HomeGUI extends JFrame implements MouseListener {
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-//        gbc.gridwidth = 1;
+        gbc.gridwidth = 0;
 //        gbc.gridheight = 1;
         gbc.weightx = 0.90;
         gbc.weighty = 0.85;
         add(showPanel, gbc);
-
+        gbc.fill = GridBagConstraints.VERTICAL; //Full fill empty space
         showPanel.revalidate();
         showPanel.repaint();
         //******//
@@ -422,7 +473,7 @@ public class HomeGUI extends JFrame implements MouseListener {
         
         //Settings
         ButtonSettings(menuPanel, new Font("Arial", Font.BOLD, 13), 15, false);
-        LabelSettings(headPanel, new Font("Arial", Font.BOLD, 13));
+        LabelSettings(headPanel, new Font("Arial", Font.BOLD, 22));
 
         setSize(1200, 700);
         setMinimumSize(new Dimension(1100, 500));
@@ -471,23 +522,74 @@ public class HomeGUI extends JFrame implements MouseListener {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
-	public JButton getBtnLogout() {
-		return logoutButton;
-	}
+    public JButton getBtnLogout() {
+            return logoutButton;
+    }
+        
+    public TaiKhoanDTO getTkUser() {
+	return tkUSER;
+    }
+    
+    public JButton getBtnSanPham(){
+        return sanphamButton;
+    }
+    
+    public JButton getBtnTacGia(){
+        return tacgiaButton;
+    }
+    
+    public JButton getBtnLoai(){
+        return theloaiButton;
+    }
+    
+    public JButton getBtnNhaCungCap(){
+        return nhacungcapButton;
+    }
+    
+    public JButton getBtnKhachHang(){
+        return khachhangButton;
+    }
+    
+    public JButton getBtnPhieuNhap(){
+        return phieunhapButton;
+    }
+    
+    public JButton getBtnHoaDon(){
+        return hoadonButton;
+    }
+    
+    public JButton getBtnThongKe(){
+        return thongkeButton;
+    }
+    
+    public JButton getBtnTaiKhoan(){
+        return taikhoanButton;
+    }
+    
+    public JButton getBtnPhanQuyen(){
+        return phanquyenButton;
+    }
+    
+    public JButton getBtnBanHang(){
+        return banhangButton;
+    }
+    
+    public GridBagConstraints getmenuPanelgbc(){
+        return menuPanelgbc;
+    }
+    
+    public JPanel getmenuPanel(){
+        return menuPanel;
+    }
+    
+    public JPanel getShowPanel(){
+        return showPanel;
+    }
+    //Ở HomeBUS
     @Override
     public void mouseClicked(MouseEvent e) {
         JButton btn = (JButton) e.getSource();       
-        if (btn == sanphamButton) {
-            int panelWidth = showPanel.getWidth();
-            int panelHeight = showPanel.getHeight();
-            SanPhamGUI spGUI = new SanPhamGUI();
-            showPanel.removeAll();
-            showPanel.add(spGUI, BorderLayout.CENTER);
-            spGUI.setVisible(true);
-
-            showPanel.revalidate();
-            showPanel.repaint();
-        }
+        
         if (btn == hoadonButton) {
             HoaDonGUI hdGUI = new HoaDonGUI();
             showPanel.removeAll();
@@ -497,16 +599,12 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.revalidate();
             showPanel.repaint();
         }
-        if (btn == khachhangButton) {
-            KhachHangGUI khGUI = new KhachHangGUI();
-            showPanel.removeAll();
-            showPanel.add(khGUI, BorderLayout.CENTER);
-            khGUI.setVisible(true);
+        
+        if (btn == banhangButton) {
 
-            showPanel.revalidate();
-            showPanel.repaint();
         }
-        if (btn == nhanvienButton) {
+
+        if (btn == canhanButton) {
             TaiKhoanDN tkDN = new TaiKhoanDN(tkUSER);
             showPanel.removeAll();
             showPanel.add(tkDN, BorderLayout.CENTER);
@@ -521,52 +619,6 @@ public class HomeGUI extends JFrame implements MouseListener {
             showPanel.revalidate(); 
             showPanel.repaint(); 
 
-        }
-        if (btn == tacgiaButton) {
-            TacGiaGUI tgGUI = new TacGiaGUI();
-            showPanel.removeAll();
-            showPanel.add(tgGUI, BorderLayout.CENTER);
-            tgGUI.setVisible(true);
-            showPanel.revalidate();
-            showPanel.repaint();
-        }
-        
-        if (btn == phanquyenButton) {
-            PhanQuyenGUI phanquyenGUI = new PhanQuyenGUI();
-            showPanel.removeAll();
-            showPanel.add(phanquyenGUI, BorderLayout.CENTER);
-            showPanel.revalidate();
-            showPanel.repaint();
-        }
-        if (btn == theloaiButton) {
-            TheLoaiGUI tlGUI = new TheLoaiGUI();
-            showPanel.removeAll();
-            showPanel.add(tlGUI, BorderLayout.CENTER);
-            tlGUI.setVisible(true);
-            showPanel.revalidate();
-            showPanel.repaint();
-        }
-        if (btn == nhacungcapButton) {
-            NhaCungCapGUI nccGUI = new NhaCungCapGUI();
-            showPanel.removeAll();
-            showPanel.add(nccGUI, BorderLayout.CENTER);
-            showPanel.revalidate();
-            showPanel.repaint();
-        }
-        if (btn == taikhoanButton) {
-            TaiKhoanGUI tkGUI = new TaiKhoanGUI(tkUSER);
-            showPanel.removeAll();
-            showPanel.add(tkGUI, BorderLayout.CENTER);
-            showPanel.revalidate();
-            showPanel.repaint();
-        }
-        if (btn == phieunhapButton) {
-            PhieuNhapGUI pnGUI = new PhieuNhapGUI();
-            showPanel.removeAll();
-            showPanel.add(pnGUI, BorderLayout.CENTER);
-            pnGUI.setVisible(true);
-            showPanel.revalidate();
-            showPanel.repaint();
         }
     }
 

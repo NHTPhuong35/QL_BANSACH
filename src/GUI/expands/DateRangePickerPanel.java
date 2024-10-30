@@ -9,6 +9,7 @@ package GUI.expands;
  * @author nhatm
  */
 
+import DAO.TheLoaiDAO;
 import org.jdatepicker.impl.*;
 import javax.swing.*;
 import java.awt.*;
@@ -25,8 +26,18 @@ public class DateRangePickerPanel extends JPanel {
     
     public LocalDate fromDate;
     public LocalDate toDate;
-    
+    private JComboBox<String> loaithoigian;
+    private JComboBox<String> theloai;
+          
     public DateRangePickerPanel() {
+        TheLoaiDAO loaiDao = new TheLoaiDAO();
+        
+        String[] typetime = {"Ngày", "Tháng", "Năm"};
+        loaithoigian = new JComboBox<>(typetime);
+        
+        String[] dstenloai = loaiDao.DanhSachTenLoai();
+        theloai = new JComboBox<>(dstenloai);
+        
         setLayout(new BorderLayout());
 
         JPanel datePanel = new JPanel();
@@ -57,7 +68,10 @@ public class DateRangePickerPanel extends JPanel {
         datePickerTo.setPreferredSize(datePickerSize);
 
         JLabel resultLabel = new JLabel();
-        
+        datePanel.add(new JLabel ("Loại thời gian"));
+        datePanel.add(loaithoigian);
+        datePanel.add(new JLabel ("Thề loại"));
+        datePanel.add(theloai);
         datePanel.add(new JLabel("Từ ngày:"));
         datePanel.add(datePickerFrom);
         datePanel.add(new JLabel("Đến ngày:"));
@@ -88,6 +102,16 @@ public class DateRangePickerPanel extends JPanel {
     
     public LocalDate getDateEnd(){
         return toDate;
+    }
+    
+    public String getTheLoai(){
+        String theloaisach = (String) theloai.getSelectedItem();
+        return theloaisach;
+    }
+    
+    public String getLoaiThoiGian(){
+        String typetime = (String) loaithoigian.getSelectedItem();
+        return typetime;
     }
     
     public class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
