@@ -8,14 +8,20 @@
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/ChiTietThongKeGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/BangThongKeBUS.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/BangThongKeByMonthGUI.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/KhachHangGUI.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/TaiKhoanGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/KhachHangDAO.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/TaiKhoanDAO.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/PhanQuyenGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/expands/DateRangePickerPanel.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/ChucNangTaiKhoanGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/QuyenDTO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/utils/TrangThaiHoaDon.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/TheLoaiGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/QuyenDAO.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/SanPhamDTO.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/PhanQuyenBUS.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/HoaDonDAO.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/PhieuNhapGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/LoginGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/HomeBUS.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/KHGUI.java</file>
@@ -27,9 +33,12 @@
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/ChiTietSachLoaiDAO.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/HomeGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/ChiTietHoaDonDAO.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/HoaDonGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/BangThongKeByDateGUI.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/SanPhamGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/ThongKeGUI.java</file>
             <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/HoaDonDTO.java</file>
+            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/TacGiaGUI.java</file>
         </group>
     </open-files>
 </project-private>

@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
 
 import GUI.HomeGUI;
+import static GUI.HomeGUI.tkUSER;
 import GUI.KhachHangGUI;
 import GUI.LoginGUI;
 import GUI.NhaCungCapGUI;
@@ -16,6 +17,7 @@ import GUI.PhanQuyenGUI;
 import GUI.PhieuNhapGUI;
 import GUI.SanPhamGUI;
 import GUI.TacGiaGUI;
+import GUI.TaiKhoanDN;
 import GUI.TaiKhoanGUI;
 import GUI.TheLoaiGUI;
 import GUI.ThongTinHDGUI;
@@ -271,7 +273,10 @@ public class HomeBUS {
                 
                 GridBagConstraints menuPanelgbc = view.getmenuPanelgbc();
                 JPanel menuPanel = view.getmenuPanel();
-                
+                                
+                menuPanelgbc.gridy++;
+                menuPanel.add(view.getBtnCaNhan(), menuPanelgbc);
+                    
                 if(phieunhap == true){
                     phieunhapgui = new PhieuNhapGUI();
                     JPanel toolBar = phieunhapgui.getToolBar();
@@ -498,6 +503,17 @@ public class HomeBUS {
 				new LoginBUS(new LoginGUI());
 			}
 		});
+                
+                view.getBtnCaNhan().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent evt){
+                        TaiKhoanDN tkDN = new TaiKhoanDN(tkUSER);
+                        view.getShowPanel().removeAll();
+                        view.getShowPanel().add(tkDN, BorderLayout.CENTER);
+                        view.getShowPanel().revalidate();
+                        view.getShowPanel().repaint();
+                    }
+                });
                 
                 view.getBtnSanPham().addActionListener(new ActionListener() {
 			@Override
