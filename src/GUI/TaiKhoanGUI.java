@@ -110,7 +110,6 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         btnThem.setBackground(BASE.color_btAdd);
         btnThem.setFont(BASE.font);
         btnThem.setOpaque(true);
-        btnThem.setBorderPainted(false);
         btnThem.setFocusPainted(false);
         btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnThem.addMouseListener(this);
@@ -126,7 +125,6 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         btnSua.setBackground(BASE.color_btEdit);
         btnSua.setFont(BASE.font);
         btnSua.setOpaque(true);
-        btnSua.setBorderPainted(false);
         btnSua.setFocusPainted(false);
         btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnSua.addMouseListener(this);
@@ -142,7 +140,6 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         btnXoa.setBackground(BASE.color_btLamXoa);
         btnXoa.setFont(BASE.font);
         btnXoa.setOpaque(true);
-        btnXoa.setBorderPainted(false);
         btnXoa.setFocusPainted(false);
         btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXoa.addMouseListener(this);

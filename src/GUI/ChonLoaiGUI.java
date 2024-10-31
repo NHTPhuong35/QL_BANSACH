@@ -64,7 +64,7 @@ public class ChonLoaiGUI extends JFrame {
         JPanel pnTieuDe = new JPanel();
         pnTieuDe.setLayout(new BorderLayout());
         pnTieuDe.setPreferredSize(new Dimension(800, 36));
-        pnTieuDe.setBackground(BASE.color_heaer);
+        pnTieuDe.setBackground(BASE.color_main);
         pnTieuDe.setOpaque(true);
 
         JLabel lblHeader = new JLabel("Chọn loại sản phẩm", JLabel.CENTER);
@@ -95,7 +95,7 @@ public class ChonLoaiGUI extends JFrame {
         btnThem = new JButton("+ Lưu");
         btnThem.setPreferredSize(new Dimension(150, 30));
         btnThem.setMaximumSize(new Dimension(150, 30));
-        btnThem.setBackground(BASE.btnThem);
+        btnThem.setBackground(BASE.color_btAdd);
         btnThem.setFont(BASE.font);
         btnThem.setOpaque(true);
         btnThem.setBorderPainted(false);
@@ -105,7 +105,7 @@ public class ChonLoaiGUI extends JFrame {
         btnTroVe = new JButton("+ Trở về");
         btnTroVe.setPreferredSize(new Dimension(150, 30));
         btnTroVe.setMaximumSize(new Dimension(150, 30));
-        btnTroVe.setBackground(BASE.color_heaer);
+        btnTroVe.setBackground(BASE.color_btLamXoa);
         btnTroVe.setFont(BASE.font);
         btnTroVe.setOpaque(true);
         btnTroVe.setBorderPainted(false);
@@ -177,7 +177,7 @@ public class ChonLoaiGUI extends JFrame {
         tbLoai.setShowVerticalLines(false);
         JTableHeader tableHeader = tbLoai.getTableHeader();
         tableHeader.setPreferredSize(new Dimension(tableHeader.getPreferredSize().width, 30));
-        tableHeader.setBackground(BASE.color_table_heaer);  // Đặt màu nền cho tiêu đề là màu xám nhạt
+        tableHeader.setBackground(BASE.color_header_tbl);
         tableHeader.setFont(BASE.font_header);
         tbLoai.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         JScrollPane jb = new JScrollPane(tbLoai);

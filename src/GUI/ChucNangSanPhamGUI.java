@@ -77,7 +77,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         lblHeader.setPreferredSize(new Dimension(width, 36));
         lblHeader.setMaximumSize(new Dimension(width, 36));
         lblHeader.setFont(bh1);
-        lblHeader.setBackground(BASE.color_heaer);
+        lblHeader.setBackground(BASE.color_main);
         lblHeader.setOpaque(true);
         lblHeader.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -110,6 +110,10 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         imageNameLabel.setPreferredSize(new Dimension(200, 30)); // Đặt kích thước cố định để tránh bị dịch chuyển
 
         JButton chooseImageButton = new JButton("Chọn ảnh");
+        chooseImageButton.setFocusPainted(false);
+        chooseImageButton.setBackground(Color.decode("#FFFFFF"));
+        chooseImageButton.setOpaque(true);
+        chooseImageButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         chooseImageButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         chooseImageButton.setPreferredSize(new Dimension(100, 30));
         chooseImageButton.addActionListener(new ActionListener() {
@@ -213,21 +217,21 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
 
         //-------------------- các nút xác nhận, lưu, huỷ --------------------------
         btnXacNhan = new JButton("Xác nhận");
-        btnXacNhan.setBackground(BASE.color_heaer);
+        btnXacNhan.setBackground(BASE.color_main);
         btnXacNhan.setOpaque(true);
         btnXacNhan.setFocusPainted(false);
         btnXacNhan.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXacNhan.addMouseListener(this);
 
         btnHuy = new JButton("Huỷ");
-        btnHuy.setBackground(BASE.color_heaer);
+        btnHuy.setBackground(BASE.color_main);
         btnHuy.setOpaque(true);
         btnHuy.setFocusPainted(false);
         btnHuy.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnHuy.addMouseListener(this);
 
         btnLuu = new JButton("Lưu");
-        btnLuu.setBackground(BASE.color_heaer);
+        btnLuu.setBackground(BASE.color_main);
         btnLuu.setOpaque(true);
         btnLuu.setFocusPainted(false);
         btnLuu.setCursor(new Cursor(Cursor.HAND_CURSOR));

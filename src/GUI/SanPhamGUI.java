@@ -226,15 +226,20 @@ public class SanPhamGUI extends JPanel implements MouseListener {
             }
         });
 
-        btnLamMoi = new JButton("Làm mới");
+        ImageIcon resetIcon = new ImageIcon("./src/image/refresh.png");
+        Image resetImage = resetIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        resetIcon = new ImageIcon(resetImage);
+        btnLamMoi = new JButton("Làm mới",resetIcon);
+        btnLamMoi.setHorizontalTextPosition(SwingConstants.LEFT); // Đặt văn bản ở bên phải của biểu tượng
+        btnLamMoi.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
         btnLamMoi.setBackground(BASE.color_btLamMoi);
         btnLamMoi.setFont(BASE.font);
         btnLamMoi.setOpaque(true);
         btnLamMoi.setBorderPainted(false);
         btnLamMoi.setFocusPainted(false);
         btnLamMoi.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnLamMoi.setPreferredSize(new Dimension(100, 25));
-        btnLamMoi.setMaximumSize(new Dimension(100, 25));
+        btnLamMoi.setPreferredSize(new Dimension(120, 25));
+        btnLamMoi.setMaximumSize(new Dimension(120, 25));
         btnLamMoi.addMouseListener(this);
 
         pnTimKiem.add(lblTimKiem);
@@ -244,7 +249,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnTimKiem.add(lblLoai);
         pnTimKiem.add(Box.createHorizontalStrut(10));
         pnTimKiem.add(cbxLoai);
-        pnTimKiem.add(Box.createHorizontalStrut(70));
+        pnTimKiem.add(Box.createHorizontalStrut(60));
         pnTimKiem.add(btnLamMoi);
 
         //Bảng danh sách sản phẩm
@@ -351,7 +356,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
         // Thêm ảnh nhỏ nếu có
         if (sp.getTenHinh() != null && sp.getTenHinh().size() > 1) {
-            for (int i = 1; i < sp.getTenHinh().size(); i++) { // Bắt đầu từ 1 để tránh hình lớn
+            for (int i = 0; i < sp.getTenHinh().size(); i++) {
                 icon = new ImageIcon("./src/image/" + sp.getTenHinh().get(i));
                 scaledImage = icon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                 JLabel lblAnhNho = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
