@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 
 import BUS.PhieuNhapBUS;
 import DTO.PhieuNhapDTO;
+import DTO.QuyenDTO;
+import DTO.TaiKhoanDTO;
 
 public class TaoPhieuNhap extends JPanel {
     private JTextField maPhieuNhapField, ngayField, maNhanVienField, loiNhuanField;
@@ -19,6 +21,7 @@ public class TaoPhieuNhap extends JPanel {
     private JButton xacNhanButton, huyButton, chonSachButton;
 
     PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO();
+    private TaiKhoanDTO tkUSER;
 
     public void setMaNV(String maNV) {
         phieuNhapDTO.setTenDN(maNV);
@@ -26,7 +29,8 @@ public class TaoPhieuNhap extends JPanel {
     }
 
     @SuppressWarnings("static-access")
-    public TaoPhieuNhap() {
+    public TaoPhieuNhap(TaiKhoanDTO tkUSER) {
+        this.tkUSER = tkUSER;
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -35,6 +39,7 @@ public class TaoPhieuNhap extends JPanel {
         addLabel("Mã phiếu nhập:", 0, 0, gbc);
         maPhieuNhapField = addTextField(PhieuNhapBUS.getLatestMaPN(), 1, 0, gbc);
         maPhieuNhapField.setEditable(false);
+        
 
         // Ngày
         addLabel("Ngày:", 2, 0, gbc);
@@ -43,7 +48,7 @@ public class TaoPhieuNhap extends JPanel {
 
         // Mã nhân viên
         addLabel("Mã nhân viên:", 4, 0, gbc);
-        maNhanVienField = addTextField("NV01", 5, 0, gbc);
+        maNhanVienField = addTextField(tkUSER.getTenDN(), 5, 0, gbc);
         maNhanVienField.setEditable(false);
 
         // Nhà cung cấp
@@ -80,8 +85,9 @@ public class TaoPhieuNhap extends JPanel {
 
         // Custom table header and table appearance
         bookTable.getTableHeader().setBackground(BASE.color_table_heaer);
+        bookTable.getTableHeader().setFont(BASE.font_header_frame);
         bookTable.setBackground(Color.WHITE);
-        bookTable.setFont(BASE.font);
+        bookTable.setFont(BASE.font_frame);
         bookTable.setRowHeight(40); // thiết lập chiều cao các cột
 
         JScrollPane scrollPane = new JScrollPane(bookTable);
@@ -206,9 +212,11 @@ public class TaoPhieuNhap extends JPanel {
     }
 
     private void addLabel(String text, int x, int y, GridBagConstraints gbc) {
+        JLabel lbl = new JLabel(text);
+        lbl.setFont(BASE.font_frame);
         gbc.gridx = x;
         gbc.gridy = y;
-        add(new JLabel(text), gbc);
+        add(lbl, gbc);
     }
 
     private JTextField addTextField(String text, int x, int y, GridBagConstraints gbc) {
@@ -297,7 +305,9 @@ public class TaoPhieuNhap extends JPanel {
             JFrame frame = new JFrame("Tạo Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(800, 600);
-            frame.add(new TaoPhieuNhap());
+            QuyenDTO q = new QuyenDTO("QL", "Quản lý");
+            TaiKhoanDTO tkDTO = new TaiKhoanDTO("NV07", "Phương123", "Quận 8", "0983456789", "Phuong579@gmail.com", "55345678", q, 0);
+            frame.add(new TaoPhieuNhap(tkDTO));
             frame.setVisible(true);
         });
     }

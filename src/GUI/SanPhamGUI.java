@@ -80,67 +80,30 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 0));
 
-        ImageIcon addIcon = new ImageIcon("./src/image/btAdd.png");
-        Image addImage = addIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        addIcon = new ImageIcon(addImage);
-        btnThem = new JButton("Thêm", addIcon);
-        btnThem.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
-        btnThem.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
-        btnThem.setPreferredSize(new Dimension(100, 35));
-        btnThem.setMaximumSize(new Dimension(100, 35));
-        btnThem.setBackground(BASE.color_btAdd);
-        btnThem.setFont(BASE.font);
-        btnThem.setOpaque(true);
-        btnThem.setFocusPainted(false);
-        btnThem.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnThem = createBtn("Thêm",BASE.color_btAdd, "btnThem","btAdd.png");
         btnThem.addMouseListener(this);
 
-        ImageIcon editIcon = new ImageIcon("./src/image/btEdit.png");
-        Image editImage = editIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        editIcon = new ImageIcon(editImage);
-        btnSua = new JButton("Sửa", editIcon);
-        btnSua.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnSua.setVerticalTextPosition(SwingConstants.CENTER);
-        btnSua.setPreferredSize(new Dimension(100, 35));
-        btnSua.setMaximumSize(new Dimension(100, 35));
-        btnSua.setBackground(BASE.color_btEdit);
-        btnSua.setFont(BASE.font);
-        btnSua.setOpaque(true);
-        btnSua.setFocusPainted(false);
-        btnSua.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnSua = createBtn("Sửa", BASE.color_btEdit, "btnSua","btEdit.png");
         btnSua.addMouseListener(this);
 
-        ImageIcon deleteIcon = new ImageIcon("./src/image/bin.png");
-        Image deleteImage = deleteIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        deleteIcon = new ImageIcon(deleteImage);
-        btnXoa = new JButton("Xoá", deleteIcon);
-        btnXoa.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnXoa.setVerticalTextPosition(SwingConstants.CENTER);
-        btnXoa.setPreferredSize(new Dimension(100, 35));
-        btnXoa.setMaximumSize(new Dimension(100, 35));
-        btnXoa.setBackground(BASE.color_btLamXoa);
-        btnXoa.setFont(BASE.font);
-        btnXoa.setOpaque(true);
-        btnXoa.setFocusPainted(false);
-        btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnXoa = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa","bin.png");
         btnXoa.addMouseListener(this);
 
+        btnExport = createBtn("Xuất Excel", Color.decode("#FFE4B5"), "btnExport", "export_icon.jpg");
+        
         ImageIcon exportIcon = new ImageIcon("./src/image/export_icon.jpg");
         Image exportImage = exportIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        exportIcon = new ImageIcon(exportImage);
-        btnExport = new JButton("Xuất Excel", exportIcon);
-        btnExport.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnExport.setVerticalTextPosition(SwingConstants.CENTER);
         btnExport.setPreferredSize(new Dimension(130, 35));
         btnExport.setMaximumSize(new Dimension(130, 35));
-        btnExport.setBackground(Color.decode("#FFE4B5"));
-        btnExport.setFont(BASE.font);
-        btnExport.setOpaque(true);
-        btnExport.setFocusPainted(false);
-        btnExport.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnExport.addMouseListener(this);
 
         pnHeader.add(btnExport);
+//        pnHeader.add(Box.createHorizontalStrut(20));
+//        pnHeader.add(btnThem);
+//        pnHeader.add(Box.createHorizontalStrut(20));
+//        pnHeader.add(btnSua);
+//        pnHeader.add(Box.createHorizontalStrut(20));
+//        pnHeader.add(btnXoa);
 
         //Content
         pnContent = new JPanel();
@@ -259,7 +222,28 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         this.add(pnHeader, BorderLayout.NORTH);
         this.add(pnContent, BorderLayout.CENTER);
     }
+    
+    private JButton createBtn(String text, Color color, String name, String url) {
+        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
+        Image iconImage = Icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Icon = new ImageIcon(iconImage);
+        JButton btn = new JButton();
+        btn.setName(name);
+        btn.setText(text);
+        btn.setIcon(Icon);
+        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
+        btn.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
+        btn.setPreferredSize(new Dimension(100, 35));
+        btn.setMaximumSize(new Dimension(100, 35));
+        btn.setBackground(color);
+        btn.setFont(BASE.font);
+        btn.setOpaque(true);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        return btn;
+    }
+    
     public JTable initContent(ArrayList<SanPhamDTO> dsSP) {
         String[] header = {"Tên sách", "Thể loại", "Nhà xuất bản", "Năm xuất bản", "Số lượng", "Giá bìa"};
         JTable table = new JTable();

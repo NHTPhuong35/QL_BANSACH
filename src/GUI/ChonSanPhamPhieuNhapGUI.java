@@ -208,6 +208,6 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
     }
 
     public static void main(String[] args) {
-        new ChonSanPhamPhieuNhapGUI(new TaoPhieuNhap());
+        new ChonSanPhamPhieuNhapGUI(new TaoPhieuNhap(HomeGUI.tkUSER));
     }
 }

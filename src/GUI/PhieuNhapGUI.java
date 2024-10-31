@@ -27,14 +27,11 @@ public class PhieuNhapGUI extends JPanel {
     
     public PhieuNhapGUI() {
         // Tạo các nút chức năng với màu sắc như trong hình
-        addButton = new JButton("+ THÊM");
-        addButton.setBackground(BASE.btnThem);
+        addButton = createBtn("Thêm",BASE.color_btAdd, "btnThem","btAdd.png");
+        
+        editButton = createBtn("Sửa", BASE.color_btEdit, "btnSua","btEdit.png");
 
-        editButton = new JButton("+ SỬA");
-        editButton.setBackground(BASE.btnSua);
-
-        deleteButton = new JButton("+ XÓA");
-        deleteButton.setBackground(BASE.btnXoa);
+        deleteButton = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa","bin.png");
 
         // Bố trí các nút theo dạng FlowLayout (căn ngang)
         toolBar = new JPanel();
@@ -52,10 +49,10 @@ public class PhieuNhapGUI extends JPanel {
                 taoPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                 taoPhieuNhapFrame.setSize(800, 600);
                 
-                TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap();
+                TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap(HomeGUI.tkUSER);
                 taoPhieuNhapPanel.setMaNV("NV01");
 
-                taoPhieuNhapFrame.add(new TaoPhieuNhap()); // Assuming TaoPhieuNhap is a JPanel
+                taoPhieuNhapFrame.add(new TaoPhieuNhap(HomeGUI.tkUSER)); // Assuming TaoPhieuNhap is a JPanel
                 taoPhieuNhapFrame.setVisible(true);
             }
         });
@@ -148,9 +145,12 @@ public class PhieuNhapGUI extends JPanel {
 
         // Tạo thanh tìm kiếm
         JTextField searchField = new JTextField(15);
+        searchField.setPreferredSize(new Dimension(150,25));
         JPanel searchPanel = new JPanel();
         searchPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10)); // Căn phải
-        searchPanel.add(new JLabel("Tìm kiếm"));
+        JLabel lblSearch = new JLabel("Tìm kiếm");
+        lblSearch.setFont(BASE.font);
+        searchPanel.add(lblSearch);
         searchPanel.add(searchField);
 
         // Tạo bảng cuộn cho bảng dữ liệu
@@ -158,14 +158,17 @@ public class PhieuNhapGUI extends JPanel {
 
 
         table.getTableHeader().setBackground(BASE.color_table_heaer);
+        table.getTableHeader().setFont(BASE.font_header);
+        table.getTableHeader().setPreferredSize(new Dimension(table.getTableHeader().getPreferredSize().width, 30));
         table.setBackground(Color.WHITE);
         table.setFont(BASE.font);
-        table.setRowHeight(40); // thiết lập chiều cao các cột
+        table.setRowHeight(30); // thiết lập chiều cao các cột
 
         // Bố cục tổng thể
         JPanel topPanel = new JPanel(new BorderLayout());
         topPanel.add(toolBar, BorderLayout.WEST); // Đưa các nút về phía trái
         topPanel.add(searchPanel, BorderLayout.EAST); // Thanh tìm kiếm ở phía phải
+        topPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
         // Đặt layout cho JPanel
         setLayout(new BorderLayout());
@@ -179,6 +182,7 @@ public class PhieuNhapGUI extends JPanel {
         frame.setSize(1024, 400);
         frame.add(new PhieuNhapGUI());
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 
     public void loadData() {
@@ -217,6 +221,11 @@ public class PhieuNhapGUI extends JPanel {
     class ButtonRenderer extends JButton implements TableCellRenderer {
         public ButtonRenderer() {
             setOpaque(true);
+            setBackground(Color.white);
+            setFont(BASE.font);
+            setOpaque(true);
+            setFocusPainted(false);
+            setCursor(new Cursor(Cursor.HAND_CURSOR));
         }
 
         @Override
@@ -224,6 +233,27 @@ public class PhieuNhapGUI extends JPanel {
             setText((value == null) ? "" : value.toString());
             return this;
         }
+    }
+    
+    private JButton createBtn(String text, Color color, String name, String url) {
+        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
+        Image iconImage = Icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Icon = new ImageIcon(iconImage);
+        JButton btn = new JButton();
+        btn.setName(name);
+        btn.setText(text);
+        btn.setIcon(Icon);
+        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
+        btn.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
+        btn.setPreferredSize(new Dimension(100, 35));
+        btn.setMaximumSize(new Dimension(100, 35));
+        btn.setBackground(color);
+        btn.setFont(BASE.font);
+        btn.setOpaque(true);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        return btn;
     }
 
     // Custom editor for the button
@@ -234,6 +264,7 @@ public class PhieuNhapGUI extends JPanel {
 
         public ButtonEditor(JCheckBox checkBox) {
             super(checkBox);
+            
             button = new JButton();
             button.setOpaque(true);
             button.addActionListener(new ActionListener() {
@@ -289,12 +320,17 @@ public class PhieuNhapGUI extends JPanel {
             detailTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
             // Custom table header and table appearance
             detailTable.getTableHeader().setBackground(BASE.color_table_heaer);
+            detailTable.getTableHeader().setFont(BASE.font_header);
             detailTable.setBackground(Color.WHITE);
             detailTable.setFont(BASE.font);
             detailTable.setRowHeight(40); // Set row height
             
             // Add a "Xong" button to close the frame
             JButton closeButton = new JButton("Xong");
+            closeButton.setBackground(BASE.color_header_tbl);
+            closeButton.setFont(BASE.font);
+            closeButton.setFocusPainted(false);
+            closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));            
             closeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -311,6 +347,7 @@ public class PhieuNhapGUI extends JPanel {
 
             // Show the details frame
             detailsFrame.setVisible(true);
+            detailsFrame.setLocationRelativeTo(null);
             }
             isPushed = false;
             return label;

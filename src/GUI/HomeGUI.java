@@ -570,6 +570,10 @@ public class HomeGUI extends JFrame implements MouseListener {
         return phanquyenButton;
     }
     
+    public JButton getBtnCaNhan(){
+        return canhanButton;
+    }
+    
     public JButton getBtnBanHang(){
         return banhangButton;
     }

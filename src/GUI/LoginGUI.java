@@ -60,7 +60,7 @@ public class LoginGUI extends JFrame {
         setBackground(Color.white);
     
         inputLoginPanel = new JPanel();
-        inputLoginPanel.setBackground(Color.decode("#98DCE2"));
+        inputLoginPanel.setBackground(BASE.color_main);
 
         loginContainer = new JPanel();
         loginContainer.setBackground(Color.white);
@@ -98,7 +98,7 @@ public class LoginGUI extends JFrame {
         inputLoginPanel.add(appname, inputLoginPanelrgbc);
 
         dangnhapPanel = new JPanel(new BorderLayout());
-        dangnhapPanel.setBackground(Color.decode("#98DCE2"));
+        dangnhapPanel.setBackground(BASE.color_main);
         tendangnhap = new JLabel("User Name");
         tendangnhap.setFont(new Font("Roboto", Font.PLAIN, 14));
         inputtendangnhap = new RoundJTextField(25, 25, 25);
@@ -109,7 +109,7 @@ public class LoginGUI extends JFrame {
         dangnhapPanel.add(inputtendangnhap, BorderLayout.SOUTH);
 
         matkhauPanel = new JPanel(new BorderLayout());
-        matkhauPanel.setBackground(Color.decode("#98DCE2"));
+        matkhauPanel.setBackground(BASE.color_main);
         matkhau = new JLabel("Password");
         matkhau.setFont(new Font("Roboto", Font.PLAIN, 14));
         inputpassword = new RoundJPasswordField(25, 25, 25);
@@ -118,7 +118,7 @@ public class LoginGUI extends JFrame {
        
         showPass = new JCheckBox();
         showPass.setIcon(new ImageIcon(getClass().getResource("/Image/eye_hide.png")));
-        showPass.setBackground(Color.decode("#98DCE2"));
+        showPass.setBackground(BASE.color_main);
         showPass.addActionListener(new ActionListener() {
             @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -156,10 +156,10 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.insets = new Insets(0, 14, 0, 14);
         inputLoginPanel.add(matkhauPanel, inputLoginPanelrgbc);
 
-        dangnhapButton = new RoundJButton("Log In", 30, 30);
+        dangnhapButton = new RoundJButton("Đăng nhập", 30, 30);
         dangnhapButton.setFont(new Font("Roboto", Font.BOLD, 15));
         dangnhapButton.setBorderPainted(false);
-        dangnhapButton.setBackground(Color.decode("#56B7C0"));
+        dangnhapButton.setBackground(BASE.color_header_tbl);
 
         inputLoginPanelrgbc.gridx = 0;
         inputLoginPanelrgbc.gridy = 4;

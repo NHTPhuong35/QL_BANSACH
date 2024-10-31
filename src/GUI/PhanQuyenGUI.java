@@ -233,11 +233,11 @@ public class PhanQuyenGUI extends JPanel {
         DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer();
 
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        centerRenderer.setFont(new Font("Arial", Font.BOLD, 15)); // Đặt font đậm cho cột đầu tiên
+        centerRenderer.setFont(BASE.font_header); // Đặt font đậm cho cột đầu tiên
 
         headerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        headerRenderer.setFont(new Font("Arial", Font.BOLD, 15));
-        headerRenderer.setBackground(Color.decode("#98DCE2"));
+        headerRenderer.setFont(BASE.font_header);
+        headerRenderer.setBackground(BASE.color_header_tbl);
 
         JTableHeader tableHeader = table.getTableHeader();
         tableHeader.setDefaultRenderer(headerRenderer);
@@ -248,7 +248,7 @@ public class PhanQuyenGUI extends JPanel {
         table.setBorder(null);
         table.setRowSelectionAllowed(false);
         table.setColumnSelectionAllowed(false);
-        table.setFont(new Font("Arial", Font.BOLD, 15));
+        table.setFont(BASE.font);
         
         phanquyenPanelgbc.gridx = 0;
         phanquyenPanelgbc.gridy = 0;
