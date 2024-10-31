@@ -35,7 +35,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
     private DefaultTableModel dtm;
     private JTextField tfTimKiem;
     private JButton btnThem, btnSua, btnXoa;
-    private JPanel pnHeader, pnMain;
+    private JPanel pnHeader, pnMain, pnBtn;
     private JScrollPane tableSPScr;
     NhaCungCapDTO selectedL = new NhaCungCapDTO();
     private NhaCungCapBUS nccBUS;
@@ -75,15 +75,15 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         btnXoa = createBtn("+Xóa nhà cung cấp", "#EBA0AC", "btnXoa");
         btnXoa.addActionListener(this);
 
-        JPanel pnBtn = new JPanel();
+        pnBtn = new JPanel();
         pnBtn.setLayout(new BoxLayout(pnBtn, BoxLayout.X_AXIS));
         pnBtn.setBackground(Color.WHITE);
 
-        pnBtn.add(btnThem);
-        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-        pnBtn.add(btnSua);
-        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-        pnBtn.add(btnXoa);
+//        pnBtn.add(btnThem);
+//        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+//        pnBtn.add(btnSua);
+//        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+//        pnBtn.add(btnXoa);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
         lblTimKiem.setFont(BASE.font);
@@ -251,7 +251,23 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
 
         }
     }
-
+    
+    public JButton getBtnThem(){
+        return btnThem;
+    }
+    
+    public JButton getBtnXoa(){
+        return btnXoa;
+    }
+    
+    public JButton getBtnSua(){
+        return btnSua;
+    }
+    
+    public JPanel getPnBtn(){
+        return pnBtn;
+    }
+    
     public static void main(String[] agrs) {
         JFrame f = new JFrame();
         f.setSize(1000, 800);

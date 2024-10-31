@@ -26,6 +26,7 @@ import javax.swing.JTextField;
 import GUI.renderers.RoundJButton;
 import GUI.renderers.RoundJPasswordField;
 import GUI.renderers.RoundJTextField;
+import BUS.LoginBUS;
 
 /**
  *
@@ -194,6 +195,7 @@ public class LoginGUI extends JFrame {
 	}	
 
     public static void main(String args[]) {
-        new LoginGUI();
+        LoginGUI loginGUI = new LoginGUI();
+        LoginBUS loginBUS = new LoginBUS(loginGUI);
     }
 }

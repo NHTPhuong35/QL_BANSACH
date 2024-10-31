@@ -36,10 +36,11 @@ public class PhanQuyenBUS {
                 case 3 -> machucnang = "KH";
                 case 4 -> machucnang = "PN";
                 case 5 -> machucnang = "SP";
-                case 6 -> machucnang = "HD";
-                case 7 -> machucnang = "THONGKE";
-                case 8 -> machucnang = "TK";
-                case 9 -> machucnang = "PQ";
+                case 6 -> machucnang = "BH";
+                case 7 -> machucnang = "HD";
+                case 8 -> machucnang = "THONGKE";
+                case 9 -> machucnang = "TK";
+                case 10 -> machucnang = "PQ";
                 default -> {
                 }
             }
@@ -71,10 +72,11 @@ public class PhanQuyenBUS {
                 case 3 -> machucnang = "KH";
                 case 4 -> machucnang = "PN";
                 case 5 -> machucnang = "SP";
-                case 6 -> machucnang = "HD";
-                case 7 -> machucnang = "THONGKE";
-                case 8 -> machucnang = "TK";
-                case 9 -> machucnang = "PQ";
+                case 6 -> machucnang = "BH";
+                case 7 -> machucnang = "HD";
+                case 8 -> machucnang = "THONGKE";
+                case 9 -> machucnang = "TK";
+                case 10 -> machucnang = "PQ";
                 default -> {
                 }
             }
@@ -148,8 +150,8 @@ public class PhanQuyenBUS {
     
     public Object[][] getPhanQuyenListByRole(String quyen){
         ArrayList<ChiTietQuyenDTO> chitietquyenlist = quyenDAO.getQuyenListByRole(quyen);
-        boolean[][] quyenlist = new boolean[10][4];
-        Object[][] mangdanhsachphanquyen = new Object[10][5];
+        boolean[][] quyenlist = new boolean[11][4];
+        Object[][] mangdanhsachphanquyen = new Object[11][5];
         
         for(ChiTietQuyenDTO chitietquyen : chitietquyenlist){
       
@@ -171,10 +173,11 @@ public class PhanQuyenBUS {
         mangdanhsachphanquyen[3][0] = "Khách hàng";
         mangdanhsachphanquyen[4][0] = "Phiếu nhập";
         mangdanhsachphanquyen[5][0] = "Sản phẩm";
-        mangdanhsachphanquyen[6][0] = "Hóa đơn";
-        mangdanhsachphanquyen[7][0] = "Thống kê";
-        mangdanhsachphanquyen[8][0] = "Tài khoản";
-        mangdanhsachphanquyen[9][0] = "Phân quyền";
+        mangdanhsachphanquyen[6][0] = "Bán hàng";
+        mangdanhsachphanquyen[7][0] = "Hóa đơn";
+        mangdanhsachphanquyen[8][0] = "Thống kê";
+        mangdanhsachphanquyen[9][0] = "Tài khoản";
+        mangdanhsachphanquyen[10][0] = "Phân quyền";
         
         for (int i = 0; i < quyenlist.length; i++) {
             for (int j = 0; j < quyenlist[i].length; j++) {
@@ -236,10 +239,11 @@ public class PhanQuyenBUS {
             case "KH" -> 3;
             case "PN" -> 4;
             case "SP" -> 5;
-            case "HD" -> 6;
-            case "THONGKE" -> 7;
-            case "TK" -> 8;
-            case "PQ" -> 9;
+            case "BH" -> 6;
+            case "HD" -> 7;
+            case "THONGKE" -> 8;
+            case "TK" -> 9;
+            case "PQ" -> 10;
             default -> -1;
         };
     }

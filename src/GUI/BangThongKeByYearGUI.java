@@ -30,11 +30,11 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.chart.title.Title;
 import org.jfree.data.category.CategoryDataset;
 
-public class BangThongKeByMonthGUI {
+public class BangThongKeByYearGUI {
     private static JFreeChart createChart(CategoryDataset dataset) {
         JFreeChart chart = ChartFactory.createBarChart(
                 null,                     // Tiêu đề biểu đồ
-                "Tháng",                   // Nhãn trục X
+                "Năm",                   // Nhãn trục X
                 "Thu nhập (đ)",           // Nhãn trục Y
                 dataset, 
                 PlotOrientation.VERTICAL,

@@ -70,6 +70,23 @@ public class QuyenDAO {
         return list;
     }
     
+    public QuyenDTO getquyen(String maquyen){
+        String query = "SELECT * FROM quyen WHERE MAQUYEN = ?";
+        QuyenDTO quyen = new QuyenDTO();
+        try{
+            PreparedStatement pstm = conn.getConn().prepareStatement(query);
+            pstm.setString(1, maquyen);
+            ResultSet rs = pstm.executeQuery();
+            while (rs.next()){
+                quyen.setMaQuyen(rs.getString(1));
+                quyen.setTenQuyen(rs.getString(2));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return quyen;
+    }
+    
     public void ThemChiTietQuyen(ChiTietQuyenDTO chitietquyen){
         String query = "INSERT INTO `chitietquyen`(MAQUYEN, MACHUCNANG, HANHDONG) VALUES (?, ?, ?)";
         try{

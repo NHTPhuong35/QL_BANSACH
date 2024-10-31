@@ -30,6 +30,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 
 
@@ -52,89 +53,18 @@ public class BangThongKeDAO {
     }
     
     private BangThongKeDTO bangthongkeDTO;
-//    public int getTotalOrder(Timestamp start, Timestamp end, String tendn) throws SQLException {
-//        String query = "SELECT COUNT(*) AS totalOrder FROM `hoadon` WHERE TRANGTHAI = ? AND NGAYHD >= ? AND NGAYHD <= ? AND TENDN = ?";
-//        PreparedStatement statement = conn.getConn().prepareStatement(query);
-//        statement.setNString(1, TrangThaiHoaDon.PAID.getId()); //lấy ID được liên kết với trạng thái PAID
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        statement.setNString(4, tendn);
-//        ResultSet rs = statement.executeQuery();
-//        if (rs.next()) {
-//            return rs.getInt("totalOrder");
-//        }
-//        return 0;
-//    }
 
-//    public int getTotalOrder(Timestamp start, Timestamp end) throws SQLException {
-//        String query = "SELECT COUNT(*) AS totalOrder FROM `hoadon` WHERE TRANGTHAI = ? AND NGAYHD >= ? AND NGAYHD <= ?";
-//        PreparedStatement statement = conn.getConn().prepareStatement(query);
-//        statement.setNString(1, TrangThaiHoaDon.PAID.getId());
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        ResultSet rs = statement.executeQuery();
-//        if (rs.next()) {
-//            return rs.getInt("totalOrder");
-//        }
-//        return 0;
-//    }
-
-//    public int getTotalIncome(Timestamp start, Timestamp end) throws SQLException {
-//        String query = "SELECT SUM(TONGTIEN) AS totalIncome FROM `hoadon` WHERE TRANGTHAI = ? AND DATE(NGAYHD) >= DATE(?) AND DATE(NGAYHD) <= DATE(?)";
-//        PreparedStatement statement = conn.getConn().prepareStatement(query);
-//        statement.setNString(1, TrangThaiHoaDon.PAID.getId());
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        ResultSet rs = statement.executeQuery();
-//        if (rs.next()) {
-//            return rs.getInt("totalIncome");
-//        }
-//        return 0;
-//    }
-
-//    public int getTotalIncomeByid(Timestamp start, Timestamp end, String tendn) throws SQLException {
-//        String query = "SELECT SUM(TONGTIEN) AS totalIncome FROM `hoadon` WHERE TRANGTHAI = ? AND DATE(NGAYHD) >= DATE(?) AND DATE(NGAYHD) <= DATE(?) AND TENDN = ?";
-//        PreparedStatement statement = conn.getConn().prepareStatement(query);
-//        statement.setNString(1, TrangThaiHoaDon.PAID.getId());
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        statement.setNString(4, tendn);
-//        ResultSet rs = statement.executeQuery();
-//        if (rs.next()) {
-//            return rs.getInt("totalIncome");
-//        }
-//        return 0;
-//    }
-
-
-//    public ArrayList<Statistical.EmployeeIncome> getListTotalIncomeByEmployee(Timestamp start, Timestamp end) throws SQLException {
-//        ArrayList<Statistical.EmployeeIncome> incomes = new ArrayList<>();
-//        String query = "SELECT `idEmployee`, SUM(paidAmount) AS totalIncome, COUNT(id) AS totalOrder FROM `order` WHERE status = ? AND DATE(orderDate) >= DATE(?) AND DATE(orderDate) <= DATE(?) GROUP BY `idEmployee`  ORDER BY `totalIncome` DESC";
-//        PreparedStatement statement = conn.getConn().prepareStatement(query);
-//        statement.setNString(1, OrderStatus.PAID.getId());
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        ResultSet rs = statement.executeQuery();
-//        while (rs.next()) {
-//            Statistical.EmployeeIncome income = statistical.new EmployeeIncome();
-//            income.employee = employeeDao.get(rs.getInt("idEmployee"));
-//            income.totalIncome = rs.getInt("totalIncome");
-//            income.totalOrder = rs.getInt("totalOrder");
-//            incomes.add(income);
-//        }
-//        return incomes;
-//    }
-
-    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeByDate(LocalDate start, LocalDate end) throws SQLException {
+    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeAllByDate(LocalDate start, LocalDate end) throws SQLException {
         ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
-        String query = "SELECT DATE(NGAYHD) AS hoadonDate, COUNT(SOHD) AS totalOrder, SUM(TONGTIEN) AS totalIncome \n" +
-               "FROM `hoadon` \n" +
-               "WHERE TRANGTHAI = ? \n" +
-               "AND DATE(NGAYHD) >= ? \n" +
-               "AND DATE(NGAYHD) <= ? \n" +
-               "GROUP BY hoadonDate \n" +
-               "ORDER BY hoadonDate ASC \n" +
-               "LIMIT 0, 1000;";
+        String query = """
+                       SELECT DATE(NGAYHD) AS hoadonDate, COUNT(SOHD) AS totalOrder, SUM(TONGTIEN) AS totalIncome 
+                       FROM `hoadon` 
+                       WHERE TRANGTHAI = ? 
+                       AND DATE(NGAYHD) >= ? 
+                       AND DATE(NGAYHD) <= ? 
+                       GROUP BY hoadonDate 
+                       ORDER BY hoadonDate ASC 
+                       LIMIT 0, 1000;""";
 
         PreparedStatement statement = conn.getConn().prepareStatement(query);
         statement.setInt(1, TrangThaiHoaDon.PAID.getId());
@@ -170,6 +100,226 @@ public class BangThongKeDAO {
         }
         return incomes;
     }
+    
+    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeByDateWithTheLoai(LocalDate start, LocalDate end, String theloai) throws SQLException {
+        ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
+        String query = """
+                       SELECT DATE(NGAYHD) AS hoadonDate, COUNT(hoadon.SOHD) AS totalOrder, SUM(cthoadon.soluong * cthoadon.dongia) AS totalIncome 
+                       FROM `hoadon` 
+                       INNER JOIN cthoadon ON hoadon.SOHD = cthoadon.SOHD
+                       INNER JOIN ctsachloai ON cthoadon.MASACH = ctsachloai.MASACH
+                       INNER JOIN loai ON loai.MALOAI = ctsachloai.MALOAI
+                       WHERE hoadon.TRANGTHAI = ? 
+                       AND DATE(NGAYHD) >= ? 
+                       AND DATE(NGAYHD) <= ? 
+                       AND loai.TENLOAI = ? 
+                       GROUP BY hoadonDate 
+                       ORDER BY hoadonDate ASC 
+                       LIMIT 0, 1000;""";
+
+        PreparedStatement statement = conn.getConn().prepareStatement(query);
+        statement.setInt(1, TrangThaiHoaDon.PAID.getId());
+        statement.setDate(2, Date.valueOf(start)); //sử dụng Date.valueOf khi sử dụng LocalDate
+        statement.setDate(3, Date.valueOf(end));
+        statement.setString(4, theloai);
+        ResultSet rs = statement.executeQuery();
+        //Test
+        System.out.println("TrangThai: " + TrangThaiHoaDon.PAID.getId());
+        System.out.println("Start: " + start);
+        System.out.println("End: " + end);
+        System.out.println("EndLocalldate: " + Date.valueOf(end));
+        System.out.println("StartLocaldate: " + Date.valueOf(start));
+
+        //
+        bangthongkeDTO = new BangThongKeDTO();
+        while (rs.next()) {
+            BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
+            Date sqlhoadonDate = rs.getDate("hoadonDate");
+            if (sqlhoadonDate != null) {
+//                System.out.println("hoadonDate: " + sqlhoadonDate.toLocalDate());
+                income.date = sqlhoadonDate.toLocalDate();
+            } else {
+//                System.out.println("hoadonDate: null");
+                income.date = null;
+            }
+            income.totalIncome = rs.getInt("totalIncome");
+            income.totalOrder = rs.getInt("totalOrder");
+            
+//            System.out.println("totalIncome: " + income.totalIncome);
+//            System.out.println("totalOrder: " + income.totalOrder);
+            
+            incomes.add(income);
+        }
+        return incomes;
+    }
+    
+    
+    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeByMonthWithTheLoai(LocalDate start, LocalDate end, String theloai) throws SQLException {
+        ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
+        String query = """
+                       SELECT YEAR(NGAYHD) AS year, MONTH(NGAYHD) AS month, COUNT(hoadon.SOHD) AS totalOrder, 
+                              SUM(cthoadon.soluong * cthoadon.dongia) AS totalIncome 
+                       FROM `hoadon` 
+                       INNER JOIN cthoadon ON hoadon.SOHD = cthoadon.SOHD
+                       INNER JOIN ctsachloai ON cthoadon.MASACH = ctsachloai.MASACH
+                       INNER JOIN loai ON loai.MALOAI = ctsachloai.MALOAI
+                       WHERE hoadon.TRANGTHAI = ? 
+                       AND NGAYHD >= ? 
+                       AND NGAYHD <= ? 
+                       AND loai.TENLOAI = ? 
+                       GROUP BY year, month 
+                       ORDER BY year, month ASC 
+                       LIMIT 0, 1000;""";
+
+        PreparedStatement statement = conn.getConn().prepareStatement(query);
+        statement.setInt(1, TrangThaiHoaDon.PAID.getId());
+        statement.setDate(2, Date.valueOf(start));
+        statement.setDate(3, Date.valueOf(end));
+        statement.setString(4, theloai);
+        ResultSet rs = statement.executeQuery();
+
+        // Kiểm tra và in thông tin
+        System.out.println("TrangThai: " + TrangThaiHoaDon.PAID.getId());
+        System.out.println("Start: " + start);
+        System.out.println("End: " + end);
+
+        bangthongkeDTO = new BangThongKeDTO();
+        while (rs.next()) {
+            BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
+            int year = rs.getInt("year");
+            int month = rs.getInt("month");
+            income.date = LocalDate.of(year, month, 1); // Chỉ cần ngày 1 cho tháng
+            income.totalIncome = rs.getInt("totalIncome");
+            income.totalOrder = rs.getInt("totalOrder");
+
+            incomes.add(income);
+        }
+        return incomes;
+    }
+    
+    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeAllByMonth(LocalDate start, LocalDate end) throws SQLException {
+        ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
+        String query = """
+                       SELECT YEAR(NGAYHD) AS year, MONTH(NGAYHD) AS month, COUNT(hoadon.SOHD) AS totalOrder, 
+                              SUM(cthoadon.soluong * cthoadon.dongia) AS totalIncome 
+                       FROM `hoadon` 
+                       INNER JOIN cthoadon ON hoadon.SOHD = cthoadon.SOHD
+                       INNER JOIN ctsachloai ON cthoadon.MASACH = ctsachloai.MASACH
+                       INNER JOIN loai ON loai.MALOAI = ctsachloai.MALOAI
+                       WHERE hoadon.TRANGTHAI = ? 
+                       AND NGAYHD >= ? 
+                       AND NGAYHD <= ? 
+                       GROUP BY year, month 
+                       ORDER BY year, month ASC 
+                       LIMIT 0, 1000;""";
+
+        PreparedStatement statement = conn.getConn().prepareStatement(query);
+        statement.setInt(1, TrangThaiHoaDon.PAID.getId());
+        statement.setDate(2, Date.valueOf(start));
+        statement.setDate(3, Date.valueOf(end));
+        ResultSet rs = statement.executeQuery();
+
+        // Kiểm tra và in thông tin
+        System.out.println("TrangThai: " + TrangThaiHoaDon.PAID.getId());
+        System.out.println("Start: " + start);
+        System.out.println("End: " + end);
+
+        bangthongkeDTO = new BangThongKeDTO();
+        while (rs.next()) {
+            BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
+            int year = rs.getInt("year");
+            int month = rs.getInt("month");
+            income.date = LocalDate.of(year, month, 1); // Chỉ cần ngày 1 cho tháng
+            income.totalIncome = rs.getInt("totalIncome");
+            income.totalOrder = rs.getInt("totalOrder");
+
+            incomes.add(income);
+        }
+        return incomes;
+    }
+    
+    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeAllByYear(LocalDate start, LocalDate end) throws SQLException {
+        ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
+        String query = """
+                       SELECT YEAR(NGAYHD) AS year, COUNT(hoadon.SOHD) AS totalOrder, 
+                              SUM(cthoadon.soluong * cthoadon.dongia) AS totalIncome 
+                       FROM `hoadon` 
+                       INNER JOIN cthoadon ON hoadon.SOHD = cthoadon.SOHD
+                       INNER JOIN ctsachloai ON cthoadon.MASACH = ctsachloai.MASACH
+                       INNER JOIN loai ON loai.MALOAI = ctsachloai.MALOAI
+                       WHERE hoadon.TRANGTHAI = ? 
+                       AND NGAYHD >= ? 
+                       AND NGAYHD <= ? 
+                       GROUP BY year 
+                       ORDER BY year ASC 
+                       LIMIT 0, 1000;""";
+
+        PreparedStatement statement = conn.getConn().prepareStatement(query);
+        statement.setInt(1, TrangThaiHoaDon.PAID.getId());
+        statement.setDate(2, Date.valueOf(start));
+        statement.setDate(3, Date.valueOf(end));
+        ResultSet rs = statement.executeQuery();
+
+        // Kiểm tra và in thông tin
+        System.out.println("TrangThai: " + TrangThaiHoaDon.PAID.getId());
+        System.out.println("Start: " + start);
+        System.out.println("End: " + end);
+
+        bangthongkeDTO = new BangThongKeDTO();
+        while (rs.next()) {
+            BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
+            int year = rs.getInt("year");
+            income.date = LocalDate.of(year, 1, 1); // Chỉ cần ngày 1 cho năm
+            income.totalIncome = rs.getInt("totalIncome");
+            income.totalOrder = rs.getInt("totalOrder");
+
+            incomes.add(income);
+        }
+        return incomes;
+    }
+    
+    public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeByYearWithTheLoai(LocalDate start, LocalDate end, String theloai) throws SQLException {
+        ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
+        String query = """
+                       SELECT YEAR(NGAYHD) AS year, COUNT(hoadon.SOHD) AS totalOrder, 
+                              SUM(cthoadon.soluong * cthoadon.dongia) AS totalIncome 
+                       FROM `hoadon` 
+                       INNER JOIN cthoadon ON hoadon.SOHD = cthoadon.SOHD
+                       INNER JOIN ctsachloai ON cthoadon.MASACH = ctsachloai.MASACH
+                       INNER JOIN loai ON loai.MALOAI = ctsachloai.MALOAI
+                       WHERE hoadon.TRANGTHAI = ? 
+                       AND NGAYHD >= ? 
+                       AND NGAYHD <= ? 
+                       AND loai.TENLOAI = ? 
+                       GROUP BY year 
+                       ORDER BY year ASC 
+                       LIMIT 0, 1000;""";
+
+        PreparedStatement statement = conn.getConn().prepareStatement(query);
+        statement.setInt(1, TrangThaiHoaDon.PAID.getId());
+        statement.setDate(2, Date.valueOf(start));
+        statement.setDate(3, Date.valueOf(end));
+        statement.setString(4, theloai);
+        ResultSet rs = statement.executeQuery();
+
+        // Kiểm tra và in thông tin
+        System.out.println("TrangThai: " + TrangThaiHoaDon.PAID.getId());
+        System.out.println("Start: " + start);
+        System.out.println("End: " + end);
+
+        bangthongkeDTO = new BangThongKeDTO();
+        while (rs.next()) {
+            BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
+            int year = rs.getInt("year");
+            income.date = LocalDate.of(year, 1, 1); // Chỉ cần ngày 1 cho năm
+            income.totalIncome = rs.getInt("totalIncome");
+            income.totalOrder = rs.getInt("totalOrder");
+
+            incomes.add(income);
+        }
+        return incomes;
+    }
+
     
     public ArrayList<BangThongKeDTO.TaiKhoanNhapHangPriceImport> getListTotalImportPriceByDate(LocalDate start, LocalDate end) throws SQLException {
         ArrayList<BangThongKeDTO.TaiKhoanNhapHangPriceImport> prices = new ArrayList<>();
@@ -267,98 +417,5 @@ public class BangThongKeDAO {
     }
 }
 
-
-//    public ArrayList<Statistical.EmployeeIncome> getListTotalIncomeByDate(Timestamp start, Timestamp end, int idEmployee) throws SQLException {
-//        ArrayList<Statistical.EmployeeIncome> incomes = new ArrayList<>();
-//        String query = "SELECT DATE(orderDate) AS orderDate, SUM(paidAmount) AS totalIncome "
-//                + "FROM `order` WHERE status = ? AND DATE(orderDate) >= DATE(?) AND DATE(orderDate) <= DATE(?) AND idEmployee = ? "
-//                + "GROUP BY orderDate ORDER BY `orderDate` ASC";
-//        PreparedStatement statement = conn.getConn().prepareStatement(query);
-//        statement.setNString(1, OrderStatus.PAID.getId());
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        statement.setInt(4, idEmployee);
-//        ResultSet rs = statement.executeQuery();
-//        Employee e = employeeDao.get(idEmployee);
-//        while (rs.next()) {
-//            Statistical.EmployeeIncome income = statistical.new EmployeeIncome();
-//            income.date = rs.getDate("orderDate");
-//            income.totalIncome = rs.getInt("totalIncome");
-//            income.employee = e;
-//        }
-//        return incomes;
-//    }
-//
-//    public int getTotalEmployee() throws SQLException {
-//        Statement statement = conn.getConn().createStatement();
-//        String query = "SELECT COUNT(*) AS total FROM employee";
-//        ResultSet rs = statement.executeQuery(query);
-//        if (rs.next()) {
-//            return rs.getInt("total");
-//        }
-//        return 0;
-//    }
-//
-//    public int getTotalCustomer() throws SQLException {
-//        Statement statement = conn.getConn().createStatement();
-//        String query = "SELECT COUNT(*) AS total FROM customer";
-//        ResultSet rs = statement.executeQuery(query);
-//        if (rs.next()) {
-//            return rs.getInt("total");
-//        }
-//        return 0;
-//    }
-
-//    public ArrayList<Statistical.ProductIncome> getQuantityItemByCategory(Timestamp start, Timestamp end, int Catetory) throws SQLException {
-//        ArrayList<Statistical.ProductIncome> itemProducts = new ArrayList<>();
-//        String query = "SELECT food_item.id AS idFoodItem, `name`, SUM(quantity) AS sum "
-//                + "FROM `order_item`, `food_item`, `order` "
-//                + "WHERE `idFoodItem` = food_item.id AND idCategory = ? "
-//                + "AND `idOrder` = order.id AND DATE(orderDate) >= DATE(?) AND DATE(orderDate) <= DATE(?) "
-//                + "GROUP BY food_item.id, `name` "
-//                + "ORDER BY sum DESC";
-//
-//
-//        PreparedStatement statement = conn.prepareStatement(query);
-//        statement.setInt(1, Catetory);
-//        statement.setTimestamp(2, start);
-//        statement.setTimestamp(3, end);
-//        ResultSet rs = statement.executeQuery();
-//        while (rs.next()) {
-//            Statistical.ProductIncome itemProduct = statistical.new ProductIncome();
-//            itemProduct.name = rs.getString("name");
-//            itemProduct.quantity = rs.getInt("sum");
-//            itemProducts.add(itemProduct);
-//        }
-//        return itemProducts;
-//    }
-//
-//    public ArrayList<Statistical.ProductIncome> getQuantityItem(Timestamp start, Timestamp end) throws SQLException {
-//        ArrayList<Statistical.ProductIncome> itemProducts = new ArrayList<>();
-//       String query = "SELECT `idFoodItem`, `name`, SUM(quantity) as sum, (foodPrice * SUM(quantity)) as amount "
-//                + "FROM `order_item`, `food_item`, `order` "
-//                + "WHERE `idFoodItem` = food_item.id AND `idOrder` = order.id "
-//                + "AND DATE(orderDate) >= DATE(?) AND DATE(orderDate) <= DATE(?) "
-//                + "AND order.status = ? "
-//                + "GROUP BY `idFoodItem`, `name`, `foodPrice` "
-//                + "ORDER BY sum DESC";
-//
-//
-//
-//        PreparedStatement statement = conn.prepareStatement(query);
-//        statement.setTimestamp(1, start);
-//        statement.setTimestamp(2, end);
-//        statement.setNString(3, OrderStatus.PAID.getId());
-//        ResultSet rs = statement.executeQuery();
-//        while (rs.next()) {
-//            Statistical.ProductIncome itemProduct = statistical.new ProductIncome();
-//            itemProduct.name = rs.getString("name");
-//            itemProduct.quantity = rs.getInt("sum");
-//            itemProduct.id = rs.getInt("idFoodItem");
-//            itemProduct.amount = rs.getInt("amount");
-//            itemProducts.add(itemProduct);
-//        }
-//        return itemProducts;
-//    }
 
 

@@ -43,7 +43,7 @@ import javax.swing.table.JTableHeader;
 
 public class TaiKhoanGUI extends JPanel implements MouseListener {
 
-    private JPanel pnHeader;
+    private JPanel pnHeader, pnThaoTac;
     private JPanel pnTimKiem;
     private JTable tbTaiKhoan;
     private JScrollPane jpTaiKhoan;
@@ -96,7 +96,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
 
         //thanh thao tác thêm, sửa, xoá
-        JPanel pnThaoTac = new JPanel();
+        pnThaoTac = new JPanel();
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
 
         ImageIcon addIcon = new ImageIcon("./src/image/btAdd.png");
@@ -144,12 +144,12 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         btnXoa.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnXoa.addMouseListener(this);
         // Thêm các button và các khoảng trống có thể giãn nở
-        pnThaoTac.add(btnThem);
-        pnThaoTac.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa các nút
-        pnThaoTac.add(btnSua);
-        pnThaoTac.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa các nút
-        pnThaoTac.add(btnXoa);
-        pnThaoTac.add(Box.createHorizontalGlue());
+//        pnThaoTac.add(btnThem);
+//        pnThaoTac.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa các nút
+//        pnThaoTac.add(btnSua);
+//        pnThaoTac.add(Box.createHorizontalStrut(20)); // Khoảng cách giữa các nút
+//        pnThaoTac.add(btnXoa);
+//        pnThaoTac.add(Box.createHorizontalGlue());
 
         //thanh Tìm kiếm
         pnTimKiem = new JPanel();
@@ -399,6 +399,22 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
             }
 
         }
+    }
+    
+    public JButton getBtnThem(){
+        return btnThem;
+    }
+    
+    public JButton getBtnXoa(){
+        return btnXoa;
+    }
+    
+    public JButton getBtnSua(){
+        return btnSua;
+    }
+    
+    public JPanel getPnThaoTac(){
+        return pnThaoTac;
     }
 
     @Override
