@@ -90,6 +90,7 @@ public class PDFExporter {
             Paragraph finalAmountParagraph = new Paragraph("Thành tiền: " + (TongTien - hd.getTienGiamGia()) + " VND", regularFont);
             finalAmountParagraph.setAlignment(Element.ALIGN_RIGHT);
             document.add(finalAmountParagraph);
+            new ShowDiaLog("In hóa đơn thành công", ShowDiaLog.SUCCESS_DIALOG);
         } catch (DocumentException | IOException e) {
             e.printStackTrace();
         } finally {

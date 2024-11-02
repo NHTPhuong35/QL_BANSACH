@@ -17,6 +17,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -26,6 +27,7 @@ import java.util.Date;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,6 +36,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -43,7 +46,8 @@ import javax.swing.table.JTableHeader;
 
 public class HoaDonGUI extends JPanel {
 
-    private JPanel pnTool, pnMain, btSearch, btRefresh, btDel, btPrint;
+    private JPanel pnTool, pnMain;
+    private  JButton btSearch, btRefresh, btDel, btPrint;
     private JTextField tfSearch;
     private JSpinner startDate, endDate;
     private DefaultTableModel dtm;
@@ -99,34 +103,30 @@ public class HoaDonGUI extends JPanel {
         MouseAdapter commonMouseListener = createCommonMouseListener();
 
         //bt Search 
-        btSearch = new JPanel();
-        JPanel pnBtSreach = createButton(btSearch, "Tìm", "search.png", BASE.color_btTim, 80, 30);
+        btSearch = createButtonWithIcon("Tìm kiếm", "./src/image/search.png", BASE.color_btTim, BASE.font, new Dimension(130,35));
         btSearch.addMouseListener(commonMouseListener);
 
         //bt Refresh
-        btRefresh = new JPanel();
+        btRefresh = createButtonWithIcon("Làm mới", "./src/image/refresh.png", BASE.color_btLamMoi, BASE.font, new Dimension(130,35));
         btRefresh.addMouseListener(commonMouseListener);
-        JPanel pnBtRefresh = createButton(btRefresh, "Làm mới", "refresh.png", BASE.color_btLamMoi, 110, 30);
 
         //bt Del
-        btDel = new JPanel();
+        btDel = createButtonWithIcon("Xóa", "./src/image/bin.png", BASE.color_btLamXoa, BASE.font, new Dimension(100,35));
         btDel.addMouseListener(commonMouseListener);
-        JPanel pnBtDel = createButton(btDel, "Xóa", "refresh.png", BASE.color_btLamXoa, 100, 60);
 
         //bt print
-        btPrint = new JPanel();
+        btPrint = createButtonWithIcon("In hóa đơn", "./src/image/print.png", BASE.color_btBFD, BASE.font, new Dimension(150,35));
         btPrint.addMouseListener(commonMouseListener);
-        JPanel pnBtBDF = createButton(btPrint, "In BDF", "print.png", BASE.color_btBFD, 100, 60);
 
         // add pnTool
         pnTool.add(pnSearch);
         pnTool.add(pnStartDate);
         pnTool.add(lblDen);
         pnTool.add(pnEndDate);
-        pnTool.add(pnBtSreach);
-        pnTool.add(pnBtRefresh);
-        pnTool.add(pnBtDel);
-        pnTool.add(pnBtBDF);
+        pnTool.add(btSearch);
+        pnTool.add(btRefresh);
+        pnTool.add(btDel);
+        pnTool.add(btPrint);
 
         //pnMain
         Object[] colSP = {"Mã HD", "Mã nhân viên", "Mã khách hàng", "Thời gian", "Ngày", "Giảm giá", "Tổng tiền", "Trạng Thái"};
@@ -236,29 +236,6 @@ public class HoaDonGUI extends JPanel {
         return pn;
     }
 
-    private JPanel createButton(JPanel btn, String text, String url, Color color, int width, int height) {
-        btn.setLayout(new BoxLayout(btn, BoxLayout.X_AXIS));
-        btn.setBackground(color);
-        btn.setBorder(new EmptyBorder(0, 10, 0, 10));
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setPreferredSize(new Dimension(width, height));
-        btn.setMaximumSize(new Dimension(width, height));
-
-        JLabel lblText = new JLabel(text);
-        lblText.setFont(BASE.font_header);
-
-        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
-        Image img = Icon.getImage();
-        Image scaledImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImg);
-
-        JLabel lblImage = new JLabel(scaledIcon);
-        btn.add(lblText);
-        btn.add(Box.createHorizontalGlue());
-        btn.add(lblImage);
-        return btn;
-    }
-
     private void reload(ArrayList<HoaDonDTO> ds) {
         dtm.setRowCount(0);
         for (HoaDonDTO hd : ds) {
@@ -271,8 +248,8 @@ public class HoaDonGUI extends JPanel {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getSource() instanceof JPanel) {
-                    JPanel clickedPanel = (JPanel) e.getSource();
+                if (e.getSource() instanceof JButton) {
+                    JButton clickedPanel = (JButton) e.getSource();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                     if (clickedPanel == btDel) {
                         Date currentDate = new Date();
@@ -313,7 +290,6 @@ public class HoaDonGUI extends JPanel {
 
                         for (HoaDonDTO bill : billList) {
                             String billDateStr = bill.getNgayHD();
-//                            System.out.println(bill.getNgayHD());
 
                             boolean isInDateRange = (billDateStr.compareTo(startDateStr) >= 0 && billDateStr.compareTo(endDateStr) <= 0);
 
@@ -344,16 +320,16 @@ public class HoaDonGUI extends JPanel {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (e.getSource() instanceof JPanel) {
-                    JPanel pn = (JPanel) e.getSource();
+                if (e.getSource() instanceof JButton) {
+                    JButton pn = (JButton) e.getSource();
 
                 }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (e.getSource() instanceof JPanel) {
-                    JPanel pn = (JPanel) e.getSource();
+                if (e.getSource() instanceof JButton) {
+                    JButton pn = (JButton) e.getSource();
 
                 }
             }
@@ -388,6 +364,25 @@ public class HoaDonGUI extends JPanel {
             }
         }
         reload(ds);
+    }
+    
+    public JButton createButtonWithIcon(String text, String iconPath, Color bgColor, Font font, Dimension size) {
+        ImageIcon icon = new ImageIcon(iconPath);
+        Image scaledImage = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(scaledImage);
+        
+        JButton button = new JButton(text, icon);
+        button.setHorizontalTextPosition(SwingConstants.RIGHT);
+        button.setVerticalTextPosition(SwingConstants.CENTER);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setBackground(bgColor);
+        button.setFont(font);
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        return button;
     }
 
     public static void main(String[] args) {

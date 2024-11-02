@@ -195,7 +195,7 @@ public class BanHangGUI extends JPanel {
         btCustomerCreate.setCursor(new Cursor(Cursor.HAND_CURSOR));
         JLabel lblCustomer = new JLabel("Tạo mới");
         lblCustomer.setFont(BASE.font);
-        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/customers.png"));
+        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/person.png"));
         Image CustomerImg = CustomerIcon.getImage();
         Image scaledCustomerImg = CustomerImg.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon scaledCustomerIcon = new ImageIcon(scaledCustomerImg);

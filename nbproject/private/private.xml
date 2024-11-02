@@ -1,48 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-<<<<<<< HEAD
-        <group/>
-=======
-        <group>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/BangThongKeDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/TheLoaiDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/ChiTietThongKeGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/BangThongKeBUS.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/BangThongKeByMonthGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/KhachHangGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/TaiKhoanGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/KhachHangDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/TaiKhoanDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/PhanQuyenGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/expands/DateRangePickerPanel.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/ChucNangTaiKhoanGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/QuyenDTO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/TheLoaiGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/QuyenDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/SanPhamDTO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/PhanQuyenBUS.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/HoaDonDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/PhieuNhapGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/LoginGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/HomeBUS.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/KHGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/TaiKhoanDTO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/BUS/LoginBUS.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/SanPhamDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/BangThongKeDTO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/connectDatabase.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/ChiTietSachLoaiDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/HomeGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DAO/ChiTietHoaDonDAO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/HoaDonGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/BangThongKeByDateGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/SanPhamGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/ThongKeGUI.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/DTO/HoaDonDTO.java</file>
-            <file>file:/D:/Workspace/Java%20Projects/QL_BANSACH/src/GUI/TacGiaGUI.java</file>
-        </group>
->>>>>>> 434613878e942399c5e454194ac749d6d44cff9a
-    </open-files>
 </project-private>
