@@ -422,8 +422,8 @@ public class HomeBUS {
                     khachhanggui = new KhachHangGUI();
                     JPanel pnBtn = khachhanggui.getPnBtn();
                     if(khachhangthem){
-                        pnBtn.add(khachhanggui.getBtAdd());
-                        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+//                        pnBtn.add(khachhanggui.getBtAdd());
+//                        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
                         khachhanggui.revalidate();
                         khachhanggui.repaint();
                     }

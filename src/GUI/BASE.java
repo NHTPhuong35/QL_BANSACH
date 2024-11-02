@@ -33,8 +33,8 @@ public class BASE {
     public static Color color_header = Color.decode("#F1C27D");
     public static Color color_btAdd = Color.decode("#5DADE2");
     public static Color color_btEdit = Color.decode("#F4D03F");
-    public static Color color_btXacNhan = Color.decode("#6BCBDF");
-    public static Color color_btHuy = Color.decode("#FD7E14");
+    public static Color color_btXacNhan = Color.decode("#6DA67A");
+    public static Color color_btHuy = Color.decode("#D47965");
     
     public static ImageIcon createResizedIcon(Class<?> clazz, String imagePath, int width, int height) {
         URL imageURL = clazz.getResource(imagePath);
