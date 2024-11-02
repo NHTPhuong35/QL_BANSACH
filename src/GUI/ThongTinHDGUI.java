@@ -336,7 +336,7 @@ public class ThongTinHDGUI extends JPanel {
 
                         HoaDonDTO hd = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
 
-                        new CTHD(hd);
+                        new CTHoaDon(hd);
                     }
                 }
             }

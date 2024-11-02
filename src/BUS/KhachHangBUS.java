@@ -6,7 +6,6 @@ package BUS;
 
 import DAO.KhachHangDAO;
 import DTO.KhachHangDTO;
-import GUI.ShowDiaLog;
 import java.util.ArrayList;
 
 /**
@@ -27,17 +26,7 @@ public class KhachHangBUS {
         ds = dao.dsKhachHang();
     }
 
-    private boolean KT_Ten(String ten) {
-        String regex = "^[a-zA-ZÀ-ỹ\\s]{2,}$";
-        return ten.matches(regex);
-    }
-
-    private boolean KT_SDT(String sdt) {
-        String regex = "^0\\d{9}$";
-        return sdt.matches(regex);
-    }
-
-    private boolean KT_SDTTT(String sdt) {
+    public boolean checkPhoneExits(String sdt) {
         for (KhachHangDTO kh : ds) {
             if (kh.getSdt().equals(sdt)) {
                 return true;
@@ -88,51 +77,29 @@ public class KhachHangBUS {
     }
 
     public boolean ThemKhachHang(KhachHangDTO kh) {
-        if (KT_Ten(kh.getTenKh()) && KT_SDT(kh.getSdt()) && !KT_SDTTT(kh.getSdt())) {
-//            kh.setMaKh(TaoMaKH());
-            KhachHangDAO khDAO = new KhachHangDAO();
-            if (khDAO.ThemKhachHang(kh)) {
-                new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
-                return true;
-            } else {
-                new ShowDiaLog("Thêm khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
-                return false;
-            }
-        }
-        if (!KT_Ten(kh.getTenKh())) {
-            new ShowDiaLog("Tên phải chứa tối thiểu 2 ký tự \n và không chứa ký tự đặc biệt", ShowDiaLog.ERROR_DIALOG);
-            return false;
-        }
-        if (!KT_SDT(kh.getSdt())) {
-            new ShowDiaLog("Số điện thoại gồm 10 và sô bắt đầu bằng số 0", ShowDiaLog.ERROR_DIALOG);
-            return false;
-        }
+        String name = kh.getTenKh();
+        String phone = kh.getSdt();
+        String nameRegex = "^(?! )[\\p{L} .'-]{1,35}(?<! )$"; 
+        String phoneRegex = "^0[0-9]{9}$"; 
 
-        if (KT_SDTTT(kh.getSdt())) {
-            new ShowDiaLog("Số điện thoại đã tồn tại", ShowDiaLog.ERROR_DIALOG);
-            return false;
+        if (phone != null && phone.matches(phoneRegex) && !checkPhoneExits(phone)) {
+            if (name != null && name.matches(nameRegex)) {
+                KhachHangDAO khDAO = new KhachHangDAO();
+                return khDAO.ThemKhachHang(kh);
+            }
         }
         return false;
     }
 
     public boolean SuaKhachHang(KhachHangDTO kh) {
-        if (KT_Ten(kh.getTenKh()) && KT_SDT(kh.getSdt())) {
+        String name = kh.getTenKh();
+        String phone = kh.getSdt();
+        String nameRegex = "^(?! )[\\p{L} .'-]{1,35}(?<! )$";
+        String phoneRegex = "^0[0-9]{9}$";
+
+        if (name != null && name.matches(nameRegex) && phone.matches(phoneRegex) && phone != null) {
             KhachHangDAO khDAO = new KhachHangDAO();
-            if (khDAO.SuaKhachHang(kh)) {
-                new ShowDiaLog("Sửa khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
-                return true;
-            } else {
-                new ShowDiaLog("Sửa khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
-                return false;
-            }
-        }
-        if (!KT_Ten(kh.getTenKh())) {
-            new ShowDiaLog("Tên phải chứa tối thiểu 2 ký tự \n và không chứa ký tự đặc biệt", ShowDiaLog.ERROR_DIALOG);
-            return false;
-        }
-        if (!KT_SDT(kh.getSdt())) {
-            new ShowDiaLog("Số điện thoại gồm 10 và sô bắt đầu bằng số 0", ShowDiaLog.ERROR_DIALOG);
-            return false;
+            return khDAO.SuaKhachHang(kh);
         }
         return false;
     }
@@ -147,16 +114,9 @@ public class KhachHangBUS {
         }
         return "";
     }
-    
-     public void CapNhatDiemTL(String MaKH, double diem) {
-          KhachHangDAO khDAO = new KhachHangDAO();
-          khDAO.CapNhatDiemTL(MaKH, diem);
-     }
 
-    public static void main(String[] agrs) {
-        KhachHangBUS khBUS = new KhachHangBUS();
-
-        System.out.println(khBUS.getTenKH("KH01"));
+    public void CapNhatDiemTL(String MaKH, double diem) {
+        KhachHangDAO khDAO = new KhachHangDAO();
+        khDAO.CapNhatDiemTL(MaKH, diem);
     }
 }
-

@@ -8,6 +8,7 @@ import DTO.TacGiaDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import static java.awt.Component.TOP_ALIGNMENT;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -44,8 +45,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     private JTextField txtTimKiem;
     private JLabel productPrice;
     private int width = 900, height = 781;
-    private BanHangGUI BanHangGUI;
-    private SalesGUI SalesGUI;
+    private BanHangGUI SalesGUI;
 
     private DecimalFormat FormatInt = new DecimalFormat("#,###");
 
@@ -60,16 +60,8 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         }
     }
 
-    public ChonSanPhamGUI(BanHangGUI BanHangGUI) {
-        this.BanHangGUI = BanHangGUI;
-        this.SelectedListSP = BanHangGUI.getCtHoaDon();
-        SanPhamBUS spBUS = new SanPhamBUS();
-        dsSP = spBUS.getDanhSachBan();
 
-        init();
-    }
-
-    public ChonSanPhamGUI(SalesGUI SalesGUI) {
+    public ChonSanPhamGUI(BanHangGUI SalesGUI) {
         this.SalesGUI = SalesGUI;
         this.SelectedListSP = SalesGUI.getBillList();
         SanPhamBUS spBUS = new SanPhamBUS();
@@ -236,10 +228,6 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     }
 
     private void sendSelectedProducts() {
-        if (BanHangGUI != null) {
-            BanHangGUI.DSHD(SelectedListSP);
-            BanHangGUI.setCtHoaDon(SelectedListSP);
-        }
         if (SalesGUI != null) {
             SalesGUI.reLoadData(SelectedListSP);
             SalesGUI.setBillList(SelectedListSP);
