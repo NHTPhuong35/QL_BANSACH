@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+<<<<<<< HEAD
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/BASE.java</file>
@@ -15,4 +16,6 @@
             <file>file:/D:/thanhphuong/CNPM/QL_BANSACH/src/GUI/NhaCungCapGUI.java</file>
         </group>
     </open-files>
+=======
+>>>>>>> ad89b33654cce1dbd7316be72fd833d5ae92f22d
 </project-private>

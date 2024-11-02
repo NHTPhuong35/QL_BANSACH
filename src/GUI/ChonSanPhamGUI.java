@@ -2,12 +2,11 @@ package GUI;
 
 import BUS.SanPhamBUS;
 import DTO.ChiTietHoaDonDTO;
-import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
-import DTO.TacGiaDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import static java.awt.Component.TOP_ALIGNMENT;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -18,8 +17,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -27,7 +24,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -44,8 +40,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     private JTextField txtTimKiem;
     private JLabel productPrice;
     private int width = 900, height = 781;
-    private BanHangGUI BanHangGUI;
-    private SalesGUI SalesGUI;
+    private BanHangGUI SalesGUI;
 
     private DecimalFormat FormatInt = new DecimalFormat("#,###");
 
@@ -60,16 +55,8 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         }
     }
 
-    public ChonSanPhamGUI(BanHangGUI BanHangGUI) {
-        this.BanHangGUI = BanHangGUI;
-        this.SelectedListSP = BanHangGUI.getCtHoaDon();
-        SanPhamBUS spBUS = new SanPhamBUS();
-        dsSP = spBUS.getDanhSachBan();
 
-        init();
-    }
-
-    public ChonSanPhamGUI(SalesGUI SalesGUI) {
+    public ChonSanPhamGUI(BanHangGUI SalesGUI) {
         this.SalesGUI = SalesGUI;
         this.SelectedListSP = SalesGUI.getBillList();
         SanPhamBUS spBUS = new SanPhamBUS();
@@ -88,7 +75,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         pnHeader = new JPanel();
         pnHeader.setLayout(new BorderLayout());
         pnHeader.setPreferredSize(new Dimension(width, 36));
-        pnHeader.setBackground(BASE.color_heaer);
+        pnHeader.setBackground(BASE.color_main);
         pnHeader.setOpaque(true);
 
         JLabel lblHeader = new JLabel("Chọn sách", JLabel.CENTER);
@@ -184,7 +171,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         JButton btnChon = new JButton("Chọn");
         btnChon.setPreferredSize(new Dimension(130, 30));
         btnChon.setMaximumSize(new Dimension(130, 30));
-        btnChon.setBackground(BASE.btnThem);
+        btnChon.setBackground(Color.decode("#D5A573"));
         btnChon.setFont(BASE.font);
         btnChon.setOpaque(true);
         btnChon.setBorderPainted(false);
@@ -236,10 +223,6 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
     }
 
     private void sendSelectedProducts() {
-        if (BanHangGUI != null) {
-            BanHangGUI.DSHD(SelectedListSP);
-            BanHangGUI.setCtHoaDon(SelectedListSP);
-        }
         if (SalesGUI != null) {
             SalesGUI.reLoadData(SelectedListSP);
             SalesGUI.setBillList(SelectedListSP);

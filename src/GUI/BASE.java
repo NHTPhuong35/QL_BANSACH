@@ -23,6 +23,7 @@ public class BASE {
     public static Font font = new Font("typeface", Font.PLAIN, 15);
     public static Font font_header_frame = new Font("typeface", Font.BOLD, 14);
     public static Font font_frame = new Font("typeface", Font.PLAIN, 12);
+    public static Font font_error = new Font("typeface", Font.PLAIN, 11);
     public static Color color_table_header;
     
     public static Color color_header_tbl = Color.decode("#E0AC69");
@@ -34,8 +35,8 @@ public class BASE {
     public static Color color_header = Color.decode("#F1C27D");
     public static Color color_btAdd = Color.decode("#5DADE2");
     public static Color color_btEdit = Color.decode("#F4D03F");
-    public static Color color_btXacNhan = Color.decode("#6BCBDF");
-    public static Color color_btHuy = Color.decode("#FD7E14");
+    public static Color color_btXacNhan = Color.decode("#6DA67A");
+    public static Color color_btHuy = Color.decode("#D47965");
     
     public static ImageIcon createResizedIcon(Class<?> clazz, String imagePath, int width, int height) {
         URL imageURL = clazz.getResource(imagePath);

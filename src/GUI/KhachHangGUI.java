@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,21 +25,20 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import BUS.KhachHangBUS;
 import DTO.KhachHangDTO;
+import java.awt.Font;
 import java.awt.Image;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 public class KhachHangGUI extends JPanel {
 
     private JTable tbl;
     private DefaultTableModel dtm;
     private JPanel pnHeader, pnMain, pnBtn;
-    private JButton btnthem, btnSua;
-    private JPanel btAdd, btEdit;
+    private JButton btAdd, btEdit ;
     private JTextField tfTimKiem;
 
     public KhachHangGUI() {
@@ -55,8 +53,8 @@ public class KhachHangGUI extends JPanel {
         this.setPreferredSize(new Dimension(1000, 600));
 
         pnHeader = new JPanel(new BorderLayout());
-        pnHeader.setPreferredSize(new Dimension(0, 60));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+        pnHeader.setPreferredSize(new Dimension(0, 80));
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
 
         pnMain = new JPanel(new BorderLayout());
         this.add(pnHeader, BorderLayout.NORTH);
@@ -70,28 +68,15 @@ public class KhachHangGUI extends JPanel {
 
         MouseAdapter commonMouseListener = createCommonMouseListener();
 
-//        btAdd = new JPanel();
-//        btAdd = createButton(btAdd, "Thêm", "btAdd.png", BASE.color_btAdd, 100, 35);
+//        btAdd = createButtonWithIcon("Thêm", "./src/image/btAdd.png", BASE.color_btAdd, BASE.font, new Dimension(100,35));
 //        btAdd.addMouseListener(commonMouseListener);
-//        
-//        btEdit = new JPanel();
-//        btEdit = createButton(btEdit, "Sửa", "btEdit.png", BASE.color_btEdit, 100, 35);
-//        btEdit.addMouseListener(commonMouseListener);
-//
+
+        btEdit = createButtonWithIcon("Sửa", "./src/image/btEdit.png",BASE.color_btEdit, BASE.font, new Dimension(100,35));
+        btEdit.addMouseListener(commonMouseListener);
+
 //        pnBtn.add(btAdd);
 //        pnBtn.add(Box.createHorizontalStrut(30));
-//        pnBtn.add(btEdit);
-
-        //Phuong
-        btnthem = createBtn("Thêm",BASE.color_btAdd, "btnThem","btAdd.png");
-        btnthem.addMouseListener(commonMouseListener);
-
-        btnSua = createBtn("Sửa", BASE.color_btEdit, "btnSua","btEdit.png");
-        btnSua.addMouseListener(commonMouseListener);
-
-//        pnBtn.add(btnthem);
-//        pnBtn.add(Box.createHorizontalStrut(30));
-//        pnBtn.add(btnSua);
+        pnBtn.add(btEdit);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
         lblTimKiem.setFont(BASE.font_header);
@@ -192,59 +177,13 @@ public class KhachHangGUI extends JPanel {
         reload(ds);
     }
 
-    private JPanel createButton(JPanel btn, String text, String url, Color color, int width, int height) {
-        btn.setLayout(new BoxLayout(btn, BoxLayout.X_AXIS));
-        btn.setBackground(color);
-//        btn.setBorder(new EmptyBorder(0, 10, 0, 10));
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.setPreferredSize(new Dimension(width, height));
-        btn.setMaximumSize(new Dimension(width, height));
-
-        JLabel lblText = new JLabel(text);
-        lblText.setFont(BASE.font_header);
-
-        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
-        Image img = Icon.getImage();
-        Image scaledImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-        ImageIcon scaledIcon = new ImageIcon(scaledImg);
-
-        JLabel lblImage = new JLabel(scaledIcon);      
-        btn.add(lblImage);
-        btn.add(Box.createHorizontalStrut(10));
-        btn.add(lblText);
-        return btn;
-    }
-    
-    //Phuong
-    private JButton createBtn(String text, Color color, String name, String url) {
-        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
-        Image iconImage = Icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-        Icon = new ImageIcon(iconImage);
-        JButton btn = new JButton();
-        btn.setName(name);
-        btn.setText(text);
-        btn.setIcon(Icon);
-        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
-        btn.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
-        btn.setPreferredSize(new Dimension(100, 35));
-        btn.setMaximumSize(new Dimension(100, 35));
-        btn.setBackground(color);
-        btn.setFont(BASE.font);
-        btn.setOpaque(true);
-        btn.setFocusPainted(false);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        return btn;
-    }
-
-
     private MouseAdapter createCommonMouseListener() {
         return new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getSource() instanceof JButton) { // đã sửa JPanel thành JButton
+                if (e.getSource() instanceof JButton) {
                     JButton clickedPanel = (JButton) e.getSource();
-                    if (clickedPanel == btnSua) {
+                    if (clickedPanel == btEdit) {
                         int selectedRow = tbl.getSelectedRow();
                         if (selectedRow != -1) {
                             String maKhachHang = (String) dtm.getValueAt(selectedRow, 0);
@@ -252,52 +191,63 @@ public class KhachHangGUI extends JPanel {
                             KhachHangBUS khBUS = new KhachHangBUS();
                             KhachHangDTO kh = khBUS.layKHTheoMa(maKhachHang);
 
-                            new SuaKhachHangGUI(kh, KhachHangGUI.this);
+                            new EditCustomer(kh,KhachHangGUI.this);
                         } else {
                             new ShowDiaLog("Vui lòng chọn một khách hàng để sửa", ShowDiaLog.ERROR_DIALOG);
                         }
-                    } else if(clickedPanel == btnthem){
-                        ThemKhachHangGUI khGUI = new ThemKhachHangGUI();
                     }
                 }
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                if (e.getSource() instanceof JPanel) {
+                if (e.getSource() instanceof JButton) {
 
                 }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                if (e.getSource() instanceof JPanel) {
+                if (e.getSource() instanceof JButton) {
 
                 }
             }
         };
     }
     
-//    public JPanel getPnAdd(){
-//       return btAdd; 
-//    }
-//    
-//    public JPanel getPnEdit(){
-//        return btEdit;
-//    }
-    public JPanel getPnBtn(){
+    public JButton createButtonWithIcon(String text, String iconPath, Color bgColor, Font font, Dimension size) {
+        ImageIcon icon = new ImageIcon(iconPath);
+        Image scaledImage = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        icon = new ImageIcon(scaledImage);
+        
+        JButton button = new JButton(text, icon);
+        button.setHorizontalTextPosition(SwingConstants.RIGHT);
+        button.setVerticalTextPosition(SwingConstants.CENTER);
+        button.setPreferredSize(size);
+        button.setMaximumSize(size);
+        button.setBackground(bgColor);
+        button.setFont(font);
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        return button;
+    }
+
+    public JPanel getPnBtn() {
         return pnBtn;
     }
+    
 
-    public JButton getBtnthem() {
-        return btnthem;
+    public JButton getBtEdit() {
+        return btEdit;
     }
 
-    public JButton getBtnSua() {
-        return btnSua;
-    }
+//    public JButton getBtAdd() {
+//        return btAdd;
+//    }
     
-    
+
     public static void main(String[] agrs) {
         JFrame f = new JFrame();
         f.setSize(1000, 800);
