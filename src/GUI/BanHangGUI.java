@@ -17,19 +17,16 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Image;
+import java.awt.Label;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.DefaultCellEditor;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -38,7 +35,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -47,17 +44,14 @@ import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 
 public class BanHangGUI extends JPanel {
-    
+
     private String MaNV;
-    private JPanel pnThongTinSP, pnThanhToan, pnDanhSachSp;
-    private DefaultTableModel dtmSP;
-    private JPanel btnThanhToan;
-    private JTable tableSP;
-    private JButton btnThemSp;
-    private JTextField tfTongCong, tfMaNV, tfMaKH, tfGiamGia, tfTongHD;
-    private JButton btnTaoKH;
-    private ArrayList<ChiTietHoaDonDTO> ctHoaDon = new ArrayList<>();
-    private ArrayList<ChiTietHoaDonDTO> ListBook = new ArrayList<>();
+    private JPanel pnProductList, pnPay, btChoose, btCustomerCreate, btPay;
+    private DefaultTableModel dtm;
+    private JTable tbl;
+    private JTextField tfMaKH, tfMaNv, tfTongCong, tfGiamGia, tfTongHD;
+    private ArrayList<ChiTietHoaDonDTO> billList = new ArrayList<>();
+    private ArrayList<ChiTietHoaDonDTO> billDetailList = new ArrayList<>();
 
     public BanHangGUI() {
         this.MaNV = "NV01";
@@ -65,245 +59,46 @@ public class BanHangGUI extends JPanel {
         initComponents();
     }
 
-    public void init() {
+    private void init() {
         this.setLayout(new BorderLayout());
-        this.setSize(1000, 1000);
 
-        pnThongTinSP = new JPanel();
-        pnThongTinSP.setLayout(new BorderLayout());
+        pnProductList = new JPanel(new BorderLayout());
 
-        pnThanhToan = new JPanel();
-        pnThanhToan.setLayout(new BorderLayout());
-        pnThanhToan.setBorder(BorderFactory.createTitledBorder(
-                BorderFactory.createLineBorder(Color.BLACK),
-                "Thông tin Hóa đơn",
-                TitledBorder.CENTER,
-                TitledBorder.TOP,
-                BASE.font_title,
-                BASE.color_text
-        ));
+        pnPay = new JPanel();
+        pnPay.setLayout(new BoxLayout(pnPay, BoxLayout.Y_AXIS));
+        pnPay.setPreferredSize(new Dimension(350, 0));
 
-        this.add(pnThongTinSP, BorderLayout.CENTER);
-        this.add(pnThanhToan, BorderLayout.EAST);
-
-        this.setVisible(true);
+        this.add(pnProductList, BorderLayout.CENTER);
+        this.add(pnPay, BorderLayout.EAST);
     }
 
     private void initComponents() {
-        JLabel lblTitleSP = new JLabel("Thông tin sản phẩm");
-        lblTitleSP.setPreferredSize(new Dimension(300, 50));
-        lblTitleSP.setFont(BASE.font_title);
-        btnThemSp = createBtn("Chọn sản phẩm", "btnChon");
+        JPanel pnHeaderProduct = new JPanel();
+        pnHeaderProduct.setLayout(new BoxLayout(pnHeaderProduct, BoxLayout.X_AXIS));
+        pnHeaderProduct.setPreferredSize(new Dimension(0, 80));
+        pnHeaderProduct.setBorder(new EmptyBorder(10, 0, 20, 0));
 
-        JPanel pnlayoutnull = new JPanel();
-        pnlayoutnull.add(btnThemSp);
+        btChoose = new JPanel();
+        btChoose.setLayout(new BoxLayout(btChoose, BoxLayout.X_AXIS));
+        btChoose.setBackground(Color.decode("#249171"));
+        btChoose.setBorder(new EmptyBorder(0, 10, 0, 10));
+        btChoose.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JLabel lblChooseProduct = new JLabel("Chọn sách");
+        lblChooseProduct.setFont(BASE.font);
+        ImageIcon productIcon = new ImageIcon(getClass().getResource("/Image/choose.png"));
+        Image img = productIcon.getImage();
+        Image scaledImg = img.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImg);
+        JLabel lblProductImage = new JLabel(scaledIcon);
+        btChoose.add(lblChooseProduct);
+        btChoose.add(lblProductImage);
 
-        JPanel pnH = new JPanel(new BorderLayout(10, 10));
-        pnH.add(lblTitleSP, BorderLayout.WEST);
-        pnH.add(pnlayoutnull, BorderLayout.EAST);
-
-        pnDanhSachSp = createPnDanhSachSp();
-
-        pnThongTinSP.add(pnH, BorderLayout.NORTH);
-        pnThongTinSP.add(pnDanhSachSp, BorderLayout.CENTER);
-
-        JLabel lblTitleHD = new JLabel("Thông tin Hóa đơn");
-        lblTitleHD.setPreferredSize(new Dimension(300, 50));
-        lblTitleHD.setFont(BASE.font_title);
-
-        JLabel lblMaKH, lblMaNV, lblGiamGia, lblTongCong, lblTongHD;
-
-        // Tạo JPanel để chứa lblMaKH, tfMaKH và btnTaoKH
-        JPanel pnMaKH = new JPanel(new FlowLayout(FlowLayout.LEFT));
-
-        lblMaKH = new JLabel("Mã khách hàng");
-        lblMaKH.setFont(BASE.font);
-        tfMaKH = new JTextField(15);
-        tfMaKH.setFont(BASE.font);
-        tfMaKH.setPreferredSize(new Dimension(tfMaKH.getPreferredSize().width, 30));
-
-        btnTaoKH = new JButton("Tạo mới");
-        btnTaoKH.setIcon(new ImageIcon(getClass().getResource("/Image/staff.png")));
-        btnTaoKH.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Thêm các thành phần vào pnMaKH
-        pnMaKH.add(lblMaKH);
-        pnMaKH.add(tfMaKH);
-        pnMaKH.add(btnTaoKH);
-
-        // Sử dụng GridBagLayout cho các thành phần khác
-        JPanel inputPn = new JPanel();
-        inputPn.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.weightx = 1.0;
-        gbc.gridwidth = GridBagConstraints.REMAINDER;
-
-        // Thêm pnMaKH vào vị trí đầu tiên
-        gbc.gridy = 0;
-        inputPn.add(pnMaKH, gbc);
-
-        lblMaNV = new JLabel("Mã nhân viên");
-        lblMaNV.setFont(BASE.font);
-        gbc.gridy = 1;
-        inputPn.add(lblMaNV, gbc);
-
-        tfMaNV = new JTextField();
-        tfMaNV.setFont(BASE.font);
-        tfMaNV.setEnabled(false);
-        tfMaNV.setPreferredSize(new Dimension(tfMaNV.getPreferredSize().width, 30));
-        tfMaNV.setText(MaNV);
-        gbc.gridy = 2;
-        inputPn.add(tfMaNV, gbc);
-
-        lblTongCong = new JLabel("Tổng cộng");
-        lblTongCong.setFont(BASE.font);
-        gbc.gridy = 3;
-        inputPn.add(lblTongCong, gbc);
-
-        tfTongCong = new JTextField(TongTien() + "");
-        tfTongCong.setFont(BASE.font);
-        tfTongCong.setEditable(false);
-        tfTongCong.setPreferredSize(new Dimension(tfTongCong.getPreferredSize().width, 30));
-        gbc.gridy = 4;
-        inputPn.add(tfTongCong, gbc);
-
-        lblGiamGia = new JLabel("Giảm giá");
-        lblGiamGia.setFont(BASE.font);
-        gbc.gridy = 5;
-        inputPn.add(lblGiamGia, gbc);
-
-        tfGiamGia = new JTextField("0.0");
-        tfGiamGia.setFont(BASE.font);
-        tfGiamGia.setEditable(false);
-        tfGiamGia.setPreferredSize(new Dimension(tfGiamGia.getPreferredSize().width, 30));
-        gbc.gridy = 6;
-        inputPn.add(tfGiamGia, gbc);
-
-        lblTongHD = new JLabel("Tổng hóa đơn");
-        lblTongHD.setFont(BASE.font);
-        gbc.gridy = 7;
-        inputPn.add(lblTongHD, gbc);
-
-        tfTongHD = new JTextField("0.0");
-        tfTongHD.setFont(BASE.font);
-        tfTongHD.setEditable(false);
-        tfTongHD.setPreferredSize(new Dimension(tfTongHD.getPreferredSize().width, 30));
-        gbc.gridy = 8;
-        inputPn.add(tfTongHD, gbc);
-
-        btnThanhToan = new JPanel();
-        styleBtn(btnThanhToan, "Thanh Toán Hóa Đơn", "btnThanhToan");
-        gbc.gridy = 9;
-        inputPn.add(btnThanhToan, gbc);
-
-        btnThemSp.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ChonSanPhamGUI spGUI = new ChonSanPhamGUI(BanHangGUI.this);
-
-                spGUI.setVisible(true);
-            }
-        });
-
-        pnThanhToan.add(inputPn, BorderLayout.NORTH);
-
-        btnThanhToan.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                JPanel clickedPanel = (JPanel) e.getSource();
-                if ("btnThanhToan".equals(clickedPanel.getName())) {
-                    if (tfMaKH.getText().isEmpty()) {
-                        new ShowDiaLog("Vui lòng nhập mã khách hàng!", ShowDiaLog.ERROR_DIALOG);
-                        return;
-                    }
-
-                    if (dtmSP.getRowCount() == 0) {
-                        new ShowDiaLog("Danh sách sản phẩm trống!", ShowDiaLog.ERROR_DIALOG);
-                        return;
-                    }
-                    String MaKH = tfMaKH.getText();
-                    KhachHangBUS khBUS = new KhachHangBUS();
-                    KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
-
-                    double TongTien = TongTien();
-                    double diemtichluy = khDTO.getDiemTichluy();
-                    double giamgia = DoiDiem(diemtichluy);
-                    double ThanhTien = 0;
-                    if (TongTien > giamgia) {
-                        double diemtl = DiemTichLuy(TongTien);
-                        khBUS.CapNhatDiemTL(MaKH, diemtl);
-                        ThanhTien = TongTien - giamgia;
-
-                    } else if (TongTien < giamgia) {
-                        double diemconlai = giamgia - TongTien;
-                        double diemtl = DiemTichLuy(TongTien);
-                        khBUS.CapNhatDiemTL(MaKH, diemtl + diemconlai);
-                        ThanhTien = 0;
-                    }
-
-                    HoaDonBUS hdBUS = new HoaDonBUS();
-                    HoaDonDTO hd = new HoaDonDTO(tfMaKH.getText(), tfMaNV.getText(), giamgia, ThanhTien);
-                    hd.setSoHD(hdBUS.TaoMaHD());
-                    if (hdBUS.ThemHoaDon(hd)) {
-                        ThemCTHD(hd.getSoHD());
-                        ChiTietHoaDonBUS ctBUS = new ChiTietHoaDonBUS();
-                        for (ChiTietHoaDonDTO ct : ListBook) {
-                            ctBUS.ThemCTHoaDon(ct);
-                            SanPhamBUS spBUS = new SanPhamBUS();
-                            SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
-                            int sl = spDTO.getSoLuong() - ct.getSoLuong();
-                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
-                        }
-
-                        new ShowDiaLog("Thanh Toán thành công", ShowDiaLog.SUCCESS_DIALOG);
-                        reset();
-                    } else {
-                        new ShowDiaLog("Thanh Toán thất tại", ShowDiaLog.ERROR_DIALOG);
-                    }
-                }
-            }
-        });
-
-        tfMaKH.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TinhToanHD();
-            }
-        });
-         btnTaoKH.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ThemKhachHangGUI kh = new ThemKhachHangGUI(BanHangGUI.this);
-                
-            }
-        });
-    }
-
-    private void styleBtn(JPanel b, String text, String name) {
-        JLabel t = new JLabel(text, JLabel.CENTER);
-
-        b.setFont(BASE.font_title);
-        t.setForeground(Color.WHITE);
-        b.setName(name);
-        b.setLayout(new BorderLayout());
-        b.add(t, BorderLayout.CENTER);
-        b.setBackground(BASE.color_table_heaer);
-        b.setPreferredSize(new Dimension(100, 40));
-        b.setOpaque(true);
-        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
-    }
-
-    private JPanel createPnDanhSachSp() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
+        pnHeaderProduct.add(Box.createHorizontalGlue());
+        pnHeaderProduct.add(btChoose);
 
         String[] columnNames = {"Mã sản phẩm", "Tên sản phẩm", "Số lượng", "Giá sách", "Thành tiền", ""};
-        dtmSP = new DefaultTableModel(columnNames, 0);
-        tableSP = new JTable(dtmSP) {
+        dtm = new DefaultTableModel(columnNames, 0);
+        tbl = new JTable(dtm) {
             public boolean isCellEditable(int row, int column) {
                 return column == 2;
             }
@@ -331,89 +126,140 @@ public class BanHangGUI extends JPanel {
             }
         };
 
-        tableSP.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int row = tableSP.rowAtPoint(e.getPoint());
-                int col = tableSP.columnAtPoint(e.getPoint());
-
-                // Kiểm tra nếu bảng có ít nhất một dòng và người dùng click vào cột xóa
-                if (row >= 0 && col == 5) {
-                    int confirm = JOptionPane.showConfirmDialog(
-                            null,
-                            "Bạn có chắc muốn xóa dòng này?",
-                            "Xác nhận xóa",
-                            JOptionPane.YES_NO_OPTION
-                    );
-                    if (confirm == JOptionPane.YES_OPTION) {
-                        dtmSP.removeRow(row);
-                        TinhToanHD();
-                    }
-                }
-            }
-        });
-
-        tableSP.getModel().addTableModelListener(e -> {
+        tbl.getModel().addTableModelListener(e -> {
             if (e.getColumn() == 2) { // Cột số lượng
                 int row = e.getFirstRow();
-
                 try {
-                    // Lấy số lượng mới (kiểm tra null và ép kiểu đúng)
-                    Object soLuongObj = tableSP.getValueAt(row, 2);
-                    int soLuong = (soLuongObj instanceof Integer) ? (Integer) soLuongObj : Integer.parseInt(soLuongObj.toString());
-
-                    // Lấy giá sách (kiểm tra null và ép kiểu đúng)
-                    Object donGiaObj = tableSP.getValueAt(row, 3);
-                    double donGia = (donGiaObj instanceof Double) ? (Double) donGiaObj : Double.parseDouble(donGiaObj.toString());
-
-                    // Tính lại thành tiền
-                    double thanhTien = soLuong * donGia;
-                    dtmSP.setValueAt(thanhTien, row, 4);
-
-                    // Cập nhật lại tổng cộng và tổng hóa đơn
-                    TinhToanHD();
-                } catch (Exception ex) {
-                    // Bắt lỗi và thông báo
+                    int soLuong = Integer.parseInt(tbl.getValueAt(row, 2).toString());
+                    double donGia = Double.parseDouble(tbl.getValueAt(row, 3).toString());
+                    dtm.setValueAt(soLuong * donGia, row, 4);
+                    tinhToanHD();
+                } catch (NumberFormatException ex) {
                     JOptionPane.showMessageDialog(null, "Lỗi trong quá trình cập nhật thành tiền: " + ex.getMessage());
                 }
             }
         });
 
-        styleTable(tableSP);
+        tbl.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = tbl.rowAtPoint(e.getPoint());
+                int column = tbl.columnAtPoint(e.getPoint());
 
-        tableSP.setFillsViewportHeight(true);
-        JScrollPane scrollPane = new JScrollPane(tableSP);
-        panel.add(scrollPane, BorderLayout.CENTER);
+                if (row != -1 && column == tbl.getColumnCount() - 1) {
+                    int response = JOptionPane.showConfirmDialog(
+                            null,
+                            "Bạn có chắc chắn muốn xóa sản phẩm này?",
+                            "Xác nhận xóa",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                    );
 
-        return panel;
-    }
+                    if (response == JOptionPane.YES_OPTION) {
+                        ChiTietHoaDonDTO productToRemove = billList.get(row);
+                        billList.remove(productToRemove);
+                        dtm.removeRow(row);
+                        tinhToanHD();
+                        toggleDeleteColumnVisibility();
+                    }
+                }
+            }
+        });
 
-    private double TongTien() {
-        double tong = 0.0;
-        int sl_dong = dtmSP.getRowCount();
-        for (int i = 0; i < sl_dong; i++) {
-            double gia = Double.parseDouble(dtmSP.getValueAt(i, 4) + "");
-            tong += gia;
-        }
-        return tong;
-    }
+        styleTable(tbl);
+        tbl.setFillsViewportHeight(true);
+        JScrollPane scrollTbl = new JScrollPane(tbl);
 
-    public void DSHD(ArrayList<ChiTietHoaDonDTO> selectedProducts) {
-        dtmSP.setRowCount(0);
-        for (ChiTietHoaDonDTO ct : selectedProducts) {
-            addProduct(ct);
-        }
-    }
+        pnProductList.add(pnHeaderProduct, BorderLayout.NORTH);
+        pnProductList.add(scrollTbl, BorderLayout.CENTER);
 
-    public void addProduct(ChiTietHoaDonDTO ct) {
-        dtmSP.addRow(new Object[]{ct.getSp().getMaSach(), ct.getSp().getTenSach(), ct.getSoLuong(), ct.getdonGia(), ct.getSoLuong() * ct.getdonGia(), "Xóa"});
-        TinhToanHD();
+        //pnPay
+        JPanel pnInfoBill = createTopBottomJL("Thông tin hóa đơn");
 
+        JLabel lblMaKH = new JLabel("Mã khách hàng", Label.LEFT);
+        lblMaKH.setFont(BASE.font_header);
+        JPanel pnlblMAKH = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        pnlblMAKH.setPreferredSize(new Dimension(500, 35));
+        pnlblMAKH.setMaximumSize(new Dimension(500, 35));
+        pnlblMAKH.add(lblMaKH);
+
+        tfMaKH = new JTextField();
+        tfMaKH.setFont(BASE.font);
+        tfMaKH.setPreferredSize(new Dimension(800, 35));
+        tfMaKH.setMaximumSize(new Dimension(800, 35));
+        btCustomerCreate = new JPanel();
+        btCustomerCreate.setMaximumSize(new Dimension(40, 40));
+        btCustomerCreate.setLayout(new BoxLayout(btCustomerCreate, BoxLayout.X_AXIS));
+        btCustomerCreate.setBackground(Color.decode("#5DADE2"));
+        btCustomerCreate.setBorder(new EmptyBorder(0, 10, 0, 10));
+        btCustomerCreate.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JLabel lblCustomer = new JLabel("Tạo mới");
+        lblCustomer.setFont(BASE.font);
+        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/customers.png"));
+        Image CustomerImg = CustomerIcon.getImage();
+        Image scaledCustomerImg = CustomerImg.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon scaledCustomerIcon = new ImageIcon(scaledCustomerImg);
+        JLabel lblCustomerImage = new JLabel(scaledCustomerIcon);
+        btCustomerCreate.add(lblCustomer);
+        btCustomerCreate.add(lblCustomerImage);
+        JPanel pnkhachhang = new JPanel();
+        pnkhachhang.setLayout(new BoxLayout(pnkhachhang, BoxLayout.X_AXIS));
+        pnkhachhang.add(tfMaKH);
+        pnkhachhang.add(Box.createVerticalStrut(5));
+        pnkhachhang.add(btCustomerCreate);
+
+        JPanel pnKH = new JPanel();
+        pnKH.setLayout(new BoxLayout(pnKH, BoxLayout.Y_AXIS));
+        pnKH.add(pnlblMAKH);
+        pnKH.add(Box.createVerticalStrut(10));
+        pnKH.add(pnkhachhang);
+
+        tfMaNv = new JTextField();
+        tfMaNv.setText(MaNV);
+        JPanel pnMaNV = createPnBill("Mã nhân viên", tfMaNv);
+
+        tfTongCong = new JTextField();
+        JPanel pnTongCong = createPnBill("Tổng cộng", tfTongCong);
+
+        tfGiamGia = new JTextField();
+        JPanel pnGiamGia = createPnBill("Giảm giá", tfGiamGia);
+
+        tfTongHD = new JTextField();
+        JPanel pnTongHD = createPnBill("Tổng thanh toán", tfTongHD);
+
+        btPay = createTopBottomJL("Thanh toán hóa đơn");
+        btPay.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        pnPay.add(pnInfoBill);
+        pnPay.add(Box.createVerticalStrut(15));
+        pnPay.add(pnKH);
+        pnPay.add(Box.createVerticalStrut(15));
+        pnPay.add(pnMaNV);
+        pnPay.add(Box.createVerticalStrut(15));
+        pnPay.add(pnTongCong);
+        pnPay.add(Box.createVerticalStrut(15));
+        pnPay.add(pnGiamGia);
+        pnPay.add(Box.createVerticalStrut(15));
+        pnPay.add(pnTongHD);
+        pnPay.add(Box.createVerticalStrut(15));
+        pnPay.add(btPay);
+
+        MouseAdapter commonMouseListener = createCommonMouseListener();
+        btChoose.addMouseListener(commonMouseListener);
+        btCustomerCreate.addMouseListener(commonMouseListener);
+        btPay.addMouseListener(commonMouseListener);
+
+        tfMaKH.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tinhToanHD();
+            }
+        });
     }
 
     private void styleTable(JTable table) {
         JTableHeader header = table.getTableHeader();
-        header.setBackground(BASE.color_table_heaer);
+        header.setBackground(BASE.color_header_tbl);
         header.setForeground(BASE.color_text);
         header.setFont(BASE.font_header);
         header.setPreferredSize(new Dimension(header.getWidth(), 40));
@@ -426,83 +272,149 @@ public class BanHangGUI extends JPanel {
         table.setDefaultRenderer(Object.class, centerRenderer);
     }
 
-    private JButton createBtn(String txt, String name) {
-        JButton btn = new JButton(txt);
-        btn.setFont(BASE.font);
-        btn.setPreferredSize(new Dimension(170, 30));
-        btn.setMaximumSize(new Dimension(170, 30));
-        btn.setForeground(Color.BLACK);
-        btn.setBackground(BASE.color_table_heaer);
-        btn.setName(name);
-        btn.setOpaque(true);
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+    private MouseAdapter createCommonMouseListener() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JPanel clickedPanel = (JPanel) e.getSource();
+                if (clickedPanel == btChoose) {
+                    ChonSanPhamGUI spGUI = new ChonSanPhamGUI(BanHangGUI.this);
+                    spGUI.setVisible(true);
+                } else if (clickedPanel == btCustomerCreate) {
+                    addCustomerGUI addCustomer = new addCustomerGUI(BanHangGUI.this);
+                } else if (clickedPanel == btPay) {
+                    if (tfMaKH.getText().isEmpty()) {
+                        new ShowDiaLog("Vui lòng nhập mã khách hàng!", ShowDiaLog.ERROR_DIALOG);
+                        return;
+                    }
 
-        return btn;
-    }
+                    if (dtm.getRowCount() == 0) {
+                        new ShowDiaLog("Danh sách sản phẩm trống!", ShowDiaLog.ERROR_DIALOG);
+                        return;
+                    }
+                    
+                    String MaKH = tfMaKH.getText();
+                    KhachHangBUS khBUS = new KhachHangBUS();
+                    KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
 
-    public ArrayList<ChiTietHoaDonDTO> getCtHoaDon() {
-        return ctHoaDon;
-    }
+                    double TongTien = tinhTongTien();
+                    double diemtichluy = khDTO.getDiemTichluy();
+                    double giamgia = tinhQuyDoiDiem(diemtichluy);
+                    double ThanhTien = 0;
+                    if (TongTien > giamgia) {
+                        double diemtl = tinhDiemTichLuy(TongTien);
+                        khBUS.CapNhatDiemTL(MaKH, diemtl);
+                        ThanhTien = TongTien - giamgia;
 
-    public void setCtHoaDon(ArrayList<ChiTietHoaDonDTO> ctHoaDon) {
-        this.ctHoaDon = ctHoaDon;
-    }
+                    } else if (TongTien < giamgia) {
+                        double diemconlai = giamgia - TongTien;
+                        double diemtl = tinhDiemTichLuy(TongTien);
+                        khBUS.CapNhatDiemTL(MaKH, diemtl + diemconlai);
+                        ThanhTien = 0;
+                    }
+                    
+                    HoaDonBUS hdBUS = new HoaDonBUS();
+                    HoaDonDTO hd = new HoaDonDTO(tfMaKH.getText(), tfMaNv.getText(), giamgia, ThanhTien);
+                    hd.setSoHD(hdBUS.TaoMaHD());
+                    if (hdBUS.ThemHoaDon(hd)) {
+                        DetailBillList(hd.getSoHD());
+                        ChiTietHoaDonBUS ctBUS = new ChiTietHoaDonBUS();
+                        for (ChiTietHoaDonDTO ct : billDetailList) {
+                            ctBUS.ThemCTHoaDon(ct);
+                            SanPhamBUS spBUS = new SanPhamBUS();
+                            SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
+                            int sl = spDTO.getSoLuong() - ct.getSoLuong();
+                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                        }
 
-    public void TinhToanHD() {
-        String MaKH = tfMaKH.getText();
-        KhachHangBUS khBUS = new KhachHangBUS();
-        KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
-
-        double TongTien = TongTien();
-
-        tfTongCong.setText(TongTien + "");
-
-        if (khDTO == null) {
-            tfGiamGia.setText("0.0");
-            tfTongHD.setText("0.0");
-        } else {
-            double diemtichluy = khDTO.getDiemTichluy();
-            double giamgia = DoiDiem(diemtichluy);
-            tfGiamGia.setText(giamgia + "");
-            if (TongTien == 0) {
-                tfTongHD.setText("0.0");
-            } else if (TongTien > giamgia) {
-                double TongHD = TongTien - giamgia;
-                tfTongHD.setText(TongHD + "");
-            } else if (TongTien < giamgia) {
-                double diemconlai = giamgia - TongTien;
-                tfTongHD.setText("0.0");
-                tfGiamGia.setText(TongTien + "");
+                        new ShowDiaLog("Thanh Toán thành công", ShowDiaLog.SUCCESS_DIALOG);
+                        reset();
+                    } else {
+                        new ShowDiaLog("Thanh Toán thất tại", ShowDiaLog.ERROR_DIALOG);
+                    }
+                }
             }
-        }
 
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                JPanel pn = (JPanel) e.getSource();
+                if (pn == btChoose) {
+                    pn.setBackground(Color.decode("#3BAF75"));
+                } else if (pn == btCustomerCreate) {
+                    pn.setBackground(Color.decode("#4988B2"));
+                } else if (pn == btPay) {
+                    pn.setBackground(Color.decode("#DAB378"));
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                JPanel pn = (JPanel) e.getSource();
+                if (pn == btChoose) {
+                    pn.setBackground(Color.decode("#249171"));
+                } else if (pn == btPay) {
+                    pn.setBackground(BASE.color_header_tbl);
+                } else if (pn == btCustomerCreate) {
+                    pn.setBackground(Color.decode("#5DADE2"));
+                }
+            }
+        };
     }
 
+    private JPanel createTopBottomJL(String name) {
+        JPanel pn = new JPanel(new BorderLayout());
+        pn.setPreferredSize(new Dimension(500, 35));
+        pn.setMaximumSize(new Dimension(500, 35));
+        pn.setBackground(BASE.color_main);
+        JLabel lbl = new JLabel(name, JLabel.CENTER);
+        lbl.setFont(BASE.font_header);
+        pn.add(lbl, BorderLayout.CENTER);
+        return pn;
+    }
+
+    private JPanel createPnBill(String name, JTextField tf) {
+        JPanel pn = new JPanel();
+        pn.setLayout(new BoxLayout(pn, BoxLayout.Y_AXIS));
+        JLabel lbl = new JLabel(name);
+        lbl.setFont(BASE.font_header);
+        tf.setPreferredSize(new Dimension(800, 35));
+        tf.setBackground(Color.WHITE);
+        tf.setMaximumSize(new Dimension(800, 35));
+        tf.setEditable(false);
+        tf.setFont(BASE.font);
+        pn.add(lbl);
+        pn.add(Box.createVerticalStrut(10));
+        pn.add(tf);
+        return pn;
+    }
+
+    public void addProduct(ChiTietHoaDonDTO ct) {
+        dtm.addRow(new Object[]{ct.getSp().getMaSach(), ct.getSp().getTenSach(), ct.getSoLuong(), ct.getdonGia(), ct.getSoLuong() * ct.getdonGia(), "Xóa"});
+        tinhToanHD();
+    }
+
+    public void reLoadData(ArrayList<ChiTietHoaDonDTO> selectedProducts) {
+        dtm.setRowCount(0);
+        for (ChiTietHoaDonDTO ct : selectedProducts) {
+            addProduct(ct);
+        }
+        toggleDeleteColumnVisibility();
+    }
+
+    public ArrayList<ChiTietHoaDonDTO> getBillList() {
+        return billList;
+    }
+
+    public void setBillList(ArrayList<ChiTietHoaDonDTO> billList) {
+        this.billList = billList;
+    }
 
     public JTextField getTfMaKH() {
         return tfMaKH;
     }
-    
-    
 
-    private double DiemTichLuy(double TongTien) {
-        return Math.round(TongTien / 100000);
-    }
-
-    private double DoiDiem(double diemtichluy) {
-        return diemtichluy * 1000;
-    }
-
-    public void ThemCTHD(String SoHD) {
-        int rowCount = dtmSP.getRowCount();
-        for (int i = 0; i < rowCount; i++) {
-            String MaSP = (String) dtmSP.getValueAt(i, 0);
-            int soLuong = (Integer) dtmSP.getValueAt(i, 2);
-            double donGia = (Double) dtmSP.getValueAt(i, 3);
-
-            ChiTietHoaDonDTO chiTiet = new ChiTietHoaDonDTO(SoHD, MaSP, soLuong, donGia);
-            ListBook.add(chiTiet);
-        }
+    public void setTfMaKH(JTextField tfMaKH) {
+        this.tfMaKH = tfMaKH;
     }
 
     private void reset() {
@@ -510,13 +422,79 @@ public class BanHangGUI extends JPanel {
         tfTongCong.setText("");
         tfGiamGia.setText("");
         tfTongHD.setText("");
-        ctHoaDon.clear();
-        DSHD(ctHoaDon);
+        billList.clear();
+        reLoadData(billList);
     }
 
+    private double tinhTongTien() {
+        double tong = 0.0;
+        int sl_dong = dtm.getRowCount();
+        for (int i = 0; i < sl_dong; i++) {
+            double gia = Double.parseDouble(dtm.getValueAt(i, 4) + "");
+            tong += gia;
+        }
+        return tong;
+    }
+
+    private double tinhDiemTichLuy(double TongTien) {
+        return Math.round(TongTien / 100000);
+    }
+
+    private double tinhQuyDoiDiem(double diemtichluy) {
+        return diemtichluy * 1000;
+    }
+
+    private void toggleDeleteColumnVisibility() {
+        if (tbl.getRowCount() == 0) {
+            // Hide the last column (delete column)
+            tbl.getColumnModel().getColumn(tbl.getColumnCount() - 1).setMinWidth(0);
+            tbl.getColumnModel().getColumn(tbl.getColumnCount() - 1).setMaxWidth(0);
+        } else {
+            // Show the last column (delete column)
+            tbl.getColumnModel().getColumn(tbl.getColumnCount() - 1).setMinWidth(75);
+            tbl.getColumnModel().getColumn(tbl.getColumnCount() - 1).setMaxWidth(75);
+        }
+    }
+
+    public void tinhToanHD() {
+        String MaKH = tfMaKH.getText();
+        KhachHangBUS khBUS = new KhachHangBUS();
+        KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
+
+        double TongTien = tinhTongTien();
+        tfTongCong.setText(String.valueOf(TongTien));
+
+        if (khDTO == null) {
+            tfGiamGia.setText("");
+            tfTongHD.setText("");
+            return;
+        }
+
+        double diemtichluy = khDTO.getDiemTichluy();
+        double giamgia = tinhQuyDoiDiem(diemtichluy);
+        tfGiamGia.setText(String.valueOf(giamgia));
+
+        if (TongTien <= giamgia) {
+            tfTongHD.setText("0.0");
+            tfGiamGia.setText(String.valueOf(TongTien));
+        } else {
+            double TongHD = TongTien - giamgia;
+            tfTongHD.setText(String.valueOf(TongHD));
+        }
+
+    }
     
-    
-    
+    public void DetailBillList(String SoHD) {
+        int rowCount = dtm.getRowCount();
+        for (int i = 0; i < rowCount; i++) {
+            String MaSP = (String) dtm.getValueAt(i, 0);
+            int soLuong = (Integer) dtm.getValueAt(i, 2);
+            double donGia = (Double) dtm.getValueAt(i, 3);
+
+            ChiTietHoaDonDTO chiTiet = new ChiTietHoaDonDTO(SoHD, MaSP, soLuong, donGia);
+            billDetailList.add(chiTiet);
+        }
+    }
 
     public static void main(String[] args) {
         JFrame f = new JFrame();

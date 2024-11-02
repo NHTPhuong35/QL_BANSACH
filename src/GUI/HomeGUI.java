@@ -595,17 +595,23 @@ public class HomeGUI extends JFrame implements MouseListener {
         JButton btn = (JButton) e.getSource();       
         
         if (btn == hoadonButton) {
-            HoaDonGUI hdGUI = new HoaDonGUI();
+            HoaDonGUI billGUI = new HoaDonGUI();
             showPanel.removeAll();
-            showPanel.add(hdGUI, BorderLayout.CENTER);
-            hdGUI.setVisible(true);
+            showPanel.add(billGUI, BorderLayout.CENTER);
+            billGUI.setVisible(true);
 
             showPanel.revalidate();
             showPanel.repaint();
         }
         
         if (btn == banhangButton) {
+            BanHangGUI salesgui = new BanHangGUI();
+            showPanel.removeAll();
+            showPanel.add(salesgui, BorderLayout.CENTER);
+            salesgui.setVisible(true);
 
+            showPanel.revalidate();
+            showPanel.repaint();
         }
 
         if (btn == canhanButton) {

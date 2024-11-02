@@ -32,7 +32,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class CTHD extends JFrame implements MouseListener {
+public class CTHoaDon extends JFrame implements MouseListener {
 
     JLabel lblNgayLap, lblMaHD, lblNV, lblKH, lblTongCong, lblGiamGia, lblThanhTien;
     private JPanel pnHeader, pnMain, pnFooter;
@@ -41,7 +41,7 @@ public class CTHD extends JFrame implements MouseListener {
     private JButton btnX;
     private HoaDonDTO hd;
 
-    public CTHD(HoaDonDTO hd) {
+    public CTHoaDon(HoaDonDTO hd) {
         this.setLayout(new BorderLayout());
         this.setSize(750, 550);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

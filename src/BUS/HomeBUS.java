@@ -2,7 +2,6 @@ package BUS;
 
 import DAO.QuyenDAO;
 import DTO.ChiTietQuyenDTO;
-import GUI.HoaDonGUI;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,6 +14,7 @@ import GUI.LoginGUI;
 import GUI.NhaCungCapGUI;
 import GUI.PhanQuyenGUI;
 import GUI.PhieuNhapGUI;
+import GUI.BanHangGUI;
 import GUI.SanPhamGUI;
 import GUI.TacGiaGUI;
 import GUI.TaiKhoanDN;
@@ -43,6 +43,7 @@ public class HomeBUS {
         private KhachHangGUI khachhanggui;
         private TaiKhoanGUI taikhoangui;
         private PhanQuyenGUI phanquyengui;
+        private BanHangGUI salesgui;
         
 	public HomeBUS(HomeGUI view) {
             this.view = view;
@@ -106,6 +107,7 @@ public class HomeBUS {
                             switch(chitietquyen.getHanhDong()){
                                 case "Xem" -> {
                                     banhang = true;
+                                    
                                     break;
                                 }
                             }
@@ -324,7 +326,8 @@ public class HomeBUS {
                     menuPanelgbc.gridy++;
                     menuPanel.add(view.getBtnSanPham(), menuPanelgbc);
                 }
-                if(banhang == true){           
+                if(banhang == true){ 
+//                    salesgui = new SalesGUI();
                     menuPanelgbc.gridy++;
                     menuPanel.add(view.getBtnBanHang(), menuPanelgbc);
                 }
@@ -419,17 +422,14 @@ public class HomeBUS {
                     khachhanggui = new KhachHangGUI();
                     JPanel pnBtn = khachhanggui.getPnBtn();
                     if(khachhangthem){
-                        pnBtn.add(khachhanggui.getPnAdd());
+                        pnBtn.add(khachhanggui.getBtAdd());
                         pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
                         khachhanggui.revalidate();
                         khachhanggui.repaint();
                     }
                     if(khachhangsua){
-                        pnBtn.add(khachhanggui.getPnEdit());
+                        pnBtn.add(khachhanggui.getBtEdit());
                     }
-//                    if(loaixoa){
-//                        pnBtn.add(khachhanggui.getBtnXoa());
-//                    }
                     
                     menuPanelgbc.gridy++;
                     menuPanel.add(view.getBtnKhachHang(), menuPanelgbc);
