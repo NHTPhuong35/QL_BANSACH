@@ -68,14 +68,14 @@ public class KhachHangGUI extends JPanel {
 
         MouseAdapter commonMouseListener = createCommonMouseListener();
 
-        btAdd = createButtonWithIcon("Thêm", "./src/image/btAdd.png", BASE.color_btAdd, BASE.font, new Dimension(100,35));
-        btAdd.addMouseListener(commonMouseListener);
+//        btAdd = createButtonWithIcon("Thêm", "./src/image/btAdd.png", BASE.color_btAdd, BASE.font, new Dimension(100,35));
+//        btAdd.addMouseListener(commonMouseListener);
 
         btEdit = createButtonWithIcon("Sửa", "./src/image/btEdit.png",BASE.color_btEdit, BASE.font, new Dimension(100,35));
         btEdit.addMouseListener(commonMouseListener);
 
-        pnBtn.add(btAdd);
-        pnBtn.add(Box.createHorizontalStrut(30));
+//        pnBtn.add(btAdd);
+//        pnBtn.add(Box.createHorizontalStrut(30));
         pnBtn.add(btEdit);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
@@ -195,7 +195,6 @@ public class KhachHangGUI extends JPanel {
                         } else {
                             new ShowDiaLog("Vui lòng chọn một khách hàng để sửa", ShowDiaLog.ERROR_DIALOG);
                         }
-                    } else if (clickedPanel == btAdd) {
                     }
                 }
             }
@@ -244,9 +243,9 @@ public class KhachHangGUI extends JPanel {
         return btEdit;
     }
 
-    public JButton getBtAdd() {
-        return btAdd;
-    }
+//    public JButton getBtAdd() {
+//        return btAdd;
+//    }
     
 
     public static void main(String[] agrs) {
