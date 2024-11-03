@@ -120,4 +120,13 @@ public class PhieuNhapBUS {
         dao.checkGiaBan(maSP, giaBan);
     }
 
+    public void addPhieuNhapWithDetails(PhieuNhapDTO pn, ArrayList<ChiTietPhieuNhapDTO> ctpn) {
+        PhieuNhapDAO dao = new PhieuNhapDAO();
+        if (dao.addPhieuNhapWithDetails(pn, ctpn)) {
+            JOptionPane.showMessageDialog(null, "Thêm phiếu nhập thành công!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Thêm phiếu nhập thất bại!");
+        }
+    }
+
 }

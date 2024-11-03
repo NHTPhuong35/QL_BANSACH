@@ -3,11 +3,14 @@ package GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import BUS.PhieuNhapBUS;
+import DTO.ChiTietPhieuNhapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.QuyenDTO;
 import DTO.TaiKhoanDTO;
@@ -70,18 +73,21 @@ public class TaoPhieuNhap extends JPanel {
         add(chonSachButton, gbc);
 
         // Book table
-        String[] columnNames = { "Mã sách", "Số lượng", "Giá nhập", "Thành tiền", "" };
+        String[] columnNames = { "Mã sách", "Số lượng", "Giá nhập", "Giá bán", "Thành tiền", "" };
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 // Only allow editing of the "Số lượng" and "Giá nhập" columns
-                return column == 1 || column == 2;
+                return column == 1 || column == 2 || column == 5;
             }
         };
         bookTable = new JTable(model);
-        bookTable.getColumnModel().getColumn(4).setCellRenderer(new ButtonRenderer());
-        bookTable.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), model));
+        bookTable.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
+        bookTable.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), model));
         bookTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        bookTable.getColumnModel().getColumn(2).setCellRenderer(numberRenderer);
+        bookTable.getColumnModel().getColumn(3).setCellRenderer(numberRenderer);
+        bookTable.getColumnModel().getColumn(4).setCellRenderer(numberRenderer);
 
         // Custom table header and table appearance
         bookTable.getTableHeader().setBackground(BASE.color_table_heaer);
@@ -106,6 +112,7 @@ public class TaoPhieuNhap extends JPanel {
         gbc.weighty = 0;
         addLabel("Tổng tiền:", 2, 3, gbc);
         tongTienField = addTextField("0", 3, 3, gbc);
+        
 
         // Center the Tổng tiền field
         gbc.gridx = 3;
@@ -150,24 +157,22 @@ public class TaoPhieuNhap extends JPanel {
                     if (donGia >= giaBia) {
                         donGia = giaBia;
                     }
-                    double thanhTien = soLuong * donGia;
+                    double thanhTien = soLuong * giaNhap;
 
-                    
-                    
-
-                    model.setValueAt(thanhTien, row, 3);
+                    model.setValueAt(donGia, row, 3);
+                    model.setValueAt(thanhTien, row, 4);
 
                     // Update tổng tiền
                     double tongTien = 0;
                     for (int i = 0; i < model.getRowCount(); i++) {
-                        tongTien += Double.parseDouble(model.getValueAt(i, 3).toString());
+                        tongTien += Double.parseDouble(model.getValueAt(i, 4).toString());
                     }
                     tongTienField.setText(String.valueOf(tongTien));
                 }
             }
         });
 
-        
+        List<ChiTietPhieuNhapDTO> chiTietPhieuNhapDTOs = new ArrayList<>();
         
 
         xacNhanButton.addActionListener(e -> {
@@ -181,23 +186,28 @@ public class TaoPhieuNhap extends JPanel {
 
             PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
 
-            phieuNhapBUS.ThemPhieuNhap(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
-
             for (int i = 0; i < model.getRowCount(); i++) {
                 String tenSach = (String) model.getValueAt(i, 0);
                 int soLuong = Integer.parseInt(model.getValueAt(i, 1).toString());
                 double giaNhap = Double.parseDouble(model.getValueAt(i, 2).toString());
+                double thanhTien = Double.parseDouble(model.getValueAt(i, 4).toString());
+                chiTietPhieuNhapDTOs.add(new ChiTietPhieuNhapDTO(maPN, tenSach, soLuong, thanhTien, giaNhap));
+            }
+            PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
+            phieuNhapBUS.addPhieuNhapWithDetails(phieuNhapDTO, new ArrayList<>(chiTietPhieuNhapDTOs));
+            
+
+
+            for (int j = 0; j < model.getRowCount(); j++) {
+                double giaNhap = Double.parseDouble(model.getValueAt(j, 2).toString());
                 double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
                 double donGia = giaNhap * (1 + loiNhuan);
                 // Get giá bìa
-                double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(i, 0).toString());
+                double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(j, 0).toString());
                 if (donGia >= giaBia) {
                     donGia = giaBia;
                 }
-
-                double thanhTien = Double.parseDouble(model.getValueAt(i, 3).toString());
-                phieuNhapBUS.checkGiaBan(tenSach, donGia);
-                phieuNhapBUS.ThemChiTietPhieuNhap(maPN, tenSach, soLuong, thanhTien, donGia);
+                phieuNhapBUS.checkGiaBan(ngayNhapStr, donGia);
             }
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
@@ -212,11 +222,9 @@ public class TaoPhieuNhap extends JPanel {
     }
 
     private void addLabel(String text, int x, int y, GridBagConstraints gbc) {
-        JLabel lbl = new JLabel(text);
-        lbl.setFont(BASE.font_frame);
         gbc.gridx = x;
         gbc.gridy = y;
-        add(lbl, gbc);
+        add(new JLabel(text), gbc);
     }
 
     private JTextField addTextField(String text, int x, int y, GridBagConstraints gbc) {
@@ -255,15 +263,15 @@ public class TaoPhieuNhap extends JPanel {
             button = new JButton();
             button.setOpaque(true);
             button.addActionListener(e -> {
-                int row = bookTable.getSelectedRow();
+                int row = bookTable.convertRowIndexToModel(bookTable.getSelectedRow());
                 if (row != -1) {
                     // Update tổng tiền
-                    double thanhTien = (double) model.getValueAt(row, 3);
+                    double thanhTien = Double.parseDouble(model.getValueAt(row, 4).toString());
                     double tongTien = Double.parseDouble(tongTienField.getText());
                     tongTien -= thanhTien;
                     tongTienField.setText(String.valueOf(tongTien));
                     // Remove row
-                    model.removeRow(row);
+                    SwingUtilities.invokeLater(() -> model.removeRow(row));
                 }
                 fireEditingStopped();
             });
@@ -286,19 +294,35 @@ public class TaoPhieuNhap extends JPanel {
         }
     }
 
-    public void receiveSelectedProduct(String maSach, int soLuong, double donGia) {
-        // Calculate total price for the selected product
-        double thanhTien = soLuong * donGia;
-
-        // Add the selected book details to the table
+    public void receiveSelectedProduct(String maSach) {
+        // Add the selected book details to the table with proper decimal formatting
         DefaultTableModel model = (DefaultTableModel) bookTable.getModel();
-        model.addRow(new Object[] { maSach, soLuong, donGia, thanhTien, "Xóa" });
-
-        // Update tổng tiền (total amount)
-        double tongTien = Double.parseDouble(tongTienField.getText());
-        tongTien += thanhTien;
-        tongTienField.setText(String.valueOf(tongTien));
+        model.addRow(new Object[] {
+                maSach,
+                0,
+                0,
+                0,
+                0,
+                "Xóa"
+        });
     }
+    
+    // Custom cell renderer for numeric columns
+    private DefaultTableCellRenderer numberRenderer = new DefaultTableCellRenderer() {
+        @Override
+        public void setValue(Object value) {
+            if (value instanceof Number) {
+                if (value instanceof Integer) {
+                    setText(String.valueOf(value));
+                } else {
+                    setText(String.format("%.0f", ((Number)value).doubleValue()));
+                }
+            } else {
+                super.setValue(value);
+            }
+        }
+    };
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
