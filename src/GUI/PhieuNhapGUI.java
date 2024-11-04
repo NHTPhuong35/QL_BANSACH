@@ -51,7 +51,7 @@ public class PhieuNhapGUI extends JPanel {
                 // Show the TaoPhieuNhap panel
                 JFrame taoPhieuNhapFrame = new JFrame("Tạo Phiếu Nhập");
                 taoPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                taoPhieuNhapFrame.setSize(800, 600);
+                taoPhieuNhapFrame.setSize(700, 700);
 
                 TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap(HomeGUI.tkUSER);
                 taoPhieuNhapPanel.setMaNV("NV01");
@@ -82,7 +82,7 @@ public class PhieuNhapGUI extends JPanel {
                         // Show the SuaPhieuNhap panel with data
                         JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
                         suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                        suaPhieuNhapFrame.setSize(800, 600);
+                        suaPhieuNhapFrame.setSize(700, 700);
                         SuaPhieuNhap suaPhieuNhapPanel = new SuaPhieuNhap();
                         suaPhieuNhapPanel.setMaPhieuNhap(maPN);
                         suaPhieuNhapPanel.setMaNhanVien(tenNV);

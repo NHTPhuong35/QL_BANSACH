@@ -328,7 +328,7 @@ public class TaoPhieuNhap extends JPanel {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tạo Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(800, 600);
+            frame.setSize(700, 700);
             QuyenDTO q = new QuyenDTO("QL", "Quản lý");
             TaiKhoanDTO tkDTO = new TaiKhoanDTO("NV07", "Phương123", "Quận 8", "0983456789", "Phuong579@gmail.com", "55345678", q, 0);
             frame.add(new TaoPhieuNhap(tkDTO));
