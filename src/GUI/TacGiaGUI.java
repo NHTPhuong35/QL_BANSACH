@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -32,9 +35,6 @@ import javax.swing.table.JTableHeader;
 
 import BUS.TacGiaBUS;
 import DTO.TacGiaDTO;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.SwingConstants;
 
 public class TacGiaGUI extends JPanel implements ActionListener {
 
@@ -86,11 +86,11 @@ public class TacGiaGUI extends JPanel implements ActionListener {
         pnBtn.setLayout(new BoxLayout(pnBtn, BoxLayout.X_AXIS));
         pnBtn.setBackground(Color.WHITE);
 
-//        pnBtn.add(btnThem);
-//        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-//        pnBtn.add(btnSua);
-//        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-//        pnBtn.add(btnXoa);
+        pnBtn.add(btnThem);
+        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+        pnBtn.add(btnSua);
+        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+        pnBtn.add(btnXoa);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
         lblTimKiem.setFont(BASE.font);
