@@ -107,7 +107,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         pnHeader.add(pnBtn, BorderLayout.WEST);
         pnHeader.add(pnFind, BorderLayout.EAST);
 
-        String[] colName = {"Mã nhà cung cấp", "Tên nhà cung cấp"};
+        String[] colName = {"Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"};
         dtm = new DefaultTableModel(colName, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -144,7 +144,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         ArrayList<NhaCungCapDTO> ds = new ArrayList<>();
         ArrayList<NhaCungCapDTO> ds_all = nccBUS.getDs();
         for (NhaCungCapDTO l : ds_all) {
-            if (l.getMaNhaCungCap().toLowerCase().contains(key) || l.getTenNhaCungCap().toLowerCase().contains(key)) {
+            if (l.getMaNhaCungCap().toLowerCase().contains(key) || l.getTenNhaCungCap().toLowerCase().contains(key) || l.getDiaChi().toLowerCase().contains(key) || l.getEmail().toLowerCase().contains(key)|| l.getSdt().toLowerCase().contains(key)) {
                 ds.add(l);
             }
         }
@@ -191,7 +191,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
     public void reload(ArrayList<NhaCungCapDTO> ds) {
         dtm.setRowCount(0);
         for (NhaCungCapDTO l : ds) {
-            dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap()});
+            dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap(), l.getDiaChi(), l.getEmail(), l.getSdt()});
         }
     }
 
@@ -200,6 +200,9 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         for (int i = 0; i < rowCount; i++) {
             if (dtm.getValueAt(i, 0).equals(l.getMaNhaCungCap())) {
                 dtm.setValueAt(l.getTenNhaCungCap(), i, 1);
+                dtm.setValueAt(l.getDiaChi(), i, 2);
+                dtm.setValueAt(l.getEmail(), i, 3);
+                dtm.setValueAt(l.getSdt(), i, 4);
                 break;
             }
         }
@@ -207,7 +210,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
     }
 
     public void addRow(NhaCungCapDTO l) {
-        dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap()});
+        dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap(), l.getDiaChi(), l.getEmail(), l.getSdt()});
     }
 
     @Override

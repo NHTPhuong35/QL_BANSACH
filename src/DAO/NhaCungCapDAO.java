@@ -26,7 +26,7 @@ public class NhaCungCapDAO {
             try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
                 ResultSet rs = pre.executeQuery();
                 while (rs.next()) {
-                    NhaCungCapDTO l = new NhaCungCapDTO(rs.getString("MANCC"), rs.getString("TENNCC"));
+                    NhaCungCapDTO l = new NhaCungCapDTO(rs.getString("MANCC"), rs.getString("TENNCC"), rs.getString("DIACHI"), rs.getString("EMAIL"), rs.getString("SDT"));
                     ds.add(l);
                 }
             }
@@ -39,11 +39,14 @@ public class NhaCungCapDAO {
     public boolean ThemNhaCungCap(NhaCungCapDTO l) {
         try {
             conn.connect();
-            String sql = "INSERT INTO NHACUNGCAP(MANCC,TENNCC,TRANGTHAI) VALUES (?,?,?)";
+            String sql = "INSERT INTO NHACUNGCAP(MANCC,TENNCC,TRANGTHAI,EMAIL,DIACHI,SDT) VALUES (?,?,?,?,?,?)";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             pre.setString(1, l.getMaNhaCungCap());
             pre.setString(2, l.getTenNhaCungCap());
             pre.setInt(3, 1);
+            pre.setString(4, l.getEmail());
+            pre.setString(5, l.getDiaChi());
+            pre.setString(6, l.getSdt());
             return pre.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,10 +57,13 @@ public class NhaCungCapDAO {
     public boolean SuaNhaCungCap(NhaCungCapDTO l) {
         try {
             conn.connect();
-            String sql = "UPDATE nhacungcap SET TENNCC=? WHERE MANCC= ?";
+            String sql = "UPDATE nhacungcap SET TENNCC=?, EMAIL=?, DIACHI=?, SDT=? WHERE MANCC= ?";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             pre.setString(1, l.getTenNhaCungCap());
-            pre.setString(2, l.getMaNhaCungCap());
+            pre.setString(5, l.getMaNhaCungCap());
+            pre.setString(2, l.getEmail());
+            pre.setString(3, l.getDiaChi());
+            pre.setString(4, l.getSdt());
             return pre.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();

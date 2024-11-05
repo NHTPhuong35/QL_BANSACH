@@ -32,6 +32,7 @@ public class PhanQuyenGUI extends JPanel {
     private PhanQuyenBUS phanquyenBUS;
     private JComboBox<String> comboBox;
     private GridBagConstraints headComponentsPanelgbc;
+    private GridBagConstraints headPanelgbc;
     
     public PhanQuyenGUI(){
         setLayout(new GridBagLayout());
@@ -41,7 +42,7 @@ public class PhanQuyenGUI extends JPanel {
         headPanel = new JPanel();
         headPanel.setBackground(Color.white);
         headPanel.setLayout(new GridBagLayout());
-        GridBagConstraints headPanelgbc = new GridBagConstraints();
+        headPanelgbc = new GridBagConstraints();
         
         headComponentsPanel = new JPanel();
         headComponentsPanel.setBackground(Color.white);
@@ -54,10 +55,17 @@ public class PhanQuyenGUI extends JPanel {
         phanquyenPanel.setLayout(new GridBagLayout());
         GridBagConstraints phanquyenPanelgbc = new GridBagConstraints();
         
-        themquyen = new JButton("Thêm quyền");
+        themquyen = new JButton("Thêm");
+
+        ImageIcon originalIcon = new ImageIcon(getClass().getResource("/Image/btAdd.png"));
+        Image scaledImage = originalIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+
+        themquyen.setIcon(scaledIcon);
+
         themquyen.setFont(new Font("Arial", Font.PLAIN, 12));
         themquyen.setFocusPainted(false);
-        themquyen.setBackground(Color.decode("#57B8C1"));
+        themquyen.setBackground(Color.decode("#5DADE2"));
         themquyen.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -97,7 +105,7 @@ public class PhanQuyenGUI extends JPanel {
         headComponentsPanelgbc.gridx = 0;
         headComponentsPanelgbc.gridy = 0;
         headComponentsPanelgbc.weightx = 1;
-        headComponentsPanelgbc.anchor = GridBagConstraints.WEST;
+        headComponentsPanelgbc.anchor = GridBagConstraints.EAST;
         headComponentsPanelgbc.insets = new Insets(0, 0, 0, 0); // Margin top left bottom right
         headComponentsPanel.add(timquyen,headComponentsPanelgbc);
         
@@ -115,13 +123,13 @@ public class PhanQuyenGUI extends JPanel {
 //        headComponentsPanelgbc.insets = new Insets(0, 15, 0, 0); // Margin top left bottom right
 //        headComponentsPanel.add(themquyen,headComponentsPanelgbc);
         
-        headPanelgbc.gridx = 0;
+        headPanelgbc.gridx = 1;
         headPanelgbc.gridy = 0;
         headPanelgbc.weightx = 1;
-        headPanelgbc.anchor = GridBagConstraints.WEST;
-        headPanelgbc.insets = new Insets(0, 10, 0, 0); // Margin top left bottom right
+        headPanelgbc.anchor = GridBagConstraints.EAST;
+        headPanelgbc.insets = new Insets(0, 0, 0, 30); // Margin top left bottom right
         headPanel.add(headComponentsPanel, headPanelgbc);
-
+        
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
@@ -275,8 +283,16 @@ public class PhanQuyenGUI extends JPanel {
         return headComponentsPanel;
     }
     
+    public JPanel getHeadPanel(){
+        return headPanel;
+    }
+    
     public GridBagConstraints getHeadComponentsPanelgbc(){
         return headComponentsPanelgbc;
+    }
+    
+    public GridBagConstraints getHeadPanelgbc(){
+        return headPanelgbc;
     }
     
     public static void main(String[] args) {
