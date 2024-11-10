@@ -605,7 +605,7 @@ public class HomeGUI extends JFrame implements MouseListener {
         }
         
         if (btn == banhangButton) {
-            BanHangGUI salesgui = new BanHangGUI();
+            BanHangGUI salesgui = new BanHangGUI(tkUSER.getTenDN());
             showPanel.removeAll();
             showPanel.add(salesgui, BorderLayout.CENTER);
             salesgui.setVisible(true);

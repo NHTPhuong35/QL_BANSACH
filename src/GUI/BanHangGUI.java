@@ -12,6 +12,7 @@ import DTO.ChiTietHoaDonDTO;
 import DTO.HoaDonDTO;
 import DTO.KhachHangDTO;
 import DTO.SanPhamDTO;
+import DTO.TaiKhoanDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -50,11 +51,12 @@ public class BanHangGUI extends JPanel {
     private DefaultTableModel dtm;
     private JTable tbl;
     private JTextField tfMaKH, tfMaNv, tfTongCong, tfGiamGia, tfTongHD;
+    private KhachHangDTO KhTao;
     private ArrayList<ChiTietHoaDonDTO> billList = new ArrayList<>();
     private ArrayList<ChiTietHoaDonDTO> billDetailList = new ArrayList<>();
 
-    public BanHangGUI() {
-        this.MaNV = "NV01";
+    public BanHangGUI(String MaNV) {
+        this.MaNV = MaNV;
         init();
         initComponents();
     }
@@ -105,7 +107,7 @@ public class BanHangGUI extends JPanel {
 
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                if (column == 2) { 
+                if (column == 2) {
                     JFormattedTextField formattedTextField = new JFormattedTextField();
                     formattedTextField.setValue(0); // Default value is 0
                     formattedTextField.setHorizontalAlignment(JFormattedTextField.RIGHT);
@@ -114,8 +116,8 @@ public class BanHangGUI extends JPanel {
                     format.setGroupingUsed(false);
                     NumberFormatter formatter = new NumberFormatter(format);
                     formatter.setValueClass(Integer.class);
-                    formatter.setAllowsInvalid(false); 
-                    formatter.setMinimum(0); 
+                    formatter.setAllowsInvalid(false);
+                    formatter.setMinimum(0);
                     formattedTextField.setFormatterFactory(new DefaultFormatterFactory(formatter));
 
                     String productCode = tbl.getValueAt(row, 0).toString();
@@ -315,20 +317,32 @@ public class BanHangGUI extends JPanel {
                         return;
                     }
 
-                    String MaKH = tfMaKH.getText();
                     KhachHangBUS khBUS = new KhachHangBUS();
-                    KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
+                    String MaKH = tfMaKH.getText();
+                    KhachHangDTO khDTO;
+
+                    if (KhTao != null) {
+                        khBUS.ThemKhachHang(KhTao);
+                        khDTO = KhTao;
+                    } else {
+                        khDTO = khBUS.layKHTheoMa(MaKH);
+                        if (khDTO == null) {
+                            JOptionPane.showMessageDialog(null, "Khách hàng không tồn tại!",
+                                    "Thông báo", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
 
                     double TongTien = tinhTongTien();
                     double diemtichluy = khDTO.getDiemTichluy();
                     double giamgia = tinhQuyDoiDiem(diemtichluy);
-                    double ThanhTien = 0;
+                    double ThanhTien;
+
                     if (TongTien > giamgia) {
                         double diemtl = tinhDiemTichLuy(TongTien);
                         khBUS.CapNhatDiemTL(MaKH, diemtl);
                         ThanhTien = TongTien - giamgia;
-
-                    } else if (TongTien < giamgia) {
+                    } else {
                         double diemconlai = giamgia - TongTien;
                         double diemtl = tinhDiemTichLuy(TongTien);
                         khBUS.CapNhatDiemTL(MaKH, diemtl + diemconlai);
@@ -486,9 +500,10 @@ public class BanHangGUI extends JPanel {
         double TongTien = tinhTongTien();
         tfTongCong.setText(String.valueOf(TongTien));
 
+        // Kiểm tra nếu khách hàng không tồn tại
         if (khDTO == null) {
-            tfGiamGia.setText("");
-            tfTongHD.setText("");
+            tfGiamGia.setText("0.0");
+            tfTongHD.setText(String.valueOf(TongTien)); // Tổng hóa đơn bằng tổng tiền
             return;
         }
 
@@ -503,19 +518,26 @@ public class BanHangGUI extends JPanel {
             double TongHD = TongTien - giamgia;
             tfTongHD.setText(String.valueOf(TongHD));
         }
-
     }
 
     public void DetailBillList(String SoHD) {
         int rowCount = dtm.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             String MaSP = (String) dtm.getValueAt(i, 0);
-            int soLuong = (Integer) dtm.getValueAt(i, 2);
-            double donGia = (Double) dtm.getValueAt(i, 3);
+            int soLuong = Integer.parseInt(dtm.getValueAt(i, 2).toString());
+            double donGia = Double.parseDouble(dtm.getValueAt(i, 3).toString());
 
             ChiTietHoaDonDTO chiTiet = new ChiTietHoaDonDTO(SoHD, MaSP, soLuong, donGia);
             billDetailList.add(chiTiet);
         }
+    }
+
+    public KhachHangDTO getKhTao() {
+        return KhTao;
+    }
+
+    public void setKhTao(KhachHangDTO KhTao) {
+        this.KhTao = KhTao;
     }
 
     public static void main(String[] args) {
@@ -523,7 +545,7 @@ public class BanHangGUI extends JPanel {
         f.setSize(1500, 800);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setLocationRelativeTo(null);
-        f.add(new BanHangGUI());
+        f.add(new BanHangGUI("NV01"));
         f.setVisible(true);
     }
 }
