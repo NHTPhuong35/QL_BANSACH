@@ -234,7 +234,7 @@ public class SuaPhieuNhap extends JPanel {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Sửa Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(800, 600);
+            frame.setSize(700, 700);
             frame.add(new SuaPhieuNhap());
             frame.setVisible(true);
         });

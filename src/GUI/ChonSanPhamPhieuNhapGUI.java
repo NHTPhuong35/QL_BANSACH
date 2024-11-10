@@ -61,10 +61,10 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         pnHeader = new JPanel();
         pnHeader.setLayout(new BorderLayout());
         pnHeader.setPreferredSize(new Dimension(width, 36));
-        pnHeader.setBackground(Color.LIGHT_GRAY); // Replace with a valid color
+        pnHeader.setBackground(BASE.color_main);
         pnHeader.setOpaque(true);
 
-        JLabel lblHeader = new JLabel("Chọn sản phẩm", JLabel.CENTER);
+        JLabel lblHeader = new JLabel("Chọn sách", JLabel.CENTER);
         lblHeader.setFont(BASE.font_title);
         lblHeader.setBorder(new EmptyBorder(0, 20, 0, 0));
 
@@ -106,6 +106,7 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
     public JPanel initContent(ArrayList<SanPhamDTO> dsSP) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 20));
 
+        // Tính toán kích thước dựa trên số lượng sản phẩm
         int dsSize = dsSP.size();
         int rows = (int) Math.ceil((double) dsSize / 4);
 
@@ -164,7 +165,7 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Notify TaoPhieuNhap with the selected product details
-                taoPhieuNhap.receiveSelectedProduct(sp.getMaSach(), 0, 0);
+                taoPhieuNhap.receiveSelectedProduct(sp.getMaSach());
 
                 // Close the product selection window
                 dispose();
@@ -208,6 +209,6 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
     }
 
     public static void main(String[] args) {
-        new ChonSanPhamPhieuNhapGUI(new TaoPhieuNhap());
+        new ChonSanPhamPhieuNhapGUI(new TaoPhieuNhap(HomeGUI.tkUSER));
     }
 }

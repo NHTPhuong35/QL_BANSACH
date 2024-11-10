@@ -166,8 +166,8 @@ public class HomeGUI extends JFrame implements MouseListener {
         hoadonButton.setHorizontalAlignment(SwingConstants.LEFT);
         hoadonButton.setVerticalAlignment(SwingConstants.CENTER);
         hoadonButton.setBorderPainted(false);
-        hoadonButton.setBackground(Color.decode("#C68642"));
-        hoadonButton.setFocusPainted(false); 
+        hoadonButton.setBackground(Color.decode("#C68642")); 
+           hoadonButton.setFocusPainted(false); 
         hoadonButton.addMouseListener(this);
         hoadonButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

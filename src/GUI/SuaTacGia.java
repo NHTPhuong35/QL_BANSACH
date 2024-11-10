@@ -179,5 +179,8 @@ public class SuaTacGia extends JFrame implements MouseListener {
             System.out.println(ex.getMessage());
         }		
 	}
+    public static void main(String[] args) {
+        new SuaTacGia();
+    }
 
 }

@@ -422,12 +422,17 @@ public class HomeBUS {
                     khachhanggui = new KhachHangGUI();
                     JPanel pnBtn = khachhanggui.getPnBtn();
                     if(khachhangthem){
+//                        pnBtn.add(khachhanggui.getBtnthem());
+                        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+
 //                        pnBtn.add(khachhanggui.getBtAdd());
 //                        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
                         khachhanggui.revalidate();
                         khachhanggui.repaint();
                     }
                     if(khachhangsua){
+
+//                        pnBtn.add(khachhanggui.getBtnSua());
                         pnBtn.add(khachhanggui.getBtEdit());
                     }
                     
@@ -435,7 +440,7 @@ public class HomeBUS {
                     menuPanel.add(view.getBtnKhachHang(), menuPanelgbc);
                 }
                 if(taikhoan == true){          
-                    taikhoangui = new TaiKhoanGUI();
+                    taikhoangui = new TaiKhoanGUI(tkUSER);
                     JPanel pnThaoTac = taikhoangui.getPnThaoTac();
                     if(taikhoanthem){
                         pnThaoTac.add(taikhoangui.getBtnThem());
@@ -461,16 +466,16 @@ public class HomeBUS {
                 }
                 if(phanquyen == true){
                     phanquyengui = new PhanQuyenGUI();
-                    JPanel pnHeadComponentsPanel = phanquyengui.getHeadComponentsPanel();
-                    GridBagConstraints headComponentsPanelgbc = phanquyengui.getHeadComponentsPanelgbc();
+                    JPanel pnHeadPanel = phanquyengui.getHeadPanel();
+                    GridBagConstraints headPanelgbc = phanquyengui.getHeadPanelgbc();
                     
                     if(phanquyenthem){
-                        headComponentsPanelgbc.gridx = 2;
-                        headComponentsPanelgbc.gridy = 0;
-                        headComponentsPanelgbc.weightx = 1;
-                        headComponentsPanelgbc.anchor = GridBagConstraints.WEST;
-                        headComponentsPanelgbc.insets = new Insets(0, 15, 0, 0); // Margin top left bottom right
-                        pnHeadComponentsPanel.add(phanquyengui.getBtnThemQuyen(),headComponentsPanelgbc);
+                        headPanelgbc.gridx = 0;
+                        headPanelgbc.gridy = 0;
+                        headPanelgbc.weightx = 1;
+                        headPanelgbc.anchor = GridBagConstraints.WEST;
+                        headPanelgbc.insets = new Insets(0, 25, 0, 0); // Margin top left bottom right
+                        pnHeadPanel.add(phanquyengui.getBtnThemQuyen(),headPanelgbc);
                         
                         phanquyengui.revalidate();
                         phanquyengui.repaint();

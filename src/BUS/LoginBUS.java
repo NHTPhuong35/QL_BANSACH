@@ -76,6 +76,12 @@ public class LoginBUS {
 				login();
 			}
 		});
+		view.getBtnLogout().addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent evt) {			
+				view.dispose();
+			}
+		});
 
 	}
 

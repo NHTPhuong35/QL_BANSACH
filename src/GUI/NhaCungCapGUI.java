@@ -28,6 +28,9 @@ import javax.swing.table.JTableHeader;
 
 import BUS.NhaCungCapBUS;
 import DTO.NhaCungCapDTO;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
 
 public class NhaCungCapGUI extends JPanel implements ActionListener{
 	
@@ -56,8 +59,8 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
 
         pnHeader = new JPanel(new BorderLayout());
         pnHeader.setBackground(Color.WHITE);
-        pnHeader.setPreferredSize(new Dimension(0, 50));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+        pnHeader.setPreferredSize(new Dimension(0, 60));
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
         pnMain = new JPanel(new BorderLayout());
         this.add(pnHeader, BorderLayout.NORTH);
@@ -66,13 +69,13 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
 
     public void initComponents() {
 
-        btnThem = createBtn("+Thêm nhà cung cấp", "#A6E3A1", "btnThem");
+        btnThem = createBtn("Thêm",BASE.color_btAdd, "btnThem","btAdd.png");
         btnThem.addActionListener(this);
 
-        btnSua = createBtn("+Sửa nhà cung cấp", "#B4BEFE", "btnSua");
+        btnSua = createBtn("Sửa", BASE.color_btEdit, "btnSua","btEdit.png");
         btnSua.addActionListener(this);
 
-        btnXoa = createBtn("+Xóa nhà cung cấp", "#EBA0AC", "btnXoa");
+        btnXoa = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa","bin.png");
         btnXoa.addActionListener(this);
 
         pnBtn = new JPanel();
@@ -104,7 +107,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         pnHeader.add(pnBtn, BorderLayout.WEST);
         pnHeader.add(pnFind, BorderLayout.EAST);
 
-        String[] colName = {"Mã nhà cung cấp", "Tên nhà cung cấp"};
+        String[] colName = {"Mã nhà cung cấp", "Tên nhà cung cấp", "Địa chỉ", "Email", "Số điện thoại"};
         dtm = new DefaultTableModel(colName, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -141,7 +144,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         ArrayList<NhaCungCapDTO> ds = new ArrayList<>();
         ArrayList<NhaCungCapDTO> ds_all = nccBUS.getDs();
         for (NhaCungCapDTO l : ds_all) {
-            if (l.getMaNhaCungCap().toLowerCase().contains(key) || l.getTenNhaCungCap().toLowerCase().contains(key)) {
+            if (l.getMaNhaCungCap().toLowerCase().contains(key) || l.getTenNhaCungCap().toLowerCase().contains(key) || l.getDiaChi().toLowerCase().contains(key) || l.getEmail().toLowerCase().contains(key)|| l.getSdt().toLowerCase().contains(key)) {
                 ds.add(l);
             }
         }
@@ -149,15 +152,22 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         return tbl;
     }
 
-    private JButton createBtn(String text, String color, String name) {
+    private JButton createBtn(String text, Color color, String name, String url) {
+        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
+        Image iconImage = Icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Icon = new ImageIcon(iconImage);
         JButton btn = new JButton();
-        btn.setPreferredSize(new Dimension(170, 30));
-        btn.setMaximumSize(new Dimension(170, 30));
         btn.setName(name);
         btn.setText(text);
-        btn.setBackground(Color.decode(color));
+        btn.setIcon(Icon);
+        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
+        btn.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
+        btn.setPreferredSize(new Dimension(100, 35));
+        btn.setMaximumSize(new Dimension(100, 35));
+        btn.setBackground(color);
         btn.setFont(BASE.font);
         btn.setOpaque(true);
+        btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return btn;
@@ -181,7 +191,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
     public void reload(ArrayList<NhaCungCapDTO> ds) {
         dtm.setRowCount(0);
         for (NhaCungCapDTO l : ds) {
-            dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap()});
+            dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap(), l.getDiaChi(), l.getEmail(), l.getSdt()});
         }
     }
 
@@ -190,6 +200,9 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
         for (int i = 0; i < rowCount; i++) {
             if (dtm.getValueAt(i, 0).equals(l.getMaNhaCungCap())) {
                 dtm.setValueAt(l.getTenNhaCungCap(), i, 1);
+                dtm.setValueAt(l.getDiaChi(), i, 2);
+                dtm.setValueAt(l.getEmail(), i, 3);
+                dtm.setValueAt(l.getSdt(), i, 4);
                 break;
             }
         }
@@ -197,7 +210,7 @@ public class NhaCungCapGUI extends JPanel implements ActionListener{
     }
 
     public void addRow(NhaCungCapDTO l) {
-        dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap()});
+        dtm.addRow(new Object[]{l.getMaNhaCungCap(), l.getTenNhaCungCap(), l.getDiaChi(), l.getEmail(), l.getSdt()});
     }
 
     @Override

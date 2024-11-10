@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -23,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -60,8 +63,8 @@ public class TacGiaGUI extends JPanel implements ActionListener {
 
         pnHeader = new JPanel(new BorderLayout());
         pnHeader.setBackground(Color.WHITE);
-        pnHeader.setPreferredSize(new Dimension(0, 50));
-        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
+        pnHeader.setPreferredSize(new Dimension(0, 60));
+        pnHeader.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
         pnMain = new JPanel(new BorderLayout());
         this.add(pnHeader, BorderLayout.NORTH);
@@ -70,24 +73,24 @@ public class TacGiaGUI extends JPanel implements ActionListener {
 
     public void initComponents() {
 
-        btnThem = createBtn("+Thêm tác giả", "#A6E3A1", "btnThem");
+        btnThem = createBtn("Thêm",BASE.color_btAdd, "btnThem","btAdd.png");
         btnThem.addActionListener(this);
 
-        btnSua = createBtn("+Sửa tác giả", "#B4BEFE", "btnSua");
+        btnSua = createBtn("Sửa", BASE.color_btEdit, "btnSua","btEdit.png");
         btnSua.addActionListener(this);
 
-        btnXoa = createBtn("+Xóa tác giả", "#EBA0AC", "btnXoa");
+        btnXoa = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa","bin.png");
         btnXoa.addActionListener(this);
 
         pnBtn = new JPanel();
         pnBtn.setLayout(new BoxLayout(pnBtn, BoxLayout.X_AXIS));
         pnBtn.setBackground(Color.WHITE);
 
-//        pnBtn.add(btnThem);
-//        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-//        pnBtn.add(btnSua);
-//        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
-//        pnBtn.add(btnXoa);
+        pnBtn.add(btnThem);
+        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+        pnBtn.add(btnSua);
+        pnBtn.add(Box.createRigidArea(new Dimension(20, 0)));
+        pnBtn.add(btnXoa);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");
         lblTimKiem.setFont(BASE.font);
@@ -153,15 +156,22 @@ public class TacGiaGUI extends JPanel implements ActionListener {
         return tbl;
     }
 
-    private JButton createBtn(String text, String color, String name) {
+    private JButton createBtn(String text, Color color, String name, String url) {
+        ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
+        Image iconImage = Icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+        Icon = new ImageIcon(iconImage);
         JButton btn = new JButton();
-        btn.setPreferredSize(new Dimension(170, 30));
-        btn.setMaximumSize(new Dimension(170, 30));
         btn.setName(name);
         btn.setText(text);
-        btn.setBackground(Color.decode(color));
+        btn.setIcon(Icon);
+        btn.setHorizontalTextPosition(SwingConstants.RIGHT); // Đặt văn bản ở bên phải của biểu tượng
+        btn.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
+        btn.setPreferredSize(new Dimension(100, 35));
+        btn.setMaximumSize(new Dimension(100, 35));
+        btn.setBackground(color);
         btn.setFont(BASE.font);
         btn.setOpaque(true);
+        btn.setFocusPainted(false);
         btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         return btn;

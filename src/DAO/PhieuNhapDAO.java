@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PhieuNhapDAO {
     private connectDatabase conn;
@@ -354,10 +355,11 @@ public class PhieuNhapDAO {
                 double giaBan = rs.getDouble("GIABAN");
                 if (giaBan != donGia) {
                     // Ask to change GiaBan to donGia
-                    int response = javax.swing.JOptionPane.showConfirmDialog(null, 
-                        "Giá bán hiện tại của sản phẩm khác với đơn giá của phiếu nhập! Bạn có muốn cập nhật giá bán thành " + donGia + "?", 
-                        "Cập Nhật Giá Bán", 
-                        javax.swing.JOptionPane.YES_NO_OPTION);
+                    int response = javax.swing.JOptionPane.showConfirmDialog(null,
+                            "Giá bán hiện tại của sản phẩm khác với đơn giá của phiếu nhập! Bạn có muốn cập nhật giá bán thành "
+                                    + donGia + "?",
+                            "Cập Nhật Giá Bán",
+                            javax.swing.JOptionPane.YES_NO_OPTION);
                     if (response == javax.swing.JOptionPane.YES_OPTION) {
                         // Assuming user input is handled elsewhere and the decision is made to update
                         String updateSql = "UPDATE sach SET GIABAN = ? WHERE MASACH = ?";
@@ -379,6 +381,49 @@ public class PhieuNhapDAO {
             e.printStackTrace();
         }
     }
+    
+    public boolean addPhieuNhapWithDetails(PhieuNhapDTO phieuNhap, List<ChiTietPhieuNhapDTO> chiTietList) {
+    try {
+        conn.connect();
+        conn.getConn().setAutoCommit(false); // Start transaction
+
+        // Insert into phieunhap table
+        String sqlPhieuNhap = "INSERT INTO phieunhap(MAPN, MANCC, TENDN, NGAYNHAP, TONGTIEN, TRANGTHAI) VALUES(?, ?, ?, ?, ?, ?)";
+        PreparedStatement prePhieuNhap = conn.getConn().prepareStatement(sqlPhieuNhap);
+        prePhieuNhap.setString(1, phieuNhap.getMaPN());
+        prePhieuNhap.setString(2, phieuNhap.getMaNCC());
+        prePhieuNhap.setString(3, phieuNhap.getTenDN());
+        prePhieuNhap.setDate(4, new java.sql.Date(phieuNhap.getNgayNhap().getTime()));
+        prePhieuNhap.setDouble(5, phieuNhap.getTongTien());
+        prePhieuNhap.setInt(6, phieuNhap.getTrangThai());
+        prePhieuNhap.executeUpdate();
+
+        // Insert into chitietphieunhap table
+        String sqlChiTiet = "INSERT INTO chitietphieunhap(MAPN, MASACH, GIANHAP, SOLUONG, TONGTIEN) VALUES(?, ?, ?, ?, ?)";
+        PreparedStatement preChiTiet = conn.getConn().prepareStatement(sqlChiTiet);
+        for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
+            preChiTiet.setString(1, chiTiet.getMAPN());
+            preChiTiet.setString(2, chiTiet.getMASACH());
+            preChiTiet.setDouble(3, chiTiet.getGIANHAP());
+            preChiTiet.setInt(4, chiTiet.getSOLUONG());
+            preChiTiet.setDouble(5, chiTiet.getTONGTIEN());
+            preChiTiet.addBatch();
+        }
+        preChiTiet.executeBatch();
+
+        conn.getConn().commit(); // Commit transaction
+        conn.disconnect();
+        return true;
+    } catch (SQLException e) {
+        try {
+            conn.getConn().rollback(); // Rollback transaction on error
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        e.printStackTrace();
+        return false;
+    }
+}
     
 
 }

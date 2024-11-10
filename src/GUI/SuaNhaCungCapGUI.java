@@ -1,19 +1,9 @@
 package GUI;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import BUS.NhaCungCapBUS;
@@ -21,7 +11,7 @@ import DTO.NhaCungCapDTO;
 
 public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
 
-    private JTextField tfTen;
+    private JTextField tfTen, tfDiaChi, tfPhone, tfEmail;
     private JPanel btnXacNhan, btnHuy;
     private NhaCungCapGUI nccGUI;
     private NhaCungCapDTO nccDTO;
@@ -29,10 +19,13 @@ public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
     public SuaNhaCungCapGUI(NhaCungCapDTO nccDTO, NhaCungCapGUI nccGUI) {
         this.nccGUI = nccGUI;
         this.nccDTO = nccDTO;
+        
+        // Initializing text fields with existing data
         this.tfTen = new JTextField(nccDTO.getTenNhaCungCap());
-        this.tfTen.setPreferredSize(new Dimension(300, 30));
-        this.tfTen.setFont(BASE.font);
-        this.tfTen.setMaximumSize(new Dimension(400, 30));
+        this.tfDiaChi = new JTextField(nccDTO.getDiaChi());
+        this.tfPhone = new JTextField(nccDTO.getSdt());
+        this.tfEmail = new JTextField(nccDTO.getEmail());
+        
         init();
     }
     
@@ -42,69 +35,105 @@ public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
 
     public void init() {
         setLayout(new BorderLayout());
-        setSize(300, 185);
-        setPreferredSize(new Dimension(300, 185));
+        setSize(400, 300);
+        setPreferredSize(new Dimension(400, 300));
         setUndecorated(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Tạo tiêu đề giao diện
+        // Title panel
         JPanel titleGUI_wrap = new JPanel(new BorderLayout());
-        titleGUI_wrap.setPreferredSize(new Dimension(360, 35));
-        JLabel titleGUI = new JLabel("Sửa NHà Cung Cấp", JLabel.CENTER);
+        titleGUI_wrap.setPreferredSize(new Dimension(400, 35));
+        JLabel titleGUI = new JLabel("Sửa Nhà Cung Cấp", JLabel.CENTER);
         titleGUI.setFont(BASE.font_header);
         titleGUI_wrap.add(titleGUI, BorderLayout.CENTER);
         titleGUI_wrap.setBackground(BASE.color_table_heaer);
 
         add(titleGUI_wrap, BorderLayout.NORTH);
 
-        JPanel pnMain = new JPanel();
-        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS));
+        // Main panel using GridBagLayout
+        JPanel pnMain = new JPanel(new GridBagLayout());
         pnMain.setBorder(new EmptyBorder(10, 15, 0, 15));
         pnMain.setBackground(Color.WHITE);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JPanel pnTenTG = new JPanel();
-        pnTenTG.setBackground(Color.WHITE);
-        pnTenTG.setLayout(new BoxLayout(pnTenTG, BoxLayout.X_AXIS));
-
+        // Name field
         JLabel lbTen = new JLabel("Tên Nhà Cung Cấp:");
         lbTen.setFont(BASE.font);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        pnMain.add(lbTen, gbc);
 
-//        tfTen = new JTextField();
-//        tfTen.setPreferredSize(new Dimension(300, 30));
-//        tfTen.setMaximumSize(new Dimension(400, 30));
+        gbc.gridx = 1;
+        pnMain.add(tfTen, gbc);
 
+        // Address field
+        JLabel lbDiaChi = new JLabel("Địa chỉ:");
+        lbDiaChi.setFont(BASE.font);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        pnMain.add(lbDiaChi, gbc);
+
+        gbc.gridx = 1;
+        pnMain.add(tfDiaChi, gbc);
+
+        // Phone field
+        JLabel lbPhone = new JLabel("Số điện thoại:");
+        lbPhone.setFont(BASE.font);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        pnMain.add(lbPhone, gbc);
+
+        gbc.gridx = 1;
+        pnMain.add(tfPhone, gbc);
+
+        // Email field
+        JLabel lbEmail = new JLabel("Email:");
+        lbEmail.setFont(BASE.font);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        pnMain.add(lbEmail, gbc);
+
+        gbc.gridx = 1;
+        pnMain.add(tfEmail, gbc);
+
+        // Buttons panel
         JPanel pnBTN = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         pnBTN.setBackground(Color.WHITE);
+
+        // Confirm button
         btnXacNhan = new JPanel();
         btnXacNhan.setPreferredSize(new Dimension(120, 30));
         cssBtn(btnXacNhan, "Xác nhận", "btnXacNhan");
         btnXacNhan.addMouseListener(this);
 
+        // Cancel button
         btnHuy = new JPanel();
         btnHuy.setPreferredSize(new Dimension(120, 30));
         cssBtn(btnHuy, "Hủy", "btnHuy");
         btnHuy.addMouseListener(this);
 
-        pnTenTG.add(lbTen);
-        pnTenTG.add(Box.createRigidArea(new Dimension(10, 10)));
-        pnTenTG.add(tfTen);
-
         pnBTN.add(btnXacNhan);
         pnBTN.add(btnHuy);
 
-        pnMain.add(pnTenTG);
-        pnMain.add(Box.createRigidArea(new Dimension(0, 20)));
-        pnMain.add(pnBTN);
+        // Add buttons to main panel
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.EAST;
+        pnMain.add(pnBTN, gbc);
+
         add(pnMain, BorderLayout.CENTER);
 
         pack();
-        setLocationRelativeTo(null);  // Canh giữa màn hình
+        setLocationRelativeTo(null);  // Center on screen
         setVisible(true);
     }
 
     private void cssBtn(JPanel b, String text, String name) {
         JLabel t = new JLabel(text, JLabel.CENTER);
-        t.setForeground(java.awt.Color.WHITE);  // Đảm bảo chữ trắng để nổi bật
+        t.setForeground(Color.WHITE);  // White text
         b.setBackground(BASE.color_table_heaer);
         b.setName(name);
         b.add(t);
@@ -126,17 +155,23 @@ public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
                     break;
                 case "btnXacNhan":
                     String ten = tfTen.getText();
+                    String diaChi = tfDiaChi.getText();
+                    String phone = tfPhone.getText();
+                    String email = tfEmail.getText();
+
+                    // Set updated values to DTO
                     nccDTO.setTenNhaCungCap(ten);
+                    nccDTO.setDiaChi(diaChi);
+                    nccDTO.setSdt(phone);
+                    nccDTO.setEmail(email);
+
+                    // Update in database (BUS)
                     NhaCungCapBUS busNCC = new NhaCungCapBUS();
-                    boolean success = true;
-                    if (success) {
-                        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-                        if (nccBUS.SuaNhaCungCap(nccDTO)) {
-                            nccGUI.EditRow(nccDTO);
-                            dispose();
-                        }else{
-                            new ShowDiaLog("Sửa nhà cung cấp thất bại", ShowDiaLog.ERROR_DIALOG);
-                        }
+                    if (busNCC.SuaNhaCungCap(nccDTO)) {
+                        nccGUI.EditRow(nccDTO);
+                        dispose();
+                    } else {
+                        new ShowDiaLog("Sửa nhà cung cấp thất bại", ShowDiaLog.ERROR_DIALOG);
                     }
                     break;
             }
@@ -145,39 +180,24 @@ public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
         }
     }
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
+    @Override public void mousePressed(MouseEvent e) {}
+    @Override public void mouseReleased(MouseEvent e) {}
+    @Override public void mouseEntered(MouseEvent e) {
         try {
             JPanel btn = (JPanel) e.getSource();
             btn.setBackground(BASE.color_table_heaer);
             btn.setOpaque(true);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-        }		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
+        }
+    }
+    @Override public void mouseExited(MouseEvent e) {
         try {
             JPanel btn = (JPanel) e.getSource();
             btn.setBackground(BASE.color_heaer);
             btn.setOpaque(true);
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
-        }		
-	}
-
-
+        }
+    }
 }

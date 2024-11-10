@@ -5,7 +5,6 @@
 package GUI;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -23,19 +22,15 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import BUS.LoginBUS;
 import GUI.renderers.RoundJButton;
 import GUI.renderers.RoundJPasswordField;
 import GUI.renderers.RoundJTextField;
-import BUS.LoginBUS;
 
-/**
- *
- * @author Hải Minh
- */
+
 public class LoginGUI extends JFrame {
 
     private JPanel loginContainer;
-//    private JButton turnoffButton;
     private JPanel inputLoginPanel;
     private JLabel applogo;
     private JLabel appname;
@@ -47,26 +42,34 @@ public class LoginGUI extends JFrame {
     private JPanel matkhauPanel;
 
     private JButton dangnhapButton;
+    private JButton logoutButton;
     private JCheckBox showPass;
     
 
     public LoginGUI() {
     	
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getContentPane().setBackground(Color.white);
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        setTitle("Đăng nhập");
-        setBackground(Color.white);
-    
+ 
         inputLoginPanel = new JPanel();
-        inputLoginPanel.setBackground(Color.decode("#98DCE2"));
+        inputLoginPanel.setBackground(BASE.color_main);
 
         loginContainer = new JPanel();
-        loginContainer.setBackground(Color.white);
+        loginContainer.setBackground(BASE.color_main);
         loginContainer.setLayout(new GridBagLayout());
-        loginContainer.setSize(394, 402);
+        loginContainer.setPreferredSize(new Dimension(412, 421));
         GridBagConstraints loginContainergbc = new GridBagConstraints();
+        
+        logoutButton = new JButton();
+        logoutButton.setIcon(new ImageIcon(getClass().getResource("/Image/icons8-power-off-button-501.png")));
+        logoutButton.setBackground(BASE.color_main);
+        logoutButton.setBorder(null);
+        logoutButton.setSize(30, 30);
+
+        loginContainergbc.gridx = 0;
+        loginContainergbc.gridy = 0;
+        loginContainergbc.anchor = GridBagConstraints.EAST;
+        loginContainergbc.insets = new Insets(10, 0, 0, 10);
+        loginContainer.add(logoutButton, loginContainergbc);
 
         loginContainergbc.gridx = 0;
         loginContainergbc.gridy = 1;
@@ -77,7 +80,7 @@ public class LoginGUI extends JFrame {
 
         inputLoginPanel.setLayout(new GridBagLayout());
         GridBagConstraints inputLoginPanelrgbc = new GridBagConstraints();
-
+        
         applogo = new JLabel();
         applogo.setSize(97, 75);
         applogo.setIcon(new ImageIcon(getClass().getResource("/Image/guiiconbook.png")));
@@ -85,11 +88,12 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.gridy = 0;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
-        inputLoginPanelrgbc.insets = new Insets(20, 0, 0, 0);
+        inputLoginPanelrgbc.insets = new Insets(10, 0, 0, 0);
         inputLoginPanel.add(applogo, inputLoginPanelrgbc);
+        
 
         appname = new JLabel("Hãy đăng nhập vào cửa hàng");
-        appname.setFont(new Font("Roboto", Font.BOLD, 16));
+        appname.setFont(new Font("Roboto", Font.BOLD, 17));
         inputLoginPanelrgbc.gridx = 0;
         inputLoginPanelrgbc.gridy = 1;
         inputLoginPanelrgbc.weightx = 1;
@@ -98,27 +102,27 @@ public class LoginGUI extends JFrame {
         inputLoginPanel.add(appname, inputLoginPanelrgbc);
 
         dangnhapPanel = new JPanel(new BorderLayout());
-        dangnhapPanel.setBackground(Color.decode("#98DCE2"));
+        dangnhapPanel.setBackground(BASE.color_main);
         tendangnhap = new JLabel("User Name");
-        tendangnhap.setFont(new Font("Roboto", Font.PLAIN, 14));
+        tendangnhap.setFont(new Font("Roboto", Font.PLAIN, 15));
         inputtendangnhap = new RoundJTextField(25, 25, 25);
         inputtendangnhap.setFont(new Font("Roboto", Font.PLAIN, 14));
-        inputtendangnhap.setPreferredSize(new Dimension(370, 25));
+        inputtendangnhap.setPreferredSize(new Dimension(380, 29));
         
         dangnhapPanel.add(tendangnhap, BorderLayout.NORTH);
         dangnhapPanel.add(inputtendangnhap, BorderLayout.SOUTH);
 
         matkhauPanel = new JPanel(new BorderLayout());
-        matkhauPanel.setBackground(Color.decode("#98DCE2"));
+        matkhauPanel.setBackground(BASE.color_main);
         matkhau = new JLabel("Password");
-        matkhau.setFont(new Font("Roboto", Font.PLAIN, 14));
+        matkhau.setFont(new Font("Roboto", Font.PLAIN, 15));
         inputpassword = new RoundJPasswordField(25, 25, 25);
         inputpassword.setFont(new Font("Roboto", Font.PLAIN, 14));
-        inputpassword.setPreferredSize(new Dimension(370, 25));
+        inputpassword.setPreferredSize(new Dimension(380, 29));
        
         showPass = new JCheckBox();
         showPass.setIcon(new ImageIcon(getClass().getResource("/Image/eye_hide.png")));
-        showPass.setBackground(Color.decode("#98DCE2"));
+        showPass.setBackground(BASE.color_main);
         showPass.addActionListener(new ActionListener() {
             @Override
 	            public void actionPerformed(ActionEvent e) {
@@ -145,7 +149,7 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
         inputLoginPanelrgbc.anchor = GridBagConstraints.WEST;
-        inputLoginPanelrgbc.insets = new Insets(0, 14, 0, 14);
+        inputLoginPanelrgbc.insets = new Insets(0, 0, 0, 0);
         inputLoginPanel.add(dangnhapPanel, inputLoginPanelrgbc);
 
         inputLoginPanelrgbc.gridx = 0;
@@ -153,29 +157,25 @@ public class LoginGUI extends JFrame {
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
         inputLoginPanelrgbc.anchor = GridBagConstraints.CENTER;
-        inputLoginPanelrgbc.insets = new Insets(0, 14, 0, 14);
+        inputLoginPanelrgbc.insets = new Insets(0, 0, 0, 0);
         inputLoginPanel.add(matkhauPanel, inputLoginPanelrgbc);
 
-        dangnhapButton = new RoundJButton("Log In", 30, 30);
-        dangnhapButton.setFont(new Font("Roboto", Font.BOLD, 15));
+        dangnhapButton = new RoundJButton("Đăng nhập", 30, 30);
+        dangnhapButton.setFont(new Font("Roboto", Font.BOLD, 16));
         dangnhapButton.setBorderPainted(false);
-        dangnhapButton.setBackground(Color.decode("#56B7C0"));
+        dangnhapButton.setBackground(BASE.color_header_tbl);
 
         inputLoginPanelrgbc.gridx = 0;
         inputLoginPanelrgbc.gridy = 4;
         inputLoginPanelrgbc.weightx = 1;
         inputLoginPanelrgbc.weighty = 1;
         inputLoginPanelrgbc.fill = GridBagConstraints.BOTH;
-        inputLoginPanelrgbc.insets = new Insets(20, 14, 30, 39);
+        inputLoginPanelrgbc.insets = new Insets(20, 0, 25, 25);
         inputLoginPanel.add(dangnhapButton, inputLoginPanelrgbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.weightx = 0.2;
-        gbc.insets = new Insets(10, 10, 10, 10);
-        add(loginContainer, gbc);
-
-        setSize(412, 410);
+        setContentPane(loginContainer);
+        setUndecorated(true);
+        pack();  
         setVisible(true);
         setLocationRelativeTo(null);
         
@@ -192,6 +192,10 @@ public class LoginGUI extends JFrame {
 	
 	public JButton getBtnLogin() {
 		return dangnhapButton;
+	}	
+	
+	public JButton getBtnLogout() {
+		return logoutButton;
 	}	
 
     public static void main(String args[]) {

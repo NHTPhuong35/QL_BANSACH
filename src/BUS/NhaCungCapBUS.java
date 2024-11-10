@@ -104,7 +104,7 @@ public class NhaCungCapBUS {
         NhaCungCapDTO l = null;
         for (NhaCungCapDTO x : ds) {
             if (x.getMaNhaCungCap().equals(MaTL)) {
-                l = new NhaCungCapDTO(x.getMaNhaCungCap(), x.getTenNhaCungCap());
+                l = new NhaCungCapDTO(x.getMaNhaCungCap(), x.getTenNhaCungCap(), x.getDiaChi(), x.getEmail(), x.getSdt());
                 break;
             }
         }
