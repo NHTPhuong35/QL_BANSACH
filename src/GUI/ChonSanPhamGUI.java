@@ -114,6 +114,31 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         this.add(pnContent, BorderLayout.CENTER);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
+
+        txtTimKiem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchQuery = txtTimKiem.getText().toLowerCase();
+                filterProducts(searchQuery);
+            }
+        });
+    }
+
+    private void filterProducts(String query) {
+        ArrayList<SanPhamDTO> filteredList = new ArrayList<>();
+
+        for (SanPhamDTO product : dsSP) {
+            if (product.getTenSach().toLowerCase().contains(query)) {
+                filteredList.add(product);
+            }
+        }
+
+        JPanel newPanel = initContent(filteredList);
+        pnContent.removeAll();
+        pnContent.add(pnTimKiem, BorderLayout.NORTH);
+        pnContent.add(newPanel, BorderLayout.CENTER);
+        pnContent.revalidate();
+        pnContent.repaint();
     }
 
     public JPanel initContent(ArrayList<SanPhamDTO> dsSP) {
@@ -199,7 +224,7 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
                         break;
                     }
                 }
-                
+
                 if (!productExists) {
                     for (SanPhamDTO product : dsSP) {
                         if (product.getMaSach().equals(maSach)) {
