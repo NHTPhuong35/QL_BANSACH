@@ -22,6 +22,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,8 +42,6 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -145,22 +145,6 @@ public class HoaDonGUI extends JPanel {
         JScrollPane scrollTbl = new JScrollPane(tbl);
         pnMain.add(scrollTbl, BorderLayout.CENTER);
 
-        tfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                Search();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                Search();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
         tbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -225,7 +209,8 @@ public class HoaDonGUI extends JPanel {
         date.setFont(BASE.font_header);
         date.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JSpinner.DateEditor startDateEditor = new JSpinner.DateEditor(date, "yyyy/MM/dd");
+//        JSpinner.DateEditor startDateEditor = new JSpinner.DateEditor(date, "yyyy/MM/dd");
+        JSpinner.DateEditor startDateEditor = new JSpinner.DateEditor(date, "dd/MM/yyyy");
         date.setEditor(startDateEditor);
 
         lbl.setMaximumSize(new Dimension(200, lbl.getPreferredSize().height));
@@ -240,9 +225,20 @@ public class HoaDonGUI extends JPanel {
 
     private void reload(ArrayList<HoaDonDTO> ds) {
         dtm.setRowCount(0);
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         for (HoaDonDTO hd : ds) {
+            String formattedDate = hd.getNgayHD();
+            try {
+                Date date = inputFormat.parse(hd.getNgayHD());
+                formattedDate = outputFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             String TrangThai = hd.getTrangThai() == 1 ? "Đã xác nhận" : "Hủy";
-            dtm.addRow(new Object[]{hd.getSoHD(), hd.getTenDN(), hd.getMaKH(), hd.getTGian(), hd.getNgayHD(), hd.getTienGiamGia(), hd.getTongTien(), TrangThai});
+            dtm.addRow(new Object[]{hd.getSoHD(), hd.getTenDN(), hd.getMaKH(), hd.getTGian(), formattedDate, hd.getTienGiamGia(), hd.getTongTien(), TrangThai});
         }
     }
 
@@ -254,31 +250,33 @@ public class HoaDonGUI extends JPanel {
                     JButton clickedPanel = (JButton) e.getSource();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                     if (clickedPanel == btDel) {
-                        Date currentDate = new Date();
+                        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn hủy hóa đơn?", "Xác nhận hủy hóa đơn", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.YES_OPTION) {
+                            Date currentDate = new Date();
+                            String formattedCurrentDate = formatter.format(currentDate);
 
-                        String formattedCurrentDate = formatter.format(currentDate);
+                            int selectedRow = tbl.getSelectedRow();
+                            if (selectedRow != -1) {
+                                String ngayHDStr = dtm.getValueAt(selectedRow, 4).toString();
+                                if (ngayHDStr.equals(formattedCurrentDate)) {
+                                    HoaDonBUS bus = new HoaDonBUS();
+                                    String soHD = dtm.getValueAt(selectedRow, 0).toString();
 
-                        int selectedRow = tbl.getSelectedRow();
-                        if (selectedRow != -1) {
-                            String ngayHDStr = dtm.getValueAt(selectedRow, 4).toString();
-                            if (ngayHDStr.equals(formattedCurrentDate)) {
-                                HoaDonBUS bus = new HoaDonBUS();
-                                String soHD = dtm.getValueAt(selectedRow, 0).toString();
-
-                                if (bus.CapNhatTrangThaiHD(soHD)) {
-                                    ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS(soHD);
-                                    ArrayList<ChiTietHoaDonDTO> dsctHD = cthdBUS.getDscthd();
-                                    HoaDonDTO hdDTO = bus.getHD(soHD);
-                                    editStatus(hdDTO);
-                                    for (ChiTietHoaDonDTO ct : dsctHD) {
-                                        SanPhamBUS spBUS = new SanPhamBUS();
-                                        SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
-                                        int sl = spDTO.getSoLuong() + ct.getSoLuong();
-                                        spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                                    if (bus.CapNhatTrangThaiHD(soHD)) {
+                                        ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS(soHD);
+                                        ArrayList<ChiTietHoaDonDTO> dsctHD = cthdBUS.getDscthd();
+                                        HoaDonDTO hdDTO = bus.getHD(soHD);
+                                        editStatus(hdDTO);
+                                        for (ChiTietHoaDonDTO ct : dsctHD) {
+                                            SanPhamBUS spBUS = new SanPhamBUS();
+                                            SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
+                                            int sl = spDTO.getSoLuong() + ct.getSoLuong();
+                                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                                        }
                                     }
+                                } else {
+                                    new ShowDiaLog("Chỉ được phép hủy hóa đơn trong Ngày", ShowDiaLog.ERROR_DIALOG);
                                 }
-                            } else {
-                                new ShowDiaLog("Chỉ được phép hủy hóa đơn trong Ngày", ShowDiaLog.ERROR_DIALOG);
                             }
                         }
                     } else if (clickedPanel == btSearch) {
@@ -293,10 +291,13 @@ public class HoaDonGUI extends JPanel {
                             return;
                         }
 
+                        System.out.println(startDateStr + " " + endDateStr);
+
                         ArrayList<HoaDonDTO> filteredList = new ArrayList<>();
 
                         for (HoaDonDTO bill : billList) {
                             String billDateStr = bill.getNgayHD();
+                            System.out.println(billDateStr);
 
                             boolean isInDateRange = (billDateStr.compareTo(startDateStr) >= 0 && billDateStr.compareTo(endDateStr) <= 0);
 
@@ -366,18 +367,6 @@ public class HoaDonGUI extends JPanel {
             }
         }
         dtm.fireTableDataChanged();
-    }
-
-    private void Search() {
-        String key = tfSearch.getText().toLowerCase();
-        HoaDonBUS bus = new HoaDonBUS();
-        ArrayList<HoaDonDTO> ds = new ArrayList<>();
-        for (HoaDonDTO hd : billList) {
-            if (hd.getSoHD().toLowerCase().contains(key) || hd.getMaKH().toLowerCase().contains(key) || hd.getTenDN().toLowerCase().contains(key)) {
-                ds.add(hd);
-            }
-        }
-        reload(ds);
     }
 
     public JButton createButtonWithIcon(String text, String iconPath, Color bgColor, Font font, Dimension size) {
