@@ -100,6 +100,7 @@ public class HoaDonBUS {
         return null;
     }
     
+    
     public static void main(String[] args){
         HoaDonBUS bus = new HoaDonBUS();
         HoaDonDTO hd = new HoaDonDTO("KH01", "NV02", 0, 100000);

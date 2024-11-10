@@ -15,12 +15,13 @@ import GUI.NhaCungCapGUI;
 import GUI.PhanQuyenGUI;
 import GUI.PhieuNhapGUI;
 import GUI.BanHangGUI;
+import GUI.HoaDonGUI;
 import GUI.SanPhamGUI;
 import GUI.TacGiaGUI;
 import GUI.TaiKhoanDN;
 import GUI.TaiKhoanGUI;
 import GUI.TheLoaiGUI;
-import GUI.ThongTinHDGUI;
+//import GUI.ThongTinHDGUI;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -36,7 +37,7 @@ public class HomeBUS {
 	private HomeGUI view;
         private PhieuNhapGUI phieunhapgui;
         private SanPhamGUI sanphamgui;
-        private ThongTinHDGUI thongtinhoadonguil;
+//        private ThongTinHDGUI thongtinhoadonguil;
         private TacGiaGUI tacgiagui;
         private NhaCungCapGUI nhacungcapgui;
         private TheLoaiGUI loaigui;
@@ -44,6 +45,7 @@ public class HomeBUS {
         private TaiKhoanGUI taikhoangui;
         private PhanQuyenGUI phanquyengui;
         private BanHangGUI salesgui;
+        private HoaDonGUI hoadongui;
         
 	public HomeBUS(HomeGUI view) {
             this.view = view;
@@ -332,19 +334,19 @@ public class HomeBUS {
                     menuPanel.add(view.getBtnBanHang(), menuPanelgbc);
                 }
                 if(hoadon == true){
-                    ThongTinHDGUI thongtinhoadongui = new ThongTinHDGUI();
-                    JPanel pnThaoTac = thongtinhoadongui.getPnThaoTac();
+//                    ThongTinHDGUI thongtinhoadongui = new ThongTinHDGUI();
+//                    JPanel pnThaoTac = thongtinhoadongui.getPnThaoTac();
 //                    if(phieunhapthem){
 //                    }
 //                    if(phieunhapsua){
 //                    }
-                    if(hoadonxoa){
-                        pnThaoTac.add(thongtinhoadongui.getBtnHuy());
-                        pnThaoTac.add(Box.createRigidArea(new Dimension(20, 0)));
-                        thongtinhoadongui.revalidate();
-                        thongtinhoadongui.repaint();
-;
-                    }
+//                    if(hoadonxoa){
+//                        pnThaoTac.add(thongtinhoadongui.getBtnHuy());
+//                        pnThaoTac.add(Box.createRigidArea(new Dimension(20, 0)));
+//                        thongtinhoadongui.revalidate();
+//                        thongtinhoadongui.repaint();
+//;
+//                    }
                     menuPanelgbc.gridy++;
                     menuPanel.add(view.getBtnHoaDon(), menuPanelgbc);
                 }

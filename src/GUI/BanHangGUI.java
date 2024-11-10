@@ -105,25 +105,47 @@ public class BanHangGUI extends JPanel {
 
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                if (column == 2) { // Chỉ áp dụng cho cột "Số lượng"
-                    // Tạo JFormattedTextField chỉ cho phép nhập số nguyên
+                if (column == 2) { 
                     JFormattedTextField formattedTextField = new JFormattedTextField();
-                    formattedTextField.setValue(0); // Giá trị mặc định là 0
+                    formattedTextField.setValue(0); // Default value is 0
                     formattedTextField.setHorizontalAlignment(JFormattedTextField.RIGHT);
 
-                    // Định dạng để chỉ chấp nhận số nguyên >= 0
                     NumberFormat format = NumberFormat.getIntegerInstance();
-                    format.setGroupingUsed(false); // Không hiển thị dấu phân cách
+                    format.setGroupingUsed(false);
                     NumberFormatter formatter = new NumberFormatter(format);
                     formatter.setValueClass(Integer.class);
-                    formatter.setAllowsInvalid(false); // Không cho phép ký tự không hợp lệ
-                    formatter.setMinimum(0); // Chỉ cho phép giá trị >= 0
+                    formatter.setAllowsInvalid(false); 
+                    formatter.setMinimum(0); 
                     formattedTextField.setFormatterFactory(new DefaultFormatterFactory(formatter));
+
+                    String productCode = tbl.getValueAt(row, 0).toString();
+
+                    SanPhamBUS busSP = new SanPhamBUS();
+                    int remainingStock = busSP.getSLSP(productCode);
+
+                    formattedTextField.setMaximumSize(new Dimension(remainingStock, formattedTextField.getPreferredSize().height));
+
+                    formattedTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+                        @Override
+                        public void focusLost(java.awt.event.FocusEvent evt) {
+                            try {
+                                int enteredQuantity = Integer.parseInt(formattedTextField.getText());
+                                if (enteredQuantity > remainingStock) {
+                                    formattedTextField.setValue(remainingStock);
+                                    JOptionPane.showMessageDialog(null, "Số lượng không thể lớn hơn số lượng còn lại: " + remainingStock);
+                                    tbl.setValueAt(remainingStock, row, 2);
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Vui lòng nhập một số hợp lệ.");
+                            }
+                        }
+                    });
 
                     return new DefaultCellEditor(formattedTextField);
                 }
                 return super.getCellEditor(row, column);
             }
+
         };
 
         tbl.getModel().addTableModelListener(e -> {
@@ -281,7 +303,7 @@ public class BanHangGUI extends JPanel {
                     ChonSanPhamGUI spGUI = new ChonSanPhamGUI(BanHangGUI.this);
                     spGUI.setVisible(true);
                 } else if (clickedPanel == btCustomerCreate) {
-                    addCustomerGUI addCustomer = new addCustomerGUI(BanHangGUI.this);
+                    TaoKhachHangGUI addCustomer = new TaoKhachHangGUI(BanHangGUI.this);
                 } else if (clickedPanel == btPay) {
                     if (tfMaKH.getText().isEmpty()) {
                         new ShowDiaLog("Vui lòng nhập mã khách hàng!", ShowDiaLog.ERROR_DIALOG);
@@ -292,7 +314,7 @@ public class BanHangGUI extends JPanel {
                         new ShowDiaLog("Danh sách sản phẩm trống!", ShowDiaLog.ERROR_DIALOG);
                         return;
                     }
-                    
+
                     String MaKH = tfMaKH.getText();
                     KhachHangBUS khBUS = new KhachHangBUS();
                     KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
@@ -312,7 +334,7 @@ public class BanHangGUI extends JPanel {
                         khBUS.CapNhatDiemTL(MaKH, diemtl + diemconlai);
                         ThanhTien = 0;
                     }
-                    
+
                     HoaDonBUS hdBUS = new HoaDonBUS();
                     HoaDonDTO hd = new HoaDonDTO(tfMaKH.getText(), tfMaNv.getText(), giamgia, ThanhTien);
                     hd.setSoHD(hdBUS.TaoMaHD());
@@ -483,7 +505,7 @@ public class BanHangGUI extends JPanel {
         }
 
     }
-    
+
     public void DetailBillList(String SoHD) {
         int rowCount = dtm.getRowCount();
         for (int i = 0; i < rowCount; i++) {

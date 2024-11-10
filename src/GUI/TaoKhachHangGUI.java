@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package GUI;
 
 import BUS.KhachHangBUS;
@@ -24,22 +20,20 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class EditCustomer extends JFrame {
+public class TaoKhachHangGUI extends JFrame {
 
     private JPanel pnHeader, pnMain, pnFooter;
     private JPanel btXacNhan, btHuy;
     private JTextField tfName, tfPhone;
     private JLabel errorName, errorPhone;
-    private KhachHangDTO khDTO;
-    private KhachHangGUI khGUI;
-    private String phoneNumber;
+    private BanHangGUI SalesGUI;
 
-    public EditCustomer(KhachHangDTO khDTO, KhachHangGUI khGUI) {
-        this.khDTO = khDTO;
-        this.khGUI = khGUI;
-        this.tfName = new JTextField(khDTO.getTenKh());
-        this.tfPhone = new JTextField(khDTO.getSdt());
-        this.phoneNumber = khDTO.getSdt();
+    public TaoKhachHangGUI() {
+        init();
+    }
+
+    public TaoKhachHangGUI(BanHangGUI SalesGUI) {
+        this.SalesGUI = SalesGUI;
         init();
     }
 
@@ -60,7 +54,7 @@ public class EditCustomer extends JFrame {
         pnHeader = new JPanel(new BorderLayout());
         pnHeader.setBackground(BASE.color_header_tbl);
         pnHeader.setPreferredSize(new Dimension(0, 35));
-        JLabel lblHeader = new JLabel("Sửa khách hàng", JLabel.CENTER);
+        JLabel lblHeader = new JLabel("Thêm khách hàng", JLabel.CENTER);
         lblHeader.setFont(BASE.font_header);
         pnHeader.add(lblHeader, BorderLayout.CENTER);
 
@@ -72,7 +66,7 @@ public class EditCustomer extends JFrame {
         pnName.setLayout(new BoxLayout(pnName, BoxLayout.X_AXIS));
         JLabel lblName = new JLabel("Tên khách hàng");
         lblName.setFont(BASE.font);
-//        tfName = new JTextField();
+        tfName = new JTextField();
         tfName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         pnName.add(lblName);
         pnName.add(Box.createHorizontalStrut(10));
@@ -90,7 +84,7 @@ public class EditCustomer extends JFrame {
         pnPhone.setLayout(new BoxLayout(pnPhone, BoxLayout.X_AXIS));
         JLabel lblPhone = new JLabel("Số điện thoại");
         lblPhone.setFont(BASE.font);
-//        tfPhone = new JTextField();
+        tfPhone = new JTextField();
         tfPhone.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
         pnPhone.add(lblPhone);
         pnPhone.add(Box.createHorizontalStrut(28));
@@ -174,7 +168,6 @@ public class EditCustomer extends JFrame {
     private void validatePhone() {
         String phone = tfPhone.getText();
         Pattern digitPattern = Pattern.compile("^[0-9]+$");
-
         KhachHangBUS khBUS = new KhachHangBUS();
 
         if (phone.isEmpty()) {
@@ -185,7 +178,7 @@ public class EditCustomer extends JFrame {
             errorPhone.setText("Số điện thoại là chữ số.");
         } else if (phone.length() != 10) {
             errorPhone.setText("Số điện thoại có độ dài 10 chữ số.");
-        } else if (khBUS.checkPhoneExits(phone) && !phone.equals(phoneNumber)) {
+        } else if (khBUS.checkPhoneExits(phone)) {
             errorPhone.setText("Số điện thoại Đã tồn tại");
         } else {
             errorPhone.setText(" ");
@@ -214,31 +207,31 @@ public class EditCustomer extends JFrame {
                             dispose();
                         }
                     } else if (clickedPanel == btXacNhan) {
-                        System.out.println("btXacNhan");
+                        if (!errorName.getText().trim().isEmpty() || !errorPhone.getText().trim().isEmpty() || tfName.getText().isEmpty() || tfPhone.getText().isEmpty()) {
+                            return;
+                        }
+                        
                         String name = tfName.getText();
                         String phone = tfPhone.getText();
                         KhachHangBUS khBUS = new KhachHangBUS();
-                        boolean success = true;
-                        System.out.println(phone);
-                        System.out.println(phoneNumber);
-                        if (khBUS.checkPhoneExits(phone) && !phone.equals(phoneNumber)) {
-                            success = false;
-                            System.out.println("vao day");
-                        }
-                        if (success) {
-                            khDTO.setTenKh(name);
-                            khDTO.setSdt(phone);
-                            if (khBUS.SuaKhachHang(khDTO)) {
-                                System.out.println("Edit");
-                                dispose();
-                                new ShowDiaLog("Sửa khách hàng thành công", ShowDiaLog.ERROR_DIALOG);
-                            }
-                        }else {
-                             new ShowDiaLog("Sửa khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
+                        KhachHangDTO kh = new KhachHangDTO(name, phone);
+                        kh.setMaKh(khBUS.TaoMaKH());
+                        SalesGUI.getTfMaKH().setText(kh.getMaKh());
+                        
+                        if (khBUS.ThemKhachHang(kh)) {
+                            SalesGUI.getTfMaKH().setText(kh.getMaKh());
+                            new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
+                            dispose();
+                        } else {
+                            new ShowDiaLog("Thêm khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
                         }
                     }
                 }
             }
         };
+    }
+
+    public static void main(String[] agrs) {
+        new TaoKhachHangGUI();
     }
 }

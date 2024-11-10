@@ -4,7 +4,6 @@
  */
 package GUI;
 
-
 import BUS.ChiTietHoaDonBUS;
 import BUS.HoaDonBUS;
 import BUS.SanPhamBUS;
@@ -21,6 +20,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +31,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -47,7 +49,7 @@ import javax.swing.table.JTableHeader;
 public class HoaDonGUI extends JPanel {
 
     private JPanel pnTool, pnMain;
-    private  JButton btSearch, btRefresh, btDel, btPrint;
+    private JButton btSearch, btRefresh, btDel, btPrint;
     private JTextField tfSearch;
     private JSpinner startDate, endDate;
     private DefaultTableModel dtm;
@@ -98,24 +100,25 @@ public class HoaDonGUI extends JPanel {
 
         //endDate
         endDate = new JSpinner(new SpinnerDateModel());
+
         JPanel pnEndDate = pnDate("Ngày kết thúc", endDate);
 
         MouseAdapter commonMouseListener = createCommonMouseListener();
 
         //bt Search 
-        btSearch = createButtonWithIcon("Tìm kiếm", "./src/image/search.png", BASE.color_btTim, BASE.font, new Dimension(130,35));
+        btSearch = createButtonWithIcon("Tìm kiếm", "./src/image/search.png", BASE.color_btTim, BASE.font, new Dimension(130, 35));
         btSearch.addMouseListener(commonMouseListener);
 
         //bt Refresh
-        btRefresh = createButtonWithIcon("Làm mới", "./src/image/refresh.png", BASE.color_btLamMoi, BASE.font, new Dimension(130,35));
+        btRefresh = createButtonWithIcon("Làm mới", "./src/image/refresh.png", BASE.color_btLamMoi, BASE.font, new Dimension(130, 35));
         btRefresh.addMouseListener(commonMouseListener);
 
         //bt Del
-        btDel = createButtonWithIcon("Xóa", "./src/image/bin.png", BASE.color_btLamXoa, BASE.font, new Dimension(100,35));
+        btDel = createButtonWithIcon("Xóa", "./src/image/bin.png", BASE.color_btLamXoa, BASE.font, new Dimension(100, 35));
         btDel.addMouseListener(commonMouseListener);
 
         //bt print
-        btPrint = createButtonWithIcon("In hóa đơn", "./src/image/print.png", BASE.color_btBFD, BASE.font, new Dimension(150,35));
+        btPrint = createButtonWithIcon("In hóa đơn", "./src/image/print.png", BASE.color_btBFD, BASE.font, new Dimension(150, 35));
         btPrint.addMouseListener(commonMouseListener);
 
         // add pnTool
@@ -175,10 +178,9 @@ public class HoaDonGUI extends JPanel {
 
                         HoaDonDTO hd = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
 
-                        new invoiceDetails(hd);
+                        new ctHoaDon(hd);
                     }
-                }
-                else if(e.getClickCount() == 1){
+                } else if (e.getClickCount() == 1) {
                     int row = tbl.rowAtPoint(e.getPoint());
 
                     if (row != -1) { // Kiểm tra dòng có tồn tại
@@ -190,7 +192,7 @@ public class HoaDonGUI extends JPanel {
                         double tienGiamGia = Double.parseDouble(tbl.getValueAt(row, 5) + "");
                         double tongTien = Double.parseDouble(tbl.getValueAt(row, 6) + "");
 
-                       billPrint = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
+                        billPrint = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
                     }
                 }
             }
@@ -286,6 +288,11 @@ public class HoaDonGUI extends JPanel {
                         String startDateStr = formatter.format(start);
                         String endDateStr = formatter.format(end);
 
+                        if (!isDateRangeValid(start, end)) {
+                            JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày kết thúc!");
+                            return;
+                        }
+
                         ArrayList<HoaDonDTO> filteredList = new ArrayList<>();
 
                         for (HoaDonDTO bill : billList) {
@@ -312,8 +319,11 @@ public class HoaDonGUI extends JPanel {
                         tfSearch.setText("");
                         reload(billList);
                     } else if (clickedPanel == btPrint) {
-                        PDFExporter exporter = new PDFExporter();
-                        exporter.exportInvoiceToPDF(billPrint);
+                        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn in hóa đơn?", "Xác nhận in hóa đơn", JOptionPane.YES_NO_OPTION);
+                        if (choice == JOptionPane.YES_OPTION) {
+                            PDFExporter exporter = new PDFExporter();
+                            exporter.exportInvoiceToPDF(billPrint);
+                        }
                     }
                 }
             }
@@ -334,6 +344,10 @@ public class HoaDonGUI extends JPanel {
                 }
             }
         };
+    }
+
+    private boolean isDateRangeValid(Date start, Date end) {
+        return !start.after(end);
     }
 
     public void editStatus(HoaDonDTO hd) {
@@ -365,12 +379,12 @@ public class HoaDonGUI extends JPanel {
         }
         reload(ds);
     }
-    
+
     public JButton createButtonWithIcon(String text, String iconPath, Color bgColor, Font font, Dimension size) {
         ImageIcon icon = new ImageIcon(iconPath);
         Image scaledImage = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         icon = new ImageIcon(scaledImage);
-        
+
         JButton button = new JButton(text, icon);
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
         button.setVerticalTextPosition(SwingConstants.CENTER);
@@ -381,7 +395,7 @@ public class HoaDonGUI extends JPanel {
         button.setOpaque(true);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         return button;
     }
 

@@ -180,4 +180,21 @@ public class SanPhamBUS {
         }
         return "Hợp lệ";
     }
+    
+    public int getSLSP(String ma) {
+        SanPhamBUS busSP = new SanPhamBUS();
+        ArrayList<SanPhamDTO> ds = busSP.getDsSP();
+        for(SanPhamDTO sp : ds) {
+            if(sp.getMaSach().equals(ma)){
+                return sp.getSoLuong();
+            }
+        }
+        return 0;
+    }
+    
+    public static void main(String[] agrs) {
+        SanPhamBUS bus = new SanPhamBUS();
+        int x = bus.getSLSP("SP01");
+        System.out.println(x);
+    }
 }

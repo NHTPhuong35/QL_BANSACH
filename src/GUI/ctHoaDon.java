@@ -32,7 +32,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class invoiceDetails extends JFrame implements MouseListener {
+public class ctHoaDon extends JFrame implements MouseListener {
 
     JLabel lblNgayLap, lblMaHD, lblNV, lblKH, lblTongCong, lblGiamGia, lblThanhTien;
     private JPanel pnHeader, pnMain, pnFooter;
@@ -41,7 +41,7 @@ public class invoiceDetails extends JFrame implements MouseListener {
     private JButton btnX;
     private HoaDonDTO hd;
 
-    public invoiceDetails(HoaDonDTO hd) {
+    public ctHoaDon(HoaDonDTO hd) {
         this.setLayout(new BorderLayout());
         this.setSize(750, 550);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
