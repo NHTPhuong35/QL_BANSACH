@@ -233,6 +233,8 @@ public class EditCustomer extends JFrame {
                                 dispose();
                                 new ShowDiaLog("Sửa khách hàng thành công", ShowDiaLog.ERROR_DIALOG);
                             }
+                        }else {
+                             new ShowDiaLog("Sửa khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
                         }
                     }
                 }
