@@ -191,7 +191,7 @@ public class KhachHangGUI extends JPanel {
                             KhachHangBUS khBUS = new KhachHangBUS();
                             KhachHangDTO kh = khBUS.layKHTheoMa(maKhachHang);
 
-                            new EditCustomer(kh,KhachHangGUI.this);
+                            new SuaKhachHangGUI(kh,KhachHangGUI.this);
                         } else {
                             new ShowDiaLog("Vui lòng chọn một khách hàng để sửa", ShowDiaLog.ERROR_DIALOG);
                         }
