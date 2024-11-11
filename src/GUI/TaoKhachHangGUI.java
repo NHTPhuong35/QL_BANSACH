@@ -214,17 +214,18 @@ public class TaoKhachHangGUI extends JFrame {
                         String name = tfName.getText();
                         String phone = tfPhone.getText();
                         KhachHangBUS khBUS = new KhachHangBUS();
-                        KhachHangDTO kh = new KhachHangDTO(name, phone);
-                        kh.setMaKh(khBUS.TaoMaKH());
-                        SalesGUI.getTfMaKH().setText(kh.getMaKh());
-                        
-                        if (khBUS.ThemKhachHang(kh)) {
-                            SalesGUI.getTfMaKH().setText(kh.getMaKh());
-                            new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
-                            dispose();
-                        } else {
-                            new ShowDiaLog("Thêm khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
-                        }
+                        KhachHangDTO tmpKH = new KhachHangDTO(name, phone);
+                        tmpKH.setMaKh(khBUS.TaoMaKH());
+                        SalesGUI.getTfMaKH().setText(tmpKH.getMaKh());
+                        SalesGUI.setKhTao(tmpKH);
+                        dispose();
+//                        if (khBUS.ThemKhachHang(kh)) {
+//                            SalesGUI.getTfMaKH().setText(kh.getMaKh());
+//                            new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
+//                            dispose();
+//                        } else {
+//                            new ShowDiaLog("Thêm khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
+//                        }
                     }
                 }
             }
