@@ -40,7 +40,9 @@ public class TaoPhieuNhap extends JPanel {
 
         // Mã phiếu nhập
         addLabel("Mã phiếu nhập:", 0, 0, gbc);
-        maPhieuNhapField = addTextField(PhieuNhapBUS.getLatestMaPN(), 1, 0, gbc);
+        String maPN = PhieuNhapBUS.getLatestMaPN();
+        System.out.println(maPN);
+        maPhieuNhapField = addTextField(maPN, 1, 0, gbc);
         maPhieuNhapField.setEditable(false);
         
 
@@ -176,7 +178,6 @@ public class TaoPhieuNhap extends JPanel {
         
 
         xacNhanButton.addActionListener(e -> {
-            String maPN = PhieuNhapBUS.getLatestMaPN();
             String maNCC = (String) nhaCungCapComboBox.getSelectedItem();
             String tenDN = maNhanVienField.getText();
             String ngayNhapStr = ngayField.getText();

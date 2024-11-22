@@ -78,7 +78,7 @@ public class PhieuNhapGUI extends JPanel {
                     String today = java.time.LocalDate.now().toString();
                     System.out.println("Ngày lập: " + ngayLap.toString());
                     System.out.println("Hôm nay: " + today);
-                    if (ngayLap.toString() == today) {
+                    if (ngayLap.toString().equals(today)) {
                         // Show the SuaPhieuNhap panel with data
                         JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
                         suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
