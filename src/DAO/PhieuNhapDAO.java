@@ -411,6 +411,17 @@ public class PhieuNhapDAO {
         }
         preChiTiet.executeBatch();
 
+
+        String updateSachSql = "UPDATE sach SET SOLUONG = SOLUONG + ? WHERE MASACH = ?";
+        PreparedStatement updateSachPre = conn.getConn().prepareStatement(updateSachSql);
+        for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
+            updateSachPre.setInt(1, chiTiet.getSOLUONG());
+            updateSachPre.setString(2, chiTiet.getMASACH());
+            updateSachPre.addBatch();
+        }
+        updateSachPre.executeBatch();
+        
+
         conn.getConn().commit(); // Commit transaction
         conn.disconnect();
         return true;

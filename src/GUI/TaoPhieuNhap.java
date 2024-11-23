@@ -213,6 +213,7 @@ public class TaoPhieuNhap extends JPanel {
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
+            
         });
 
         huyButton.addActionListener(e -> {

@@ -54,10 +54,18 @@ public class PhieuNhapGUI extends JPanel {
                 taoPhieuNhapFrame.setSize(700, 700);
 
                 TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap(HomeGUI.tkUSER);
+                
                 taoPhieuNhapPanel.setMaNV("NV01");
+                taoPhieuNhapFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        loadData(); // Reload the table data after closing the tauaPhieuNhap frame
+                    }
+                });
 
                 taoPhieuNhapFrame.add(new TaoPhieuNhap(HomeGUI.tkUSER)); // Assuming TaoPhieuNhap is a JPanel
                 taoPhieuNhapFrame.setVisible(true);
+                
             }
         });
 
