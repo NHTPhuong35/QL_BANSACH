@@ -73,7 +73,7 @@ public class PhieuNhapDAO {
         String latestMaPN = null;
         try {
             conn.connect();
-            String sql = "SELECT MAPN FROM phieunhap ORDER BY NGAYNHAP DESC LIMIT 1";
+            String sql = "SELECT MAPN FROM phieunhap ORDER BY MAPN DESC LIMIT 1";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
