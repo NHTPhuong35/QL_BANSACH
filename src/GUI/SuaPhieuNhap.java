@@ -16,6 +16,7 @@ import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
 
 public class SuaPhieuNhap extends JPanel {
+
     private JTextField maPhieuNhapField, ngayField, maNhanVienField;
     private JComboBox<String> nhaCungCapComboBox;
     private List<String> suppliers = PhieuNhapBUS.getAllMaNCC();
@@ -52,7 +53,6 @@ public class SuaPhieuNhap extends JPanel {
         phieuNhapDTO.setTongTien(tongTien);
     }
 
-
     public SuaPhieuNhap() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -74,17 +74,29 @@ public class SuaPhieuNhap extends JPanel {
         // Nhà cung cấp
         addLabel("Nhà cung cấp:", 2, 1, gbc);
         nhaCungCapComboBox = new JComboBox<String>(suppliers.toArray(new String[0]));
+        nhaCungCapComboBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridx = 3;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
 
-
         // Book table
-        String[] columnNames = { "Tên sách", "Số lượng"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        bookTable = new JTable(tableModel); // Initialize bookTable with tableModel
-        bookTable.setFont(BASE.font);
+        String[] columnNames = {"Tên sách", "Số lượng"};
+        // Tạo model tùy chỉnh
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                // Chỉ cho phép chỉnh sửa cột thứ hai (index 1)
+                return column != 0;
+            }
+        };
+
+        bookTable = new JTable(tableModel); // Gắn model tùy chỉnh vào bảng
+        bookTable.setFont(BASE.font_frame);
         bookTable.setRowHeight(40); // thiết lập chiều cao các cột
+
+        bookTable.getTableHeader().setFont(BASE.font_header_frame);
+        bookTable.getTableHeader().setBackground(BASE.color_table_heaer);
+
         JScrollPane scrollPane = new JScrollPane(bookTable);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -94,13 +106,14 @@ public class SuaPhieuNhap extends JPanel {
         gbc.weighty = 1.0;
         add(scrollPane, gbc);
 
-
         // Buttons
         JPanel buttonPanel = new JPanel();
         xacNhanButton = new JButton("Xác nhận");
         xacNhanButton.setBackground(Color.decode("#56B7C0"));
+        xacNhanButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         huyButton = new JButton("Hủy");
         huyButton.setBackground(Color.decode("#56B7C0"));
+        huyButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         buttonPanel.add(xacNhanButton);
         buttonPanel.add(huyButton);
         gbc.gridx = 0;
@@ -127,7 +140,7 @@ public class SuaPhieuNhap extends JPanel {
                     phieuNhapDTO.getNgayNhap(),
                     phieuNhapDTO.getTongTien(),
                     phieuNhapDTO.getTrangThai());
-            
+
             // Add data to afterArrayList
             DefaultTableModel updatedTableModel = (DefaultTableModel) bookTable.getModel();
             int rowCount = updatedTableModel.getRowCount();
@@ -136,7 +149,7 @@ public class SuaPhieuNhap extends JPanel {
                 String soLuong = updatedTableModel.getValueAt(i, 1).toString();
                 afterArrayList.add(maSach + "/" + soLuong);
             }
-            
+
             // Calculate the difference between afterArrayList and befoArrayList
             ArrayList<String> diffArrayList = new ArrayList<>();
             for (String after : afterArrayList) {
@@ -167,9 +180,6 @@ public class SuaPhieuNhap extends JPanel {
                 phieuNhapBUS.capNhatChiTietPhieuNhap(phieuNhapDTO.getMaPN(), maSach, soLuong);
             }
 
-            
-
-
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
             PhieuNhapGUI phieuNhapGUI = new PhieuNhapGUI();
@@ -186,6 +196,7 @@ public class SuaPhieuNhap extends JPanel {
 
     private JTextField addTextField(String text, int x, int y, GridBagConstraints gbc) {
         JTextField field = new JTextField(text, 10);
+        field.setEditable(false);
         gbc.gridx = x;
         gbc.gridy = y;
         add(field, gbc);
@@ -199,8 +210,8 @@ public class SuaPhieuNhap extends JPanel {
 
         for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
             Object[] rowData = {
-                    chiTiet.getMASACH(),
-                    chiTiet.getSOLUONG()
+                chiTiet.getMASACH(),
+                chiTiet.getSOLUONG()
             };
             tableModel.addRow(rowData);
         }
@@ -210,8 +221,8 @@ public class SuaPhieuNhap extends JPanel {
         }
     }
 
-
     class ButtonRenderer extends JButton implements TableCellRenderer {
+
         private static final long serialVersionUID = 1L;
 
         public ButtonRenderer() {

@@ -40,7 +40,9 @@ public class TaoPhieuNhap extends JPanel {
 
         // Mã phiếu nhập
         addLabel("Mã phiếu nhập:", 0, 0, gbc);
-        maPhieuNhapField = addTextField(PhieuNhapBUS.getLatestMaPN(), 1, 0, gbc);
+        String maPN = PhieuNhapBUS.getLatestMaPN();
+        System.out.println(maPN);
+        maPhieuNhapField = addTextField(maPN, 1, 0, gbc);
         maPhieuNhapField.setEditable(false);
         
 
@@ -57,6 +59,7 @@ public class TaoPhieuNhap extends JPanel {
         // Nhà cung cấp
         addLabel("Nhà cung cấp:", 0, 1, gbc);
         nhaCungCapComboBox = new JComboBox<String>(suppliers.toArray(new String[0]));
+        nhaCungCapComboBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
@@ -68,6 +71,7 @@ public class TaoPhieuNhap extends JPanel {
         // Chọn sách button
         chonSachButton = new JButton("+ Chọn sách");
         chonSachButton.setBackground(Color.decode("#249171"));
+        chonSachButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridx = 4;
         gbc.gridy = 1;
         add(chonSachButton, gbc);
@@ -125,8 +129,10 @@ public class TaoPhieuNhap extends JPanel {
         JPanel buttonPanel = new JPanel();
         xacNhanButton = new JButton("Xác nhận");
         xacNhanButton.setBackground(Color.decode("#56B7C0"));
+        xacNhanButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         huyButton = new JButton("Hủy");
         huyButton.setBackground(Color.decode("#56B7C0"));
+        huyButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         buttonPanel.add(xacNhanButton);
         buttonPanel.add(huyButton);
 
@@ -176,7 +182,6 @@ public class TaoPhieuNhap extends JPanel {
         
 
         xacNhanButton.addActionListener(e -> {
-            String maPN = PhieuNhapBUS.getLatestMaPN();
             String maNCC = (String) nhaCungCapComboBox.getSelectedItem();
             String tenDN = maNhanVienField.getText();
             String ngayNhapStr = ngayField.getText();
@@ -212,6 +217,7 @@ public class TaoPhieuNhap extends JPanel {
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
+            
         });
 
         huyButton.addActionListener(e -> {

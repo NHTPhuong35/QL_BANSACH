@@ -35,6 +35,7 @@ public class PhieuNhapGUI extends JPanel {
         deleteButton = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa", "bin.png");
 
         refreshButton = createBtn("Làm mới", BASE.color_btLamMoi, "btnLamMoi", "refresh.png");
+        refreshButton.setPreferredSize(new Dimension(120,35));
 
         // Bố trí các nút theo dạng FlowLayout (căn ngang)
         toolBar = new JPanel();
@@ -54,10 +55,19 @@ public class PhieuNhapGUI extends JPanel {
                 taoPhieuNhapFrame.setSize(700, 700);
 
                 TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap(HomeGUI.tkUSER);
+                
                 taoPhieuNhapPanel.setMaNV("NV01");
+                taoPhieuNhapFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        loadData(); // Reload the table data after closing the tauaPhieuNhap frame
+                    }
+                });
 
                 taoPhieuNhapFrame.add(new TaoPhieuNhap(HomeGUI.tkUSER)); // Assuming TaoPhieuNhap is a JPanel
                 taoPhieuNhapFrame.setVisible(true);
+                taoPhieuNhapFrame.setLocationRelativeTo(null);
+                
             }
         });
 
@@ -78,7 +88,7 @@ public class PhieuNhapGUI extends JPanel {
                     String today = java.time.LocalDate.now().toString();
                     System.out.println("Ngày lập: " + ngayLap.toString());
                     System.out.println("Hôm nay: " + today);
-                    if (ngayLap.toString() == today) {
+                    if (ngayLap.toString().equals(today)) {
                         // Show the SuaPhieuNhap panel with data
                         JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
                         suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -98,6 +108,7 @@ public class PhieuNhapGUI extends JPanel {
 
                         suaPhieuNhapFrame.add(suaPhieuNhapPanel);
                         suaPhieuNhapFrame.setVisible(true);
+                        suaPhieuNhapFrame.setLocationRelativeTo(null);
                     } else {
                         JOptionPane.showMessageDialog(null, "Chỉ có thể sửa phiếu nhập trong ngày.");
                     }
