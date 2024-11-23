@@ -50,12 +50,12 @@ public class SanPhamBUS {
         return false;
     }
 
-    public boolean delete(String maSP, Boolean ktraPN) {
+    public boolean delete(String maSP) {
         for (int i = 0; i < dsSP.size(); i++) {
             if (dsSP.get(i).getMaSach().equals(maSP)) {
                 dsSP.remove(i);
                 SanPhamDAO spDAO = new SanPhamDAO();
-                return spDAO.xoaSanPham(maSP, ktraPN);
+                return spDAO.xoaSanPham(maSP);
             }
         }
         return false;

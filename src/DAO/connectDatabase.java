@@ -20,7 +20,7 @@ public class connectDatabase {
         dbName = "qlbs";
         driver = "com.mysql.cj.jdbc.Driver";
         userName = "root";
-        password = "quynh04";
+        password = "Phuong35";
 
     }
 

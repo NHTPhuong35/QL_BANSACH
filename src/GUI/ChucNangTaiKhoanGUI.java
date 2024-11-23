@@ -7,6 +7,7 @@ package GUI;
 import BUS.TaiKhoanBUS;
 import DTO.QuyenDTO;
 import DTO.TaiKhoanDTO;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -14,6 +15,7 @@ import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -31,11 +33,12 @@ import javax.swing.JTextField;
 public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
 
     private JLabel lblHeader;
-    private JPanel pnContent, pnThaoTac;
+    private JPanel pnContent, pnThaoTac, pnMain;
     private JPanel[] pnThuocTinh = new JPanel[10];
     private JTextField txtTenNV, txtDiaChi, txtSDT, txtEmail;
     private JPasswordField txtMatKhau, txtNhapLaiMK;
     private JComboBox<QuyenDTO> cbxQuyen;
+    private JComboBox<String> cbxState;
     private JButton btnXacNhan, btnHuy, btnLuu;
 
     private ArrayList<QuyenDTO> dsQuyen;
@@ -54,11 +57,15 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
     }
 
     private void init() {
-        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); // Sửa lại để dùng getContentPane
+        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(new Dimension(width, height));
         this.setUndecorated(true);
 
+        pnMain = new JPanel();
+        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS)); 
+        pnMain.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        
         lblHeader = new JLabel("Thêm tài khoản", JLabel.CENTER);
         lblHeader.setPreferredSize(new Dimension(width, 36));
         lblHeader.setMaximumSize(new Dimension(width, 36));
@@ -149,13 +156,14 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
         pnThaoTac.add(Box.createRigidArea(new Dimension(150, 0)));
 
-        this.add(lblHeader);
+        pnMain.add(lblHeader);
         for (int i = 0; i < data.length; i++) {
-            this.add(Box.createVerticalStrut(20));
-            this.add(pnThuocTinh[i]);
+            pnMain.add(Box.createVerticalStrut(20));
+            pnMain.add(pnThuocTinh[i]);
         }
-        this.add(Box.createVerticalStrut(20));
+        pnMain.add(Box.createVerticalStrut(20));
 
+        this.add(pnMain);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
@@ -165,27 +173,60 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         pnThaoTac.add(btnXacNhan);
         pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
         pnThaoTac.add(btnHuy);
-        this.add(pnThaoTac);
-        this.add(Box.createVerticalStrut(20));
+        pnMain.add(pnThaoTac);
+        pnMain.add(Box.createVerticalStrut(20));
         setVisible(true);
     }
 
     public void initEdit() {
         this.setSize(new Dimension(width, 450));
+        pnMain.removeAll();
+        
         lblHeader.setText("Sửa tài khoản");
-        pnThuocTinh[1].setVisible(false);
-        pnThuocTinh[6].setVisible(false);
+        pnMain.add(lblHeader);
+        pnMain.add(Box.createVerticalStrut(20));
+        pnMain.add(pnThuocTinh[0]); //Tên NV
+        
+        for (int i = 2; i <=5 ; i++) {
+            pnMain.add(Box.createVerticalStrut(20));
+            pnMain.add(pnThuocTinh[i]);
+        }
+        
+        JPanel pnState = new JPanel();
+        pnState.setPreferredSize(new Dimension(300, height_row));
+        pnState.setMaximumSize(new Dimension(300, height_row));
+        pnState.setLayout(new GridLayout(1, 1, 10, 10));  
+        
+        JLabel lblState = new JLabel("Trạng thái");
+        lblState.setFont(BASE.font_header);
+        
+        cbxState = new JComboBox<>();
+        cbxState.setPreferredSize(new Dimension(width_row, height_row));
+        cbxState.setMaximumSize(new Dimension(width_row, height_row));
+        cbxState.setFont(BASE.font);
+        cbxState.addItem("Đã khoá");
+        cbxState.addItem("Đang hoạt động");
+        pnState.add(lblState);
+        pnState.add(cbxState);
+        
+        pnMain.add(Box.createVerticalStrut(20));
+        pnMain.add(pnState);
+        pnMain.add(Box.createVerticalStrut(20));
         pnThaoTac.add(btnLuu);
         pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
         pnThaoTac.add(btnHuy);
-        this.add(pnThaoTac);
-        this.add(Box.createVerticalStrut(20));
+        pnMain.add(pnThaoTac);
+        pnMain.add(Box.createVerticalStrut(20));
 
         txtTenNV.setText(tkGUI.selectedTK.getTenNV());
         txtDiaChi.setText(tkGUI.selectedTK.getDiaChi());
         txtSDT.setText(tkGUI.selectedTK.getSDT());
         txtEmail.setText(tkGUI.selectedTK.getEmail());
         txtMatKhau.setText(tkGUI.selectedTK.getMatKhau());
+        String state = (tkGUI.selectedTK.getTrangThai() == 1) ? "Đang hoạt động" : "Đã khoá";
+        cbxState.setSelectedItem(state);
+        pnMain.repaint();
+        pnMain.revalidate();
     }
 
     public void addTK() {
@@ -236,7 +277,7 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         }
         TaiKhoanDTO tk = new TaiKhoanDTO(tkGUI.selectedTK.getTenDN(), txtTenNV.getText(),
                 txtDiaChi.getText(), txtSDT.getText(), txtEmail.getText(),
-                new String(txtMatKhau.getPassword()), tkGUI.selectedTK.getQuyen(), 1);
+                new String(txtMatKhau.getPassword()), tkGUI.selectedTK.getQuyen(), cbxState.getSelectedIndex());
         this.dispose();
         tkGUI.suaTaiKhoan(tk);
     }

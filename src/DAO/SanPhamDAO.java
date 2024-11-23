@@ -55,6 +55,8 @@ public class SanPhamDAO {
                     + "    ctsachloai cl ON s.MASACH = cl.MASACH\n"
                     + "LEFT JOIN \n"
                     + "    loai l ON cl.MALOAI = l.MALOAI\n"
+                    + "WHERE \n"
+                    + "    s.TRANGTHAI = 1\n"
                     + "GROUP BY \n"
                     + "    s.MASACH;";
             try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
@@ -237,29 +239,44 @@ public class SanPhamDAO {
         themHinhSanPham(sp);
     }
 
-    public boolean xoaSanPham(String maSach, Boolean ktraPN) {
+    public boolean xoaSanPham(String maSach) {
         try {
             conn.connect();
-            if (ktraPN) {
-                // Nếu ktraPN = true, chỉ cập nhật trạng thái về 0
-                String sql = "UPDATE sach SET TRANGTHAI = 0 WHERE MASACH = ?";
-                try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
-                    pre.setString(1, maSach);
-                    pre.executeUpdate();
+
+            // Kiểm tra mã sản phẩm có trong chi tiết phiếu nhập hay không
+            String sqlCheck = "SELECT COUNT(*) FROM chitietphieunhap WHERE MASACH = ?";
+            boolean isInChiTietPhieuNhap = false;
+
+            try (PreparedStatement preCheck = conn.getConn().prepareStatement(sqlCheck)) {
+                preCheck.setString(1, maSach);
+                try (ResultSet rs = preCheck.executeQuery()) {
+                    if (rs.next()) {
+                        isInChiTietPhieuNhap = rs.getInt(1) > 0;
+                    }
+                }
+            }
+
+            if (isInChiTietPhieuNhap) {
+                // Nếu mã sản phẩm có trong chi tiết phiếu nhập, cập nhật trạng thái về 0
+                String sqlUpdate = "UPDATE sach SET TRANGTHAI = 0 WHERE MASACH = ?";
+                try (PreparedStatement preUpdate = conn.getConn().prepareStatement(sqlUpdate)) {
+                    preUpdate.setString(1, maSach);
+                    preUpdate.executeUpdate();
                 }
             } else {
-                // Nếu ktraPN = false, xóa tất cả bản ghi liên quan
+                // Nếu không có trong chi tiết phiếu nhập, xóa tất cả bản ghi liên quan
                 xoaTacGiaSanPham(maSach);
                 xoaLoaiSanPham(maSach);
                 xoaHinhSanPham(maSach);
 
                 // Xóa từ bảng `sach`
-                String sql = "DELETE FROM sach WHERE MASACH = ?";
-                try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
-                    pre.setString(1, maSach);
-                    pre.executeUpdate();
+                String sqlDelete = "DELETE FROM sach WHERE MASACH = ?";
+                try (PreparedStatement preDelete = conn.getConn().prepareStatement(sqlDelete)) {
+                    preDelete.setString(1, maSach);
+                    preDelete.executeUpdate();
                 }
             }
+
             conn.disconnect();
             return true;
         } catch (Exception e) {

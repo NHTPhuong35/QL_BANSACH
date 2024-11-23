@@ -526,6 +526,7 @@ public class HomeBUS {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
                             view.getShowPanel().removeAll();
+                            sanphamgui.updateDatabase();
                             view.getShowPanel().add(sanphamgui, BorderLayout.CENTER);
                             sanphamgui.setVisible(true);
 

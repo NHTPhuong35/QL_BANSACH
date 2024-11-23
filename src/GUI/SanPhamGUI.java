@@ -72,6 +72,18 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         init();
     }
 
+    public void updateDatabase() {
+        spBUS = new SanPhamBUS();
+        dsSP = spBUS.getDsSP();
+        
+        pnRight.remove(jpSanPham);
+        tbSanPham = initContent(dsSP);
+        jpSanPham = new JScrollPane(tbSanPham);
+        pnRight.add(jpSanPham, BorderLayout.CENTER);
+        pnRight.revalidate();
+        pnRight.repaint();
+    }
+    
     public void init() {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(width, height));
@@ -493,10 +505,17 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                 JOptionPane.showMessageDialog(null,
                         "Hãy chọn sách cần xoá!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             } else {
+                
+                // kiểm tra 
+                if (selectedSP.getSoLuong() > 0) {
+                    new ShowDiaLog("Số lượng sách > 0 không thể xoá!", ShowDiaLog.ERROR_DIALOG);
+                    return;
+                }
+                
                 Object[] options = {"Có", "Không"};
                 int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn xoá sách này không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (spBUS.delete(selectedSP.getMaSach(), false)) {
+                    if (spBUS.delete(selectedSP.getMaSach())) {
                         new ShowDiaLog("Đã xoá sản phẩm thành công!", ShowDiaLog.SUCCESS_DIALOG);
                         reload(dsSP);
 

@@ -39,7 +39,7 @@ public class LoginBUS {
 				new ShowDiaLog("Không được để trống!", 1);
 				return;
 			}
-			if (taikhoan == null) {
+			if (taikhoan == null || taikhoan.getTrangThai()==2) {
 				new ShowDiaLog("Không tồn tại tài khoản!", 1);
 				return;
 			}
@@ -48,6 +48,10 @@ public class LoginBUS {
 			
 				return;
 			}
+                        if (taikhoan.getTrangThai()== 0){
+                            new ShowDiaLog("Tài khoản đã bị khoá", 1);
+                            return;
+                        }
                         HomeGUI homeGUI = new HomeGUI(taikhoan); 
 			HomeBUS home = new HomeBUS(homeGUI);
                         TaiKhoanDTO tk = homeGUI.tkUSER;
