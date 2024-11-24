@@ -12,7 +12,6 @@ import DTO.ChiTietHoaDonDTO;
 import DTO.HoaDonDTO;
 import DTO.KhachHangDTO;
 import DTO.SanPhamDTO;
-import DTO.TaiKhoanDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -47,11 +46,11 @@ import javax.swing.text.NumberFormatter;
 public class BanHangGUI extends JPanel {
 
     private String MaNV;
-    private JPanel pnProductList, pnPay, btChoose, btCustomerCreate, btPay;
+    private JPanel pnProductList, pnPay, btChoose, btCustomerCreate, btPay, btChonKH;
     private DefaultTableModel dtm;
     private JTable tbl;
     private JTextField tfMaKH, tfMaNv, tfTongCong, tfGiamGia, tfTongHD;
-    private KhachHangDTO KhTao;
+//    private KhachHangDTO KhTao;
     private ArrayList<ChiTietHoaDonDTO> billList = new ArrayList<>();
     private ArrayList<ChiTietHoaDonDTO> billDetailList = new ArrayList<>();
 
@@ -211,6 +210,7 @@ public class BanHangGUI extends JPanel {
         tfMaKH.setFont(BASE.font);
         tfMaKH.setPreferredSize(new Dimension(800, 35));
         tfMaKH.setMaximumSize(new Dimension(800, 35));
+        tfMaKH.setEnabled(false);
         btCustomerCreate = new JPanel();
         btCustomerCreate.setMaximumSize(new Dimension(40, 40));
         btCustomerCreate.setLayout(new BoxLayout(btCustomerCreate, BoxLayout.X_AXIS));
@@ -219,17 +219,36 @@ public class BanHangGUI extends JPanel {
         btCustomerCreate.setCursor(new Cursor(Cursor.HAND_CURSOR));
         JLabel lblCustomer = new JLabel("Tạo mới");
         lblCustomer.setFont(BASE.font);
-        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/person.png"));
+        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/btAdd.png"));
         Image CustomerImg = CustomerIcon.getImage();
         Image scaledCustomerImg = CustomerImg.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon scaledCustomerIcon = new ImageIcon(scaledCustomerImg);
         JLabel lblCustomerImage = new JLabel(scaledCustomerIcon);
         btCustomerCreate.add(lblCustomer);
         btCustomerCreate.add(lblCustomerImage);
+
+        btChonKH = new JPanel();
+        btChonKH.setMaximumSize(new Dimension(40, 40));
+        btChonKH.setLayout(new BoxLayout(btChonKH, BoxLayout.X_AXIS));
+        btChonKH.setBackground(Color.decode("#F5B041"));
+        btChonKH.setBorder(new EmptyBorder(0, 10, 0, 10));
+        btChonKH.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JLabel lblChonKH = new JLabel("Chọn KH");
+        lblChonKH.setFont(BASE.font);
+        ImageIcon KhIcon = new ImageIcon(getClass().getResource("/Image/person.png"));
+        Image khImg = KhIcon.getImage();
+        Image scaledKhImg = khImg.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon scaledkhIcon = new ImageIcon(scaledKhImg);
+        JLabel lblKhImage = new JLabel(scaledkhIcon);
+        btChonKH.add(lblChonKH);
+        btChonKH.add(lblKhImage);
+
         JPanel pnkhachhang = new JPanel();
         pnkhachhang.setLayout(new BoxLayout(pnkhachhang, BoxLayout.X_AXIS));
         pnkhachhang.add(tfMaKH);
-        pnkhachhang.add(Box.createVerticalStrut(5));
+        pnkhachhang.add(Box.createVerticalStrut(10));
+        pnkhachhang.add(btChonKH);
+        pnkhachhang.add(Box.createVerticalStrut(10));
         pnkhachhang.add(btCustomerCreate);
 
         JPanel pnKH = new JPanel();
@@ -272,6 +291,7 @@ public class BanHangGUI extends JPanel {
         btChoose.addMouseListener(commonMouseListener);
         btCustomerCreate.addMouseListener(commonMouseListener);
         btPay.addMouseListener(commonMouseListener);
+        btChonKH.addMouseListener(commonMouseListener);
 
         tfMaKH.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
@@ -306,7 +326,9 @@ public class BanHangGUI extends JPanel {
                     spGUI.setVisible(true);
                 } else if (clickedPanel == btCustomerCreate) {
                     TaoKhachHangGUI addCustomer = new TaoKhachHangGUI(BanHangGUI.this);
-                } else if (clickedPanel == btPay) {
+                }else if(clickedPanel == btChonKH){
+                    ChonKhachHangGUI kh = new ChonKhachHangGUI(BanHangGUI.this);
+                }else if (clickedPanel == btPay) {
                     if (tfMaKH.getText().isEmpty()) {
                         new ShowDiaLog("Vui lòng nhập mã khách hàng!", ShowDiaLog.ERROR_DIALOG);
                         return;
@@ -319,19 +341,7 @@ public class BanHangGUI extends JPanel {
 
                     KhachHangBUS khBUS = new KhachHangBUS();
                     String MaKH = tfMaKH.getText();
-                    KhachHangDTO khDTO;
-
-                    if (KhTao != null) {
-                        khBUS.ThemKhachHang(KhTao);
-                        khDTO = KhTao;
-                    } else {
-                        khDTO = khBUS.layKHTheoMa(MaKH);
-                        if (khDTO == null) {
-                            JOptionPane.showMessageDialog(null, "Khách hàng không tồn tại!",
-                                    "Thông báo", JOptionPane.ERROR_MESSAGE);
-                            return;
-                        }
-                    }
+                    KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
 
                     double TongTien = tinhTongTien();
                     double diemtichluy = khDTO.getDiemTichluy();
@@ -380,6 +390,8 @@ public class BanHangGUI extends JPanel {
                     pn.setBackground(Color.decode("#4988B2"));
                 } else if (pn == btPay) {
                     pn.setBackground(Color.decode("#DAB378"));
+                }else if (pn == btChonKH) {
+                    pn.setBackground(Color.decode("#D68910"));
                 }
             }
 
@@ -392,6 +404,9 @@ public class BanHangGUI extends JPanel {
                     pn.setBackground(BASE.color_header_tbl);
                 } else if (pn == btCustomerCreate) {
                     pn.setBackground(Color.decode("#5DADE2"));
+                }
+                else if (pn == btChonKH) {
+                    pn.setBackground(Color.decode("#F5B041"));
                 }
             }
         };
@@ -532,13 +547,13 @@ public class BanHangGUI extends JPanel {
         }
     }
 
-    public KhachHangDTO getKhTao() {
-        return KhTao;
-    }
-
-    public void setKhTao(KhachHangDTO KhTao) {
-        this.KhTao = KhTao;
-    }
+//    public KhachHangDTO getKhTao() {
+//        return KhTao;
+//    }
+//
+//    public void setKhTao(KhachHangDTO KhTao) {
+//        this.KhTao = KhTao;
+//    }
 
     public static void main(String[] args) {
         JFrame f = new JFrame();

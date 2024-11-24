@@ -190,7 +190,7 @@ public class KhachHangGUI extends JPanel {
 
                             KhachHangBUS khBUS = new KhachHangBUS();
                             KhachHangDTO kh = khBUS.layKHTheoMa(maKhachHang);
-
+                            
                             new SuaKhachHangGUI(kh,KhachHangGUI.this);
                         } else {
                             new ShowDiaLog("Vui lòng chọn một khách hàng để sửa", ShowDiaLog.ERROR_DIALOG);
@@ -243,9 +243,6 @@ public class KhachHangGUI extends JPanel {
         return btEdit;
     }
 
-//    public JButton getBtAdd() {
-//        return btAdd;
-//    }
     
 
     public static void main(String[] agrs) {
