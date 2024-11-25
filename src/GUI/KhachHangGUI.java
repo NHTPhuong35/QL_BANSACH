@@ -68,14 +68,10 @@ public class KhachHangGUI extends JPanel {
 
         MouseAdapter commonMouseListener = createCommonMouseListener();
 
-//        btAdd = createButtonWithIcon("Thêm", "./src/image/btAdd.png", BASE.color_btAdd, BASE.font, new Dimension(100,35));
-//        btAdd.addMouseListener(commonMouseListener);
 
         btEdit = createButtonWithIcon("Sửa", "./src/image/btEdit.png",BASE.color_btEdit, BASE.font, new Dimension(100,35));
         btEdit.addMouseListener(commonMouseListener);
 
-//        pnBtn.add(btAdd);
-//        pnBtn.add(Box.createHorizontalStrut(30));
         pnBtn.add(btEdit);
 
         JLabel lblTimKiem = new JLabel("Tìm kiếm");

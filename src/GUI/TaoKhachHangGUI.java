@@ -215,7 +215,7 @@ public class TaoKhachHangGUI extends JFrame {
                         KhachHangDTO kh = new KhachHangDTO(name, phone);
                         kh.setMaKh(khBUS.TaoMaKH());
 
-                        if (!khBUS.checkPhoneExits(phone)) {
+                        if (!khBUS.validatePhone(phone)) {
                             khBUS.ThemKhachHang(kh);
                             SalesGUI.getTfMaKH().setText(kh.getMaKh());
                             new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);

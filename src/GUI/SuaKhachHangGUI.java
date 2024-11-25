@@ -167,7 +167,7 @@ public class SuaKhachHangGUI extends JFrame {
         } else if (!validNamePattern.matcher(name).matches()) {
             errorName.setText("Tên không được chứa ký tự đặc biệt.");
         } else {
-            errorName.setText(" ");
+            errorName.setText("");
         }
     }
 
@@ -186,7 +186,7 @@ public class SuaKhachHangGUI extends JFrame {
         } else if (phone.length() != 10) {
             errorPhone.setText("Số điện thoại có độ dài 10 chữ số.");
         } else {
-            errorPhone.setText(" ");
+            errorPhone.setText("");
         }
     }
 
@@ -220,15 +220,16 @@ public class SuaKhachHangGUI extends JFrame {
                         String phone = tfPhone.getText();
                         KhachHangBUS khBUS = new KhachHangBUS();
                         boolean success = true;
-                        if (khBUS.checkPhoneExits(phone) && !phone.equals(phoneNumber)) {
+                        if (khBUS.validatePhone(phone) && !phone.equals(phoneNumber)) {
                             success = false;
                         }
                         if (success) {
                             khDTO.setTenKh(name);
                             khDTO.setSdt(phone);
+                            khGUI.EditRow(khDTO);
                             if (khBUS.SuaKhachHang(khDTO)) {
                                 dispose();
-                                new ShowDiaLog("<html>Sửa khách hàng thành công</html>", ShowDiaLog.ERROR_DIALOG);
+                                new ShowDiaLog("<html>Sửa khách hàng thành công</html>", ShowDiaLog.SUCCESS_DIALOG);
                             }
                         } else {
                             new ShowDiaLog("<html>Sửa khách hàng thất bại <br>Số điện thoại đã tồn tại</html> ", ShowDiaLog.ERROR_DIALOG);
