@@ -84,7 +84,7 @@ public class KhachHangDAO {
             e.printStackTrace();
         }
     }
-    
+
     public String TimTenKhachHangWithId(String makh) {
         String query = "SELECT TENKH FROM khachhang WHERE MAKH = ?";
         String tenkh = "";
@@ -104,7 +104,24 @@ public class KhachHangDAO {
         return tenkh;
     }
 
-    
+    public boolean checkPhoneExits(String phone) {
+        try {
+            conn.connect();
+            String sql = "SELECT COUNT(*) FROM KHACHHANG WHERE SDT = ?";
+            try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
+                pre.setString(1, phone);
+                ResultSet rs = pre.executeQuery();
+                if(rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+            conn.disconnect();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     public static void main(String[] agrs) {
         KhachHangDAO dao = new KhachHangDAO();
 //        ArrayList<KhachHangDTO> ds = dao.dsKhachHang();
@@ -114,4 +131,3 @@ public class KhachHangDAO {
         dao.CapNhatDiemTL("KH01", 120);
     }
 }
-

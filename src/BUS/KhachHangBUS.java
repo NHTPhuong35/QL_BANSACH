@@ -26,13 +26,9 @@ public class KhachHangBUS {
         ds = dao.dsKhachHang();
     }
 
-    public boolean checkPhoneExits(String sdt) {
-        for (KhachHangDTO kh : ds) {
-            if (kh.getSdt().equals(sdt)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean validatePhone(String sdt) {
+        KhachHangDAO dao = new KhachHangDAO();
+        return dao.checkPhoneExits(sdt);
     }
 
     public String TaoMaKH() {
