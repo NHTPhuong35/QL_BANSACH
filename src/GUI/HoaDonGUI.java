@@ -316,7 +316,6 @@ public class HoaDonGUI extends JPanel {
                         }
 
                         reload(filteredList);
-
                     } else if (clickedPanel == btRefresh) {
                         Date currentDate = new Date();
                         startDate.setValue(currentDate);
