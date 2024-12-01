@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -171,6 +172,17 @@ public class PhieuNhapGUI extends JPanel {
         lblSearch.setFont(BASE.font);
         searchPanel.add(lblSearch);
         searchPanel.add(searchField);
+
+        // Add action listener to the searchField
+        searchField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchText = searchField.getText().toLowerCase();
+                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+                table.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+            }
+        });
 
         // Tạo bảng cuộn cho bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(table);
