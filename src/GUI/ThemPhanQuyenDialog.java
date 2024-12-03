@@ -25,9 +25,18 @@ public class ThemPhanQuyenDialog extends JDialog {
         InitComponent();
         them.addActionListener((ActionEvent e) -> {
             getInput = nhaptenphanquyenField.getText();
-            phanquyenBUS.ThemQuyen(getInput);
-            System.out.println(getInput);
-            dispose();
+            if(getInput.equals("")){
+                JOptionPane.showMessageDialog(null, "Không được để trống tên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return ;
+            }
+            if(phanquyenBUS.ThemQuyen(getInput)){
+                System.out.println(getInput);
+                JOptionPane.showMessageDialog(null, "Thêm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                dispose();
+            }else{
+                JOptionPane.showMessageDialog(null, "Quyền đã tồn tại!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("Lỗi khi thêm");
+            }
         });
     }
 
