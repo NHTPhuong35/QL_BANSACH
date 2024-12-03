@@ -160,6 +160,10 @@ public class TaoPhieuNhap extends JPanel {
                     double donGia = giaNhap * (1 + loiNhuan);
                     // Get giá bìa
                     double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(row, 0).toString());
+                    if (giaNhap >= giaBia) {
+                        JOptionPane.showMessageDialog(this, "Nên nhập giá nhập bé hơn hoặc bằng giá bìa: " + giaBia, "Cảnh báo",
+                                JOptionPane.WARNING_MESSAGE);
+                    }
                     if (donGia >= giaBia) {
                         donGia = giaBia;
                     }
