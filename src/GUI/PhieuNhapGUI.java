@@ -123,15 +123,23 @@ public class PhieuNhapGUI extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    String maPN = (String) table.getValueAt(selectedRow, 0);
-                    PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-                    phieuNhapBUS.XoaPhieuNhap(maPN);
-                    model.removeRow(selectedRow);
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String maPN = (String) table.getValueAt(selectedRow, 0);
+                Date ngayLap = (Date) table.getValueAt(selectedRow, 3);
+
+                // Check if today is the same day as ngayLap
+                String today = java.time.LocalDate.now().toString();
+                if (ngayLap.toString().equals(today)) {
+                PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+                phieuNhapBUS.XoaPhieuNhap(maPN);
+                model.removeRow(selectedRow);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xóa.");
+                JOptionPane.showMessageDialog(null, "Chỉ có thể xóa phiếu nhập trong ngày.");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xóa.");
+            }
             }
         });
 
