@@ -21,13 +21,17 @@ public class ThemPhanQuyenDialog extends JDialog {
     public ThemPhanQuyenDialog(JPanel parent) {
         phanquyenBUS = new PhanQuyenBUS();
         phanquyenGUI = new PhanQuyenGUI();
-
+        String regex = "^[a-zA-Z\\s]+$";
         InitComponent();
         them.addActionListener((ActionEvent e) -> {
             getInput = nhaptenphanquyenField.getText();
             if(getInput.equals("")){
                 JOptionPane.showMessageDialog(null, "Không được để trống tên", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
                 return ;
+            }
+            if(!getInput.matches(regex)){
+                JOptionPane.showMessageDialog(null, "Quyền chứa kí tự không hợp lệ", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+                return;
             }
             if(phanquyenBUS.ThemQuyen(getInput)){
                 System.out.println(getInput);
