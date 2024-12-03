@@ -31,7 +31,7 @@ public class TaiKhoanDTO {
     public QuyenDTO getQuyen() {
         return quyen;
     }
-    
+
     public void setQuyen(QuyenDTO quyen) {
         this.quyen = quyen;
     }
@@ -91,24 +91,24 @@ public class TaiKhoanDTO {
     public void setTrangThai(int trangThai) {
         this.trangThai = trangThai;
     }
-    
-	public boolean checkPassword(String password) {
-		return this.matKhau.equals(password);
-	}
-	
-	public static TaiKhoanDTO getFromResultSet(ResultSet rs) throws SQLException {
-		TaiKhoanDTO tk = new TaiKhoanDTO();
-                QuyenDTO quyen = new QuyenDTO();
-                QuyenDAO quyendao = new QuyenDAO();
-                quyen = quyendao.getquyen(rs.getString("MAQUYEN"));
-		tk.setTenDN(rs.getString("TENDN"));
-		tk.setTenNV(rs.getString("TENNV"));
-		tk.setDiaChi(rs.getString("DIACHI"));
-                tk.setQuyen(quyen);
-		tk.setSDT(rs.getString("SDT"));
-		tk.setEmail(rs.getString("EMAIL"));
-		tk.setMatKhau(rs.getString("MATKHAU"));
-		tk.setTrangThai(rs.getInt("TRANGTHAI"));
-		return tk;
-	}
+
+    public boolean checkPassword(String password) {
+        return this.matKhau.equals(password);
+    }
+
+    public static TaiKhoanDTO getFromResultSet(ResultSet rs) throws SQLException {
+        TaiKhoanDTO tk = new TaiKhoanDTO();
+        QuyenDTO quyen = new QuyenDTO();
+        QuyenDAO quyendao = new QuyenDAO();
+        quyen = quyendao.getquyen(rs.getString("MAQUYEN"));
+        tk.setTenDN(rs.getString("TENDN"));
+        tk.setTenNV(rs.getString("TENNV"));
+        tk.setDiaChi(rs.getString("DIACHI"));
+        tk.setQuyen(quyen);
+        tk.setSDT(rs.getString("SDT"));
+        tk.setEmail(rs.getString("EMAIL"));
+        tk.setMatKhau(rs.getString("MATKHAU"));
+        tk.setTrangThai(rs.getInt("TRANGTHAI"));
+        return tk;
+    }
 }
