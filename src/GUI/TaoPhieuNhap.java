@@ -44,7 +44,6 @@ public class TaoPhieuNhap extends JPanel {
         System.out.println(maPN);
         maPhieuNhapField = addTextField(maPN, 1, 0, gbc);
         maPhieuNhapField.setEditable(false);
-        
 
         // Ngày
         addLabel("Ngày:", 2, 0, gbc);
@@ -67,6 +66,16 @@ public class TaoPhieuNhap extends JPanel {
         // Lợi nhuận
         addLabel("Lợi nhuận:", 2, 1, gbc);
         loiNhuanField = addTextField("0", 3, 1, gbc);
+        loiNhuanField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                char c = evt.getKeyChar();
+                if (!Character.isDigit(c) && c != '.') {
+                    evt.consume(); // Ignore non-digit characters
+                    JOptionPane.showMessageDialog(null, "Chỉ được nhập số!", "Lỗi nhập liệu",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
 
         // Chọn sách button
         chonSachButton = new JButton("+ Chọn sách");
@@ -116,7 +125,6 @@ public class TaoPhieuNhap extends JPanel {
         gbc.weighty = 0;
         addLabel("Tổng tiền:", 2, 3, gbc);
         tongTienField = addTextField("0", 3, 3, gbc);
-        
 
         // Center the Tổng tiền field
         gbc.gridx = 3;
@@ -154,36 +162,41 @@ public class TaoPhieuNhap extends JPanel {
                 int row = e.getFirstRow();
                 int column = e.getColumn();
                 if (column == 1 || column == 2) { // Only update if quantity or price is changed
-                    int soLuong = Integer.parseInt(model.getValueAt(row, 1).toString());
-                    double giaNhap = Double.parseDouble(model.getValueAt(row, 2).toString());
-                    double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
-                    double donGia = giaNhap * (1 + loiNhuan);
-                    // Get giá bìa
-                    double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(row, 0).toString());
-                    if (giaNhap > giaBia) {
-                        JOptionPane.showMessageDialog(this, "Nên nhập giá nhập bé hơn hoặc bằng giá bìa: " + giaBia, "Cảnh báo",
-                                JOptionPane.WARNING_MESSAGE);
-                    }
-                    if (donGia >= giaBia) {
-                        donGia = giaBia;
-                    }
-                    double thanhTien = soLuong * giaNhap;
+                    try {
+                        int soLuong = Integer.parseInt(model.getValueAt(row, 1).toString());
+                        double giaNhap = Double.parseDouble(model.getValueAt(row, 2).toString());
+                        double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
+                        double donGia = giaNhap * (1 + loiNhuan);
+                        // Get giá bìa
+                        double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(row, 0).toString());
+                        if (giaNhap > giaBia) {
+                            JOptionPane.showMessageDialog(this, "Nên nhập giá nhập bé hơn hoặc bằng giá bìa: " + giaBia,
+                                    "Cảnh báo",
+                                    JOptionPane.WARNING_MESSAGE);
+                        }
+                        if (donGia >= giaBia) {
+                            donGia = giaBia;
+                        }
+                        double thanhTien = soLuong * giaNhap;
 
-                    model.setValueAt(donGia, row, 3);
-                    model.setValueAt(thanhTien, row, 4);
+                        model.setValueAt(donGia, row, 3);
+                        model.setValueAt(thanhTien, row, 4);
 
-                    // Update tổng tiền
-                    double tongTien = 0;
-                    for (int i = 0; i < model.getRowCount(); i++) {
-                        tongTien += Double.parseDouble(model.getValueAt(i, 4).toString());
+                        // Update tổng tiền
+                        double tongTien = 0;
+                        for (int i = 0; i < model.getRowCount(); i++) {
+                            tongTien += Double.parseDouble(model.getValueAt(i, 4).toString());
+                        }
+                        tongTienField.setText(String.valueOf(tongTien));
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ cho số lượng và giá nhập.",
+                                "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
                     }
-                    tongTienField.setText(String.valueOf(tongTien));
                 }
             }
         });
 
         List<ChiTietPhieuNhapDTO> chiTietPhieuNhapDTOs = new ArrayList<>();
-        
 
         xacNhanButton.addActionListener(e -> {
             String maNCC = (String) nhaCungCapComboBox.getSelectedItem();
@@ -199,13 +212,16 @@ public class TaoPhieuNhap extends JPanel {
                 String tenSach = (String) model.getValueAt(i, 0);
                 int soLuong = Integer.parseInt(model.getValueAt(i, 1).toString());
                 double giaNhap = Double.parseDouble(model.getValueAt(i, 2).toString());
+                if (soLuong <= 0 || giaNhap <= 0) {
+                    JOptionPane.showMessageDialog(this, "Số lượng và giá nhập phải lớn hơn 0.", "Lỗi nhập liệu",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 double thanhTien = Double.parseDouble(model.getValueAt(i, 4).toString());
                 chiTietPhieuNhapDTOs.add(new ChiTietPhieuNhapDTO(maPN, tenSach, soLuong, thanhTien, giaNhap));
             }
             PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
             phieuNhapBUS.addPhieuNhapWithDetails(phieuNhapDTO, new ArrayList<>(chiTietPhieuNhapDTOs));
-            
-
 
             for (int j = 0; j < model.getRowCount(); j++) {
                 double giaNhap = Double.parseDouble(model.getValueAt(j, 2).toString());
@@ -221,7 +237,7 @@ public class TaoPhieuNhap extends JPanel {
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
-            
+
         });
 
         huyButton.addActionListener(e -> {
@@ -316,7 +332,7 @@ public class TaoPhieuNhap extends JPanel {
                 "Xóa"
         });
     }
-    
+
     // Custom cell renderer for numeric columns
     private DefaultTableCellRenderer numberRenderer = new DefaultTableCellRenderer() {
         @Override
@@ -325,7 +341,7 @@ public class TaoPhieuNhap extends JPanel {
                 if (value instanceof Integer) {
                     setText(String.valueOf(value));
                 } else {
-                    setText(String.format("%.0f", ((Number)value).doubleValue()));
+                    setText(String.format("%.0f", ((Number) value).doubleValue()));
                 }
             } else {
                 super.setValue(value);
@@ -333,14 +349,14 @@ public class TaoPhieuNhap extends JPanel {
         }
     };
 
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tạo Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(700, 700);
             QuyenDTO q = new QuyenDTO("QL", "Quản lý");
-            TaiKhoanDTO tkDTO = new TaiKhoanDTO("NV07", "Phương123", "Quận 8", "0983456789", "Phuong579@gmail.com", "55345678", q, 0);
+            TaiKhoanDTO tkDTO = new TaiKhoanDTO("NV07", "Phương123", "Quận 8", "0983456789", "Phuong579@gmail.com",
+                    "55345678", q, 0);
             frame.add(new TaoPhieuNhap(tkDTO));
             frame.setVisible(true);
         });
