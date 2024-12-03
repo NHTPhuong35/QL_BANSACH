@@ -248,33 +248,39 @@ public class HoaDonGUI extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getSource() instanceof JButton) {
                     JButton clickedPanel = (JButton) e.getSource();
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                     if (clickedPanel == btDel) {
-                        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn hủy hóa đơn?", "Xác nhận hủy hóa đơn", JOptionPane.YES_NO_OPTION);
-                        if (choice == JOptionPane.YES_OPTION) {
-                            Date currentDate = new Date();
-                            String formattedCurrentDate = formatter.format(currentDate);
+                        int selectedRow = tbl.getSelectedRow();
+                        if (selectedRow == -1) { // Nếu chưa chọn dòng
+                            JOptionPane.showMessageDialog(null, "Vui lòng chọn một hóa đơn để hủy!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            // Hiển thị hộp thoại xác nhận
+                            int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn hủy hóa đơn?", "Xác nhận hủy hóa đơn", JOptionPane.YES_NO_OPTION);
+                            if (choice == JOptionPane.YES_OPTION) {
+                                Date currentDate = new Date();
+                                String formattedCurrentDate = formatter.format(currentDate);
 
-                            int selectedRow = tbl.getSelectedRow();
-                            if (selectedRow != -1) {
+                                // Lấy thông tin từ dòng đã chọn
                                 String ngayHDStr = dtm.getValueAt(selectedRow, 4).toString();
-                                if (ngayHDStr.equals(formattedCurrentDate)) {
+                                if (ngayHDStr.equals(formattedCurrentDate)) { // Chỉ hủy hóa đơn trong ngày
                                     HoaDonBUS bus = new HoaDonBUS();
                                     String soHD = dtm.getValueAt(selectedRow, 0).toString();
 
-                                    if (bus.CapNhatTrangThaiHD(soHD)) {
+                                    if (bus.CapNhatTrangThaiHD(soHD)) { // Cập nhật trạng thái hóa đơn
                                         ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS(soHD);
                                         ArrayList<ChiTietHoaDonDTO> dsctHD = cthdBUS.getDscthd();
                                         HoaDonDTO hdDTO = bus.getHD(soHD);
-                                        editStatus(hdDTO);
+
+                                        editStatus(hdDTO); // Cập nhật trạng thái hóa đơn trong giao diện
                                         for (ChiTietHoaDonDTO ct : dsctHD) {
                                             SanPhamBUS spBUS = new SanPhamBUS();
                                             SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
                                             int sl = spDTO.getSoLuong() + ct.getSoLuong();
-                                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl); // Cập nhật số lượng sản phẩm
                                         }
                                     }
                                 } else {
+                                    // Thông báo nếu hóa đơn không được phép hủy vì không phải trong ngày
                                     new ShowDiaLog("Chỉ được phép hủy hóa đơn trong Ngày", ShowDiaLog.ERROR_DIALOG);
                                 }
                             }
@@ -309,9 +315,7 @@ public class HoaDonGUI extends JPanel {
                             }
                         }
 
-                        // Reload the table with the filtered list
                         reload(filteredList);
-
                     } else if (clickedPanel == btRefresh) {
                         Date currentDate = new Date();
                         startDate.setValue(currentDate);
@@ -320,10 +324,13 @@ public class HoaDonGUI extends JPanel {
                         tfSearch.setText("");
                         reload(billList);
                     } else if (clickedPanel == btPrint) {
-                        int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn in hóa đơn?", "Xác nhận in hóa đơn", JOptionPane.YES_NO_OPTION);
-                        if (choice == JOptionPane.YES_OPTION) {
-                            PDFExporter exporter = new PDFExporter();
-                            exporter.exportInvoiceToPDF(billPrint);
+                        int selectedRow = tbl.getSelectedRow();
+                        if (selectedRow != -1) {
+                            int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn in hóa đơn?", "Xác nhận in hóa đơn", JOptionPane.YES_NO_OPTION);
+                            if (choice == JOptionPane.YES_OPTION) {
+                                PDFExporter exporter = new PDFExporter();
+                                exporter.exportInvoiceToPDF(billPrint);
+                            }
                         }
                     }
                 }

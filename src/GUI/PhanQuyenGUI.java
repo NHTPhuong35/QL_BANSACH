@@ -82,7 +82,7 @@ public class PhanQuyenGUI extends JPanel {
         timquyen = new JLabel("Tìm quyền");
         phanquyenBUS = new PhanQuyenBUS();
         
-        String[] options = phanquyenBUS.getTenPhanQuyenList();
+        String[] options = phanquyenBUS.getTenQuyenList();
         comboBox = new JComboBox<>(options);
         
         themquyen.addActionListener((ActionEvent e) -> {
@@ -92,7 +92,7 @@ public class PhanQuyenGUI extends JPanel {
             phanquyendialog.addWindowListener(new WindowAdapter() {
                 @Override
                 public void windowClosed(WindowEvent e) {
-                    String[] updatedOptions = phanquyenBUS.getTenPhanQuyenList();
+                    String[] updatedOptions = phanquyenBUS.getTenQuyenList();
                     comboBox.removeAllItems();
                     for (String option : updatedOptions) {
                         comboBox.addItem(option); // Thêm các mục mới
@@ -149,7 +149,7 @@ public class PhanQuyenGUI extends JPanel {
         String[] columnNames = {"","Xem", "Thêm", "Xóa", "Sửa"};
         
         String selectedRole = (String) comboBox.getSelectedItem();
-        String maphanquyen = phanquyenBUS.getMaPhanQuyenByTenPhanQuyen(selectedRole);
+        String maphanquyen = phanquyenBUS.getMaTenQuyenByTenPhanQuyen(selectedRole);
         Object[][] data = phanquyenBUS.getPhanQuyenListByRole(maphanquyen);
         
         DefaultTableModel model = new DefaultTableModel(data, columnNames) {
@@ -177,7 +177,7 @@ public class PhanQuyenGUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 String selectedRole = (String) comboBox.getSelectedItem();
-                String maphanquyen = phanquyenBUS.getMaPhanQuyenByTenPhanQuyen(selectedRole);
+                String maphanquyen = phanquyenBUS.getMaTenQuyenByTenPhanQuyen(selectedRole);
                 Object[][] newData = phanquyenBUS.getPhanQuyenListByRole(maphanquyen);
 
                 model.setDataVector(newData, columnNames);
@@ -207,7 +207,7 @@ public class PhanQuyenGUI extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 
                 String selectedRole = (String) comboBox.getSelectedItem();
-                String maphanquyen = phanquyenBUS.getMaPhanQuyenByTenPhanQuyen(selectedRole);
+                String maphanquyen = phanquyenBUS.getMaTenQuyenByTenPhanQuyen(selectedRole);
 
                 int row = table.rowAtPoint(e.getPoint());
                 int column = table.columnAtPoint(e.getPoint());

@@ -26,13 +26,9 @@ public class KhachHangBUS {
         ds = dao.dsKhachHang();
     }
 
-    public boolean checkPhoneExits(String sdt) {
-        for (KhachHangDTO kh : ds) {
-            if (kh.getSdt().equals(sdt)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean validatePhone(String sdt) {
+        KhachHangDAO dao = new KhachHangDAO();
+        return dao.checkPhoneExits(sdt);
     }
 
     public String TaoMaKH() {
@@ -77,31 +73,13 @@ public class KhachHangBUS {
     }
 
     public boolean ThemKhachHang(KhachHangDTO kh) {
-        String name = kh.getTenKh();
-        String phone = kh.getSdt();
-        String nameRegex = "^(?! )[\\p{L} .'-]{1,35}(?<! )$"; 
-        String phoneRegex = "^0[0-9]{9}$"; 
-
-        if (phone != null && phone.matches(phoneRegex) && !checkPhoneExits(phone)) {
-            if (name != null && name.matches(nameRegex)) {
-                KhachHangDAO khDAO = new KhachHangDAO();
-                return khDAO.ThemKhachHang(kh);
-            }
-        }
-        return false;
+        KhachHangDAO khDAO = new KhachHangDAO();
+        return khDAO.ThemKhachHang(kh);
     }
 
     public boolean SuaKhachHang(KhachHangDTO kh) {
-        String name = kh.getTenKh();
-        String phone = kh.getSdt();
-        String nameRegex = "^(?! )[\\p{L} .'-]{1,35}(?<! )$";
-        String phoneRegex = "^0[0-9]{9}$";
-
-        if (name != null && name.matches(nameRegex) && phone.matches(phoneRegex) && phone != null) {
-            KhachHangDAO khDAO = new KhachHangDAO();
-            return khDAO.SuaKhachHang(kh);
-        }
-        return false;
+        KhachHangDAO khDAO = new KhachHangDAO();
+        return khDAO.SuaKhachHang(kh);
     }
 
     public String getTenKH(String MaKH) {

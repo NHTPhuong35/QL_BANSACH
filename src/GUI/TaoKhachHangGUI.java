@@ -178,8 +178,6 @@ public class TaoKhachHangGUI extends JFrame {
             errorPhone.setText("Số điện thoại là chữ số.");
         } else if (phone.length() != 10) {
             errorPhone.setText("Số điện thoại có độ dài 10 chữ số.");
-        } else if (khBUS.checkPhoneExits(phone)) {
-            errorPhone.setText("Số điện thoại Đã tồn tại");
         } else {
             errorPhone.setText(" ");
         }
@@ -210,22 +208,21 @@ public class TaoKhachHangGUI extends JFrame {
                         if (!errorName.getText().trim().isEmpty() || !errorPhone.getText().trim().isEmpty() || tfName.getText().isEmpty() || tfPhone.getText().isEmpty()) {
                             return;
                         }
-                        
+
+                        KhachHangBUS khBUS = new KhachHangBUS();
                         String name = tfName.getText();
                         String phone = tfPhone.getText();
-                        KhachHangBUS khBUS = new KhachHangBUS();
-                        KhachHangDTO tmpKH = new KhachHangDTO(name, phone);
-                        tmpKH.setMaKh(khBUS.TaoMaKH());
-                        SalesGUI.getTfMaKH().setText(tmpKH.getMaKh());
-                        SalesGUI.setKhTao(tmpKH);
-                        dispose();
-//                        if (khBUS.ThemKhachHang(kh)) {
-//                            SalesGUI.getTfMaKH().setText(kh.getMaKh());
-//                            new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
-//                            dispose();
-//                        } else {
-//                            new ShowDiaLog("Thêm khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
-//                        }
+                        KhachHangDTO kh = new KhachHangDTO(name, phone);
+                        kh.setMaKh(khBUS.TaoMaKH());
+
+                        if (!khBUS.validatePhone(phone)) {
+                            khBUS.ThemKhachHang(kh);
+                            SalesGUI.getTfMaKH().setText(kh.getMaKh());
+                            new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
+                            dispose();
+                        } else {
+                            new ShowDiaLog("<html>Thêm khách hàng thất bại <br>Số điện thoại đã tồn tại</html> ", ShowDiaLog.ERROR_DIALOG);
+                        }
                     }
                 }
             }

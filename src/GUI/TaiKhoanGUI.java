@@ -62,7 +62,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     public TaiKhoanGUI(TaiKhoanDTO tkUSER) {
         this.tkUSER = tkUSER;
         PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
-        dsQuyen = quyenBUS.getTenPhanQuyenList();
+        dsQuyen = quyenBUS.getTenQuyenList();
 
         tkBUS = new TaiKhoanBUS();
         dsTK = new ArrayList<>();
@@ -79,7 +79,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
     public TaiKhoanGUI() {
         PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
-        dsQuyen = quyenBUS.getTenPhanQuyenList();
+        dsQuyen = quyenBUS.getTenQuyenList();
 
         tkBUS = new TaiKhoanBUS();
         dsTK = new ArrayList<>();

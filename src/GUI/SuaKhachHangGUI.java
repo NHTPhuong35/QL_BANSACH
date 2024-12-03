@@ -167,7 +167,7 @@ public class SuaKhachHangGUI extends JFrame {
         } else if (!validNamePattern.matcher(name).matches()) {
             errorName.setText("Tên không được chứa ký tự đặc biệt.");
         } else {
-            errorName.setText(" ");
+            errorName.setText("");
         }
     }
 
@@ -185,10 +185,8 @@ public class SuaKhachHangGUI extends JFrame {
             errorPhone.setText("Số điện thoại là chữ số.");
         } else if (phone.length() != 10) {
             errorPhone.setText("Số điện thoại có độ dài 10 chữ số.");
-        } else if (khBUS.checkPhoneExits(phone) && !phone.equals(phoneNumber)) {
-            errorPhone.setText("Số điện thoại Đã tồn tại");
         } else {
-            errorPhone.setText(" ");
+            errorPhone.setText("");
         }
     }
 
@@ -222,22 +220,19 @@ public class SuaKhachHangGUI extends JFrame {
                         String phone = tfPhone.getText();
                         KhachHangBUS khBUS = new KhachHangBUS();
                         boolean success = true;
-                        System.out.println(phone);
-                        System.out.println(phoneNumber);
-                        if (khBUS.checkPhoneExits(phone) && !phone.equals(phoneNumber)) {
+                        if (khBUS.validatePhone(phone) && !phone.equals(phoneNumber)) {
                             success = false;
-                            System.out.println("vao day");
                         }
                         if (success) {
                             khDTO.setTenKh(name);
                             khDTO.setSdt(phone);
+                            khGUI.EditRow(khDTO);
                             if (khBUS.SuaKhachHang(khDTO)) {
-                                System.out.println("Edit");
                                 dispose();
-                                new ShowDiaLog("Sửa khách hàng thành công", ShowDiaLog.ERROR_DIALOG);
+                                new ShowDiaLog("<html>Sửa khách hàng thành công</html>", ShowDiaLog.SUCCESS_DIALOG);
                             }
                         } else {
-                            new ShowDiaLog("Sửa khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
+                            new ShowDiaLog("<html>Sửa khách hàng thất bại <br>Số điện thoại đã tồn tại</html> ", ShowDiaLog.ERROR_DIALOG);
                         }
                     }
                 }
