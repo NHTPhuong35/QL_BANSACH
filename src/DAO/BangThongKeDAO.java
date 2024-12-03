@@ -94,7 +94,6 @@ public class BangThongKeDAO {
         }
         return incomes;
     }
-
     
     public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeByDateWithTheLoai(LocalDate start, LocalDate end, String theloai) throws SQLException {
         ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
