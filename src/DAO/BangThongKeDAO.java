@@ -57,49 +57,44 @@ public class BangThongKeDAO {
     public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeAllByDate(LocalDate start, LocalDate end) throws SQLException {
         ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
         String query = """
-                       SELECT DATE(NGAYHD) AS hoadonDate, COUNT(SOHD) AS totalOrder, SUM(TONGTIEN) AS totalIncome 
-                       FROM `hoadon` 
-                       WHERE TRANGTHAI = ? 
-                       AND DATE(NGAYHD) >= ? 
-                       AND DATE(NGAYHD) <= ? 
-                       GROUP BY hoadonDate 
-                       ORDER BY hoadonDate ASC 
-                       LIMIT 0, 1000;""";
+                       SELECT 
+                           DATE(hoadon.NGAYHD) AS hoadonDate, 
+                           SUM(cthoadon.DONGIA * cthoadon.SOLUONG) AS totalIncome,
+                           COUNT(hoadon.SOHD) AS totalOrder
+                       FROM `hoadon`
+                       INNER JOIN `cthoadon` ON hoadon.SOHD = cthoadon.SOHD
+                       INNER JOIN `ctsachloai` ON cthoadon.MASACH = ctsachloai.MASACH
+                       INNER JOIN `loai` ON ctsachloai.MALOAI = loai.MALOAI
+                       WHERE hoadon.TRANGTHAI = 1
+                         AND DATE(hoadon.NGAYHD) >= ?
+                         AND DATE(hoadon.NGAYHD) <= ?
+                       GROUP BY DATE(hoadon.NGAYHD);
+                       """;
 
-        PreparedStatement statement = conn.getConn().prepareStatement(query);
-        statement.setInt(1, TrangThaiHoaDon.PAID.getId());
-        statement.setDate(2, Date.valueOf(start)); //sử dụng Date.valueOf khi sử dụng LocalDate
-        statement.setDate(3, Date.valueOf(end));
-        ResultSet rs = statement.executeQuery();
-        //Test
-        System.out.println("TrangThai: " + TrangThaiHoaDon.PAID.getId());
-        System.out.println("Start: " + start);
-        System.out.println("End: " + end);
-        System.out.println("EndLocalldate: " + Date.valueOf(end));
-        System.out.println("StartLocaldate: " + Date.valueOf(start));
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
 
-        //
-        bangthongkeDTO = new BangThongKeDTO();
-        while (rs.next()) {
-            BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
-            Date sqlhoadonDate = rs.getDate("hoadonDate");
-            if (sqlhoadonDate != null) {
-//                System.out.println("hoadonDate: " + sqlhoadonDate.toLocalDate());
-                income.date = sqlhoadonDate.toLocalDate();
-            } else {
-//                System.out.println("hoadonDate: null");
-                income.date = null;
+        try {
+            stmt = conn.getConn().prepareStatement(query);
+            stmt.setDate(1, Date.valueOf(start));
+            stmt.setDate(2, Date.valueOf(end));
+            rs = stmt.executeQuery();
+
+            bangthongkeDTO = new BangThongKeDTO();
+            while (rs.next()) {
+                BangThongKeDTO.TaiKhoanIncome income = bangthongkeDTO.new TaiKhoanIncome();
+                income.date = rs.getDate("hoadonDate").toLocalDate();
+                income.totalIncome = rs.getInt("totalIncome");
+                income.totalOrder = rs.getInt("totalOrder");
+                incomes.add(income);
             }
-            income.totalIncome = rs.getInt("totalIncome");
-            income.totalOrder = rs.getInt("totalOrder");
-            
-//            System.out.println("totalIncome: " + income.totalIncome);
-//            System.out.println("totalOrder: " + income.totalOrder);
-            
-            incomes.add(income);
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
         }
         return incomes;
     }
+
     
     public ArrayList<BangThongKeDTO.TaiKhoanIncome> getListTotalIncomeByDateWithTheLoai(LocalDate start, LocalDate end, String theloai) throws SQLException {
         ArrayList<BangThongKeDTO.TaiKhoanIncome> incomes = new ArrayList<>();
