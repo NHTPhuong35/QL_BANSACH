@@ -170,9 +170,10 @@ public class TaoPhieuNhap extends JPanel {
                         // Get giá bìa
                         double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(row, 0).toString());
                         if (giaNhap > giaBia) {
-                            JOptionPane.showMessageDialog(this, "Nên nhập giá nhập bé hơn hoặc bằng giá bìa: " + giaBia,
+                            JOptionPane.showMessageDialog(this, "Giá nhập cần bé hơn hoặc bằng giá bìa: " + giaBia,
                                     "Cảnh báo",
                                     JOptionPane.WARNING_MESSAGE);
+                            return;
                         }
                         if (donGia >= giaBia) {
                             donGia = giaBia;
@@ -218,6 +219,11 @@ public class TaoPhieuNhap extends JPanel {
                     return;
                 }
                 double thanhTien = Double.parseDouble(model.getValueAt(i, 4).toString());
+                if(thanhTien <= 0) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng kiểm tra lại số lượng và giá nhập.", "Cảnh báo",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 chiTietPhieuNhapDTOs.add(new ChiTietPhieuNhapDTO(maPN, tenSach, soLuong, thanhTien, giaNhap));
             }
             PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
