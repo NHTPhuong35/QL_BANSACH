@@ -48,6 +48,7 @@ public class LoginBUS {
 			
 				return;
 			}
+			
                         HomeGUI homeGUI = new HomeGUI(taikhoan); 
 			HomeBUS home = new HomeBUS(homeGUI);
                         TaiKhoanDTO tk = homeGUI.tkUSER;

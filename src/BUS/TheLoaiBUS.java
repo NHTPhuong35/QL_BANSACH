@@ -50,7 +50,16 @@ public class TheLoaiBUS {
         }
     }
     public boolean ThemTheLoai(LoaiDTO l) {
-        if (KT_Ten(l.getTenLoai())) {
+    	String tenTl = l.getTenLoai();
+        if (tenTl == null || tenTl.trim().isEmpty()) {
+            new ShowDiaLog("<html>Tên thể loại không được để trống.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (!tenTl.equals(tenTl.trim())) {
+            new ShowDiaLog("<html>Tên thể loại không được có<br> khoảng trắng ở đầu hoặc cuối.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (KT_Ten(tenTl)) {
             l.setMaLoai(TaoMaLOAI());
             TheLoaiDAO tlDAO = new TheLoaiDAO();
             if (tlDAO.ThemTheLoai(l)) {
@@ -61,7 +70,7 @@ public class TheLoaiBUS {
                 return false;
             }
         }
-        if (!KT_Ten(l.getTenLoai())) {
+        if (!KT_Ten(tenTl)) {
             new ShowDiaLog("<html>Tên thể loại phải chứa tối thiểu 2 ký tự <br> ( Không nhập số ) )</html>", ShowDiaLog.ERROR_DIALOG);
             return false;
         }
@@ -69,7 +78,16 @@ public class TheLoaiBUS {
     }
 
     public boolean SuaTheLoai(LoaiDTO l) {
-        if (KT_Ten(l.getTenLoai())) {
+    	String tenTl = l.getTenLoai();
+        if (tenTl == null || tenTl.trim().isEmpty()) {
+            new ShowDiaLog("<html>Tên thể loại không được để trống.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (!tenTl.equals(tenTl.trim())) {
+            new ShowDiaLog("<html>Tên thể loại không được có<br> khoảng trắng ở đầu hoặc cuối.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (KT_Ten(tenTl)) {
             TheLoaiDAO tlDAO = new TheLoaiDAO();
             if (tlDAO.SuaTheLoai(l)) {
                 new ShowDiaLog("Sửa thể loại thành công", ShowDiaLog.SUCCESS_DIALOG);
@@ -79,7 +97,7 @@ public class TheLoaiBUS {
                 return false;
             }
         }
-        if (!KT_Ten(l.getTenLoai())) {
+        if (!KT_Ten(tenTl)) {
             new ShowDiaLog("<html>Tên thể loại phải chứa tối thiểu 2 ký tự <br>( Không nhập số )</html>", ShowDiaLog.ERROR_DIALOG);
             return false;
         }

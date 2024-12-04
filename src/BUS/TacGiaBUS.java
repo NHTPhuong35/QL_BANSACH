@@ -50,7 +50,16 @@ public class TacGiaBUS {
         }
     }
     public boolean ThemTacGia(TacGiaDTO tg) {
-        if (KT_Ten(tg.getTenTG())) {
+    	String tenTg = tg.getTenTG();
+        if (tenTg == null || tenTg.trim().isEmpty()) {
+            new ShowDiaLog("<html>Tên tác giả không được để trống.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (!tenTg.equals(tenTg.trim())) {
+            new ShowDiaLog("<html>Tên tác giả không được có<br> khoảng trắng ở đầu hoặc cuối.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (KT_Ten(tenTg)) {
             tg.setMaTG(TaoMaTG());
             TacGiaDAO tgDAO = new TacGiaDAO();
             if (tgDAO.ThemTacGia(tg)) {
@@ -61,7 +70,7 @@ public class TacGiaBUS {
                 return false;
             }
         }
-        if (!KT_Ten(tg.getTenTG())) {
+        if (!KT_Ten(tenTg)) {
             new ShowDiaLog("<html>Tên tác giả chỉ được nhập chữ<br> và phải chứa tối thiểu 2 ký tự</html>", ShowDiaLog.ERROR_DIALOG);
             return false;
         }
@@ -69,7 +78,16 @@ public class TacGiaBUS {
     }
 
     public boolean SuaTacGia(TacGiaDTO tg) {
-        if (KT_Ten(tg.getTenTG())) {
+    	String tenTg = tg.getTenTG();
+        if (tenTg == null || tenTg.trim().isEmpty()) {
+            new ShowDiaLog("<html>Tên tác giả không được để trống.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (!tenTg.equals(tenTg.trim())) {
+            new ShowDiaLog("<html>Tên tác giả không được có<br> khoảng trắng ở đầu hoặc cuối.</html>", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        if (KT_Ten(tenTg)) {
             TacGiaDAO tgDAO = new TacGiaDAO();
             if (tgDAO.SuaTacGia(tg)) {
                 new ShowDiaLog("Sửa tác giả thành công", ShowDiaLog.SUCCESS_DIALOG);
@@ -79,7 +97,7 @@ public class TacGiaBUS {
                 return false;
             }
         }
-        if (!KT_Ten(tg.getTenTG())) {
+        if (!KT_Ten(tenTg)) {
             new ShowDiaLog("<html>Tên tác giả chỉ được nhập chữ <br> và phải chứa tối thiểu 2 ký tự</html>", ShowDiaLog.ERROR_DIALOG);
             return false;
         }
