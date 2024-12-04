@@ -66,14 +66,51 @@ public class TaoPhieuNhap extends JPanel {
         // Lợi nhuận
         addLabel("Lợi nhuận:", 2, 1, gbc);
         loiNhuanField = addTextField("0", 3, 1, gbc);
-        loiNhuanField.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                char c = evt.getKeyChar();
-                if (!Character.isDigit(c) && c != '.') {
-                    evt.consume(); // Ignore non-digit characters
-                    JOptionPane.showMessageDialog(null, "Chỉ được nhập số!", "Lỗi nhập liệu",
-                            JOptionPane.ERROR_MESSAGE);
+        
+        // Ensure Lợi nhuận field is a number
+        loiNhuanField.setInputVerifier(new InputVerifier() {
+            @Override
+            public boolean verify(JComponent input) {
+            JTextField textField = (JTextField) input;
+            try {
+                String text = textField.getText();
+                if (text == null || text.trim().isEmpty()) {
+                textField.setText("0");
+                } else {
+                Double.parseDouble(text);
                 }
+                return true;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập số hợp lệ cho lợi nhuận.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            }
+        });
+
+
+        loiNhuanField.addActionListener(e -> {
+            try {
+            double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
+            for (int i = 0; i < bookTable.getRowCount(); i++) {
+                double giaNhap = Double.parseDouble(bookTable.getValueAt(i, 2).toString());
+                double donGia = giaNhap * (1 + loiNhuan);
+                double giaBia = PhieuNhapBUS.getGiaBia(bookTable.getValueAt(i, 0).toString());
+                if (donGia >= giaBia) {
+                donGia = giaBia;
+                }
+                bookTable.setValueAt(donGia, i, 3);
+                int soLuong = Integer.parseInt(bookTable.getValueAt(i, 1).toString());
+                double thanhTien = soLuong * giaNhap;
+                bookTable.setValueAt(thanhTien, i, 4);
+            }
+            // Update tổng tiền
+            double tongTien = 0;
+            for (int i = 0; i < bookTable.getRowCount(); i++) {
+                tongTien += Double.parseDouble(bookTable.getValueAt(i, 4).toString());
+            }
+            tongTienField.setText(String.valueOf(tongTien));
+            } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ cho lợi nhuận.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -125,6 +162,7 @@ public class TaoPhieuNhap extends JPanel {
         gbc.weighty = 0;
         addLabel("Tổng tiền:", 2, 3, gbc);
         tongTienField = addTextField("0", 3, 3, gbc);
+        tongTienField.setEditable(false);
 
         // Center the Tổng tiền field
         gbc.gridx = 3;
