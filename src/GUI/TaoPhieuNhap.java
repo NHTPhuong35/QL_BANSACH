@@ -224,6 +224,7 @@ public class TaoPhieuNhap extends JPanel {
             phieuNhapBUS.addPhieuNhapWithDetails(phieuNhapDTO, new ArrayList<>(chiTietPhieuNhapDTOs));
 
             for (int j = 0; j < model.getRowCount(); j++) {
+                String maSP = model.getValueAt(j, 0).toString();
                 double giaNhap = Double.parseDouble(model.getValueAt(j, 2).toString());
                 double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
                 double donGia = giaNhap * (1 + loiNhuan);
@@ -232,7 +233,7 @@ public class TaoPhieuNhap extends JPanel {
                 if (donGia >= giaBia) {
                     donGia = giaBia;
                 }
-                phieuNhapBUS.checkGiaBan(ngayNhapStr, donGia);
+                phieuNhapBUS.checkGiaBan(maSP, donGia);
             }
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
