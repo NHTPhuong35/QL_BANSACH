@@ -51,7 +51,7 @@ public class QuyenDAO {
     }
     
     public ArrayList<ChiTietQuyenDTO> getQuyenListByRole(String quyen){
-        ArrayList<ChiTietQuyenDTO> list = new ArrayList<>();
+        ArrayList<ChiTietQuyenDTO> quyenlist = new ArrayList<>();
         String query = "SELECT * FROM chitietquyen WHERE MAQUYEN = ?";
         try{
             PreparedStatement pstm = conn.getConn().prepareStatement(query);
@@ -62,12 +62,27 @@ public class QuyenDAO {
                 chitietquyen.setMaQuyen(rs.getString(1));
                 chitietquyen.setMaChucNang(rs.getString(2));
                 chitietquyen.setHanhDong(rs.getString(3));
-                list.add(chitietquyen);
+                quyenlist.add(chitietquyen);
             }
         }catch(SQLException e){
             e.printStackTrace();
         }
-        return list;
+        return quyenlist;
+    }
+    
+    public boolean kiemtraquyentontai(String maquyen){
+        String query = "SELECT * FROM quyen WHERE MAQUYEN = ?";
+        try{
+            PreparedStatement pstm = conn.getConn().prepareStatement(query);
+            pstm.setString(1, maquyen);
+            ResultSet rs = pstm.executeQuery();
+            if (rs.next()){
+                return true;
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+        }
+        return false;
     }
     
     public QuyenDTO getquyen(String maquyen){

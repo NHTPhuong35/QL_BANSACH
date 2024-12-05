@@ -2,8 +2,29 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+<<<<<<< HEAD
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Java/pullmain/QL_BANSACH/src/GUI/BanHangGUI.java</file>
+=======
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/ChonLoaiGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/BUS/SanPhamBUS.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/DAO/PhieuNhapDAO.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/TheLoaiGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/ChonSanPhamPhieuNhapGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/BanHangGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/TaoPhieuNhap.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/ThemLoaiGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/DAO/ChiTietSachLoaiDAO.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/TheLoaiListener.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/ChonTacGiaGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/BUS/PhieuNhapBUS.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/SanPhamGUI.java</file>
+            <file>file:/D:/CNPM/QL_BANSACH/src/GUI/ChonSanPhamGUI.java</file>
+>>>>>>> a87216994d02df6936437f3589b3c1529b65d2a8
         </group>
+=======
+        <group/>
+>>>>>>> db1fbfe167e24e7cda1cd2e49b12d064704c32cf
     </open-files>
 </project-private>

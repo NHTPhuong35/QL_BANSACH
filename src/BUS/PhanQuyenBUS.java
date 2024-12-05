@@ -99,7 +99,7 @@ public class PhanQuyenBUS {
         }
     }
     
-    public String[] getTenPhanQuyenList(){
+    public String[] getTenQuyenList(){
         
         ArrayList<QuyenDTO> quyenlist = quyenDAO.getQuyenList();
         List<String> tenquyenlist = new ArrayList<>();
@@ -114,38 +114,42 @@ public class PhanQuyenBUS {
         return tenquyenArray;
     }
     
-    public String getMaPhanQuyenByTenPhanQuyen(String tenphanquyen){
+    public String getMaTenQuyenByTenPhanQuyen(String tenphanquyen){
         
         ArrayList<QuyenDTO> quyenlist = quyenDAO.getQuyenList();
-        String maphanquyen = new String();
+        String matenquyen = new String();
         
         for(QuyenDTO quyen : quyenlist){
             if(quyen.getTenQuyen().equals(tenphanquyen)){
-                maphanquyen = quyen.getMaQuyen();
+                matenquyen = quyen.getMaQuyen();
                 break;
             }
         }
         
-        return maphanquyen;
+        return matenquyen;
     }
     
-    public void ThemQuyen(String tenquyen){
+    public boolean ThemQuyen(String tenquyen){
         try{
             QuyenDTO quyen = new QuyenDTO();
             
             TachChuCaiDauInHoa tachchucaidauinhoa = new TachChuCaiDauInHoa();
-            quyen.setMaQuyen(tachchucaidauinhoa.LayCumTuInHoa(tenquyen));
-            quyen.setTenQuyen(tenquyen);
             
-            quyenDAO.ThemPhanQuyen(quyen);
-    //        System.out.println(tachchucaidauinhoa.LayCumTuInHoa(tenquyen));
-    //        System.out.println(tenquyen);
-    
-            JOptionPane.showMessageDialog(null, "Thêm quyền thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            if(quyenDAO.kiemtraquyentontai(tachchucaidauinhoa.LayCumTuInHoa(tenquyen))){
+                return false;
+            }else{
+                quyen.setMaQuyen(tachchucaidauinhoa.LayCumTuInHoa(tenquyen));
+                quyen.setTenQuyen(tenquyen);
+                quyenDAO.ThemPhanQuyen(quyen);
+        //        System.out.println(tachchucaidauinhoa.LayCumTuInHoa(tenquyen));
+        //        System.out.println(tenquyen);
+                return true;
+            }        
         }catch(Exception e){
             JOptionPane.showMessageDialog(null, "Có lỗi xảy ra khi thêm quyền: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-        }  
+        }
+        return false;
     }
     
     public Object[][] getPhanQuyenListByRole(String quyen){

@@ -182,10 +182,31 @@ public class PhieuNhapDAO {
     public boolean xoaPhieuNhap(String maPN) {
         try {
             conn.connect();
+            
+            // Get the details of the phieu nhap to be deleted
+            String getChiTietSql = "SELECT MASACH, SOLUONG FROM chitietphieunhap WHERE MAPN = ?";
+            PreparedStatement getChiTietPre = conn.getConn().prepareStatement(getChiTietSql);
+            getChiTietPre.setString(1, maPN);
+            ResultSet rs = getChiTietPre.executeQuery();
+            
+            // Update the quantity of each product in the sach table
+            String updateSachSql = "UPDATE sach SET SOLUONG = SOLUONG - ? WHERE MASACH = ?";
+            PreparedStatement updateSachPre = conn.getConn().prepareStatement(updateSachSql);
+            while (rs.next()) {
+                String maSach = rs.getString("MASACH");
+                int soLuong = rs.getInt("SOLUONG");
+                updateSachPre.setInt(1, soLuong);
+                updateSachPre.setString(2, maSach);
+                updateSachPre.addBatch();
+            }
+            updateSachPre.executeBatch();
+            
+            // Set the TRANGTHAI of the phieu nhap to 0
             String sql = "UPDATE phieunhap SET TRANGTHAI = 0 WHERE MAPN = ?";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             pre.setString(1, maPN);
             pre.executeUpdate();
+            
             conn.disconnect();
             return true;
         } catch (SQLException e) {
@@ -356,7 +377,7 @@ public class PhieuNhapDAO {
                 if (giaBan != donGia) {
                     // Ask to change GiaBan to donGia
                     int response = javax.swing.JOptionPane.showConfirmDialog(null,
-                            "Giá bán hiện tại của sản phẩm khác với đơn giá của phiếu nhập! Bạn có muốn cập nhật giá bán thành "
+                            "Giá bán của "+ maSach +" vừa tính khác với giá bán hiện tại! Bạn có muốn cập nhật giá bán thành "
                                     + donGia + "?",
                             "Cập Nhật Giá Bán",
                             javax.swing.JOptionPane.YES_NO_OPTION);
