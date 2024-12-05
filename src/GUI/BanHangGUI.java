@@ -116,7 +116,7 @@ public class BanHangGUI extends JPanel {
                     NumberFormatter formatter = new NumberFormatter(format);
                     formatter.setValueClass(Integer.class);
                     formatter.setAllowsInvalid(false);
-                    formatter.setMinimum(0);
+                    formatter.setMinimum(1);
                     formattedTextField.setFormatterFactory(new DefaultFormatterFactory(formatter));
 
                     String productCode = tbl.getValueAt(row, 0).toString();
