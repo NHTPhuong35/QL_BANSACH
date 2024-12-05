@@ -4,6 +4,7 @@
  */
 package GUI;
 
+import BUS.TheLoaiBUS;
 import DTO.LoaiDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,10 +45,10 @@ public class ChonLoaiGUI extends JFrame {
 
     public ChonLoaiGUI(ChucNangSanPhamGUI cnSPGUI) {
         this.cnSPGUI = cnSPGUI;
+        TheLoaiBUS loaiBUS = new TheLoaiBUS();
         dsLoai = new ArrayList<>();
-        dsLoai.add(new LoaiDTO("L01", "Kỹ năng sống"));
-        dsLoai.add(new LoaiDTO("L02", "Tâm lý học"));
-        dsLoai.add(new LoaiDTO("L03", "Quản trị - lãnh đạo"));
+        dsLoai = loaiBUS.getDs();
+   
         init();
     }
 

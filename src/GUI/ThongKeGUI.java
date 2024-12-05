@@ -353,8 +353,12 @@ public class ThongKeGUI extends JPanel{
         totalincome = bangthongkebus.getTotalIncomeByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
         totalreturn = bangthongkebus.getTotalHoaDonBiHuyByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
         totalbooks = bangthongkebus.getTotalBooksByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
-        totalHoaDon = bangthongkebus.getTotalHoaDonByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());
-                    
+        totalHoaDon = bangthongkebus.getTotalHoaDonByTheLoai(datepickerpanel.getDateStart(), datepickerpanel.getDateEnd(), datepickerpanel.getTheLoai(), datepickerpanel.getLoaiThoiGian());       
+        tongtienbanduocTotal.setText(MoneyFormatter.formatToVND(totalincome));
+        trahangTotal.setText(String.valueOf(totalreturn));
+        sosachbanduocTotal.setText(String.valueOf(totalbooks));
+        sohoadonTotal.setText(String.valueOf(totalHoaDon));
+        
         tim.addActionListener(e -> {
             String loaithoigian = datepickerpanel.getLoaiThoiGian();
             switch(loaithoigian){

@@ -75,15 +75,36 @@ public class SanPhamGUI extends JPanel implements MouseListener {
     public void updateDatabase() {
         spBUS = new SanPhamBUS();
         dsSP = spBUS.getDsSP();
-        
+
+        TheLoaiBUS loaiBUS = new TheLoaiBUS();
+        int n = loaiBUS.getDs().size() - loai.size();
+        while (n > 0){
+            int i = loai.size();
+            cbxLoai.addItem(loaiBUS.getDs().get(i));
+            i++;
+            n--;
+        } 
+
         pnRight.remove(jpSanPham);
         tbSanPham = initContent(dsSP);
         jpSanPham = new JScrollPane(tbSanPham);
         pnRight.add(jpSanPham, BorderLayout.CENTER);
         pnRight.revalidate();
         pnRight.repaint();
+
+        // Cập nhật panel chi tiết sản phẩm
+        selectedSP = new SanPhamDTO();
+        pnChiTietSP.removeAll();
+        pnChiTietSP.setVisible(false);
+        pnChiTietSP.revalidate();
+        pnChiTietSP.repaint();  
     }
     
+    public void addLoaiToComboBox(LoaiDTO loaiMoi) {
+    cbxLoai.addItem(loaiMoi);
+    }
+
+
     public void init() {
         this.setLayout(new BorderLayout());
         this.setPreferredSize(new Dimension(width, height));
@@ -92,17 +113,17 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnHeader.setLayout(new BoxLayout(pnHeader, BoxLayout.X_AXIS));
         pnHeader.setBorder(BorderFactory.createEmptyBorder(20, 20, 50, 0));
 
-        btnThem = createBtn("Thêm",BASE.color_btAdd, "btnThem","btAdd.png");
+        btnThem = createBtn("Thêm", BASE.color_btAdd, "btnThem", "btAdd.png");
         btnThem.addMouseListener(this);
 
-        btnSua = createBtn("Sửa", BASE.color_btEdit, "btnSua","btEdit.png");
+        btnSua = createBtn("Sửa", BASE.color_btEdit, "btnSua", "btEdit.png");
         btnSua.addMouseListener(this);
 
-        btnXoa = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa","bin.png");
+        btnXoa = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa", "bin.png");
         btnXoa.addMouseListener(this);
 
         btnExport = createBtn("Xuất Excel", Color.decode("#FFE4B5"), "btnExport", "export_icon.jpg");
-        
+
         ImageIcon exportIcon = new ImageIcon("./src/image/export_icon.jpg");
         Image exportImage = exportIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         btnExport.setPreferredSize(new Dimension(130, 35));
@@ -198,7 +219,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         ImageIcon resetIcon = new ImageIcon("./src/image/refresh.png");
         Image resetImage = resetIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         resetIcon = new ImageIcon(resetImage);
-        btnLamMoi = new JButton("Làm mới",resetIcon);
+        btnLamMoi = new JButton("Làm mới", resetIcon);
         btnLamMoi.setHorizontalTextPosition(SwingConstants.LEFT); // Đặt văn bản ở bên phải của biểu tượng
         btnLamMoi.setVerticalTextPosition(SwingConstants.CENTER);   // Căn giữa theo chiều dọc
         btnLamMoi.setBackground(BASE.color_btLamMoi);
@@ -234,7 +255,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         this.add(pnHeader, BorderLayout.NORTH);
         this.add(pnContent, BorderLayout.CENTER);
     }
-    
+
     private JButton createBtn(String text, Color color, String name, String url) {
         ImageIcon Icon = new ImageIcon(getClass().getResource("/Image/" + url));
         Image iconImage = Icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
@@ -255,7 +276,7 @@ public class SanPhamGUI extends JPanel implements MouseListener {
 
         return btn;
     }
-    
+
     public JTable initContent(ArrayList<SanPhamDTO> dsSP) {
         String[] header = {"Tên sách", "Thể loại", "Nhà xuất bản", "Năm xuất bản", "Số lượng", "Giá bìa"};
         JTable table = new JTable();
@@ -505,13 +526,13 @@ public class SanPhamGUI extends JPanel implements MouseListener {
                 JOptionPane.showMessageDialog(null,
                         "Hãy chọn sách cần xoá!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
             } else {
-                
+
                 // kiểm tra 
                 if (selectedSP.getSoLuong() > 0) {
                     new ShowDiaLog("Số lượng sách > 0 không thể xoá!", ShowDiaLog.ERROR_DIALOG);
                     return;
                 }
-                
+
                 Object[] options = {"Có", "Không"};
                 int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn xoá sách này không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == JOptionPane.YES_OPTION) {
@@ -539,22 +560,23 @@ public class SanPhamGUI extends JPanel implements MouseListener {
             exExcel.xuatExcel(dsSP);
         }
     }
-    
-    public JButton getBtnThem(){
+
+    public JButton getBtnThem() {
         return btnThem;
     }
-    
-    public JButton getBtnSua(){
+
+    public JButton getBtnSua() {
         return btnSua;
     }
-    
-    public JButton getBtnXoa(){
+
+    public JButton getBtnXoa() {
         return btnXoa;
     }
-    
-    public JPanel getpnHeader(){
+
+    public JPanel getpnHeader() {
         return pnHeader;
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
     }

@@ -377,7 +377,7 @@ public class PhieuNhapDAO {
                 if (giaBan != donGia) {
                     // Ask to change GiaBan to donGia
                     int response = javax.swing.JOptionPane.showConfirmDialog(null,
-                            "Giá bán hiện tại của sản phẩm khác với đơn giá của phiếu nhập! Bạn có muốn cập nhật giá bán thành "
+                            "Giá bán của "+ maSach +" vừa tính khác với giá bán hiện tại! Bạn có muốn cập nhật giá bán thành "
                                     + donGia + "?",
                             "Cập Nhật Giá Bán",
                             javax.swing.JOptionPane.YES_NO_OPTION);

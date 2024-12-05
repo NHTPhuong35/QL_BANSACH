@@ -122,7 +122,7 @@ public class ThemLoaiGUI extends JFrame implements MouseListener{
                     LoaiDTO l = new LoaiDTO("",TenTL); //Phuong sua
                     TheLoaiBUS tlBUS = new TheLoaiBUS();
                     if(tlBUS.ThemTheLoai(l)) {
-                        TLGUI.addRow(l);
+                        TLGUI.addRow(l);                                               
                         dispose();
                     }
                     break;
