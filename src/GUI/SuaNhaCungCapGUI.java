@@ -140,6 +140,70 @@ public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
         b.setPreferredSize(new Dimension(100, (int) b.getPreferredSize().getHeight()));
         b.setOpaque(true);
     }
+
+    private boolean KT_Ten(String ten) {
+        String regex = "^[a-zA-ZÀ-ỹ\\s-/]{2,}$";
+        boolean isValid = ten.matches(regex);
+        if (!isValid){
+            new ShowDiaLog("Tên phải lớn hơn 2 kí tự", ShowDiaLog.ERROR_DIALOG);
+        }
+        return isValid;
+    }
+    private boolean KT_Email(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            new ShowDiaLog("email không được để trống", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+    
+        // Biểu thức chính quy kiểm tra định dạng email hợp lệ
+        String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";  
+        // Kiểm tra tính hợp lệ của email
+        boolean isValid = email.matches(regex);
+    
+        if (!isValid) {
+            new ShowDiaLog("Email không hợp lệ", ShowDiaLog.ERROR_DIALOG);
+        }
+    
+        return isValid;
+    }
+    private boolean KT_SDT(String sdt) {
+        // Kiểm tra số điện thoại không được để trống
+        if (sdt == null || sdt.trim().isEmpty()) {
+            new ShowDiaLog("Số điện thoại không được để trống", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+    
+        // Biểu thức chính quy để kiểm tra số điện thoại
+        String regex = "^0\\d{9}$"; // Bắt đầu bằng '0' và có tổng cộng 10 chữ số
+    
+        // Kiểm tra tính hợp lệ
+        boolean isValid = sdt.matches(regex);
+    
+        if (!isValid) {
+            new ShowDiaLog("Số điện thoại không hợp lệ", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        } 
+    
+        return isValid;
+    }
+    private boolean KT_DiaChi(String diaChi) {
+        // Kiểm tra địa chỉ không được để trống
+        if (diaChi == null || diaChi.trim().isEmpty()) {
+            new ShowDiaLog("Địa chỉ không được trống", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+    
+        // Kiểm tra độ dài của địa chỉ
+        int length = diaChi.trim().length();
+        if (length < 5 || length > 100) {
+            new ShowDiaLog("Địa chỉ phải từ 5 đến 100 kí tự", ShowDiaLog.ERROR_DIALOG);
+            return false;
+        }
+        return true;
+    }
+    
+    
+    
     
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -158,6 +222,18 @@ public class SuaNhaCungCapGUI extends JFrame implements MouseListener {
                     String diaChi = tfDiaChi.getText();
                     String phone = tfPhone.getText();
                     String email = tfEmail.getText();
+                    if (!KT_Ten(ten)) {
+                        return;
+                    }
+                    if (!KT_DiaChi(diaChi)) {
+                        return;
+                    }
+                    if (!KT_SDT(phone)) {
+                        return;
+                    }
+                    if (!KT_Email(email)) {;
+                        return;
+                    }
 
                     // Set updated values to DTO
                     nccDTO.setTenNhaCungCap(ten);

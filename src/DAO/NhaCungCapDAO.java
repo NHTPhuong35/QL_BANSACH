@@ -39,14 +39,14 @@ public class NhaCungCapDAO {
     public boolean ThemNhaCungCap(NhaCungCapDTO l) {
         try {
             conn.connect();
-            String sql = "INSERT INTO NHACUNGCAP(MANCC,TENNCC,TRANGTHAI,EMAIL,DIACHI,SDT) VALUES (?,?,?,?,?,?)";
+            String sql = "INSERT INTO NHACUNGCAP(MANCC,TENNCC,TRANGTHAI,SDT,EMAIL,DIACHI) VALUES (?,?,?,?,?,?)";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             pre.setString(1, l.getMaNhaCungCap());
             pre.setString(2, l.getTenNhaCungCap());
             pre.setInt(3, 1);
-            pre.setString(4, l.getEmail());
-            pre.setString(5, l.getDiaChi());
-            pre.setString(6, l.getSdt());
+            pre.setString(4, l.getSdt());
+            pre.setString(5, l.getEmail());
+            pre.setString(6, l.getDiaChi());
             return pre.executeUpdate() > 0;
         } catch (Exception e) {
             e.printStackTrace();
