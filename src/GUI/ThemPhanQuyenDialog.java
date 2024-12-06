@@ -21,7 +21,7 @@ public class ThemPhanQuyenDialog extends JDialog {
     public ThemPhanQuyenDialog(JPanel parent) {
         phanquyenBUS = new PhanQuyenBUS();
         phanquyenGUI = new PhanQuyenGUI();
-        String regex = "^[a-zA-Z\\s]+$";
+        String regex = "^[\\p{L}\\s]+$";
         InitComponent();
         them.addActionListener((ActionEvent e) -> {
             getInput = nhaptenphanquyenField.getText();

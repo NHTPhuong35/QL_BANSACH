@@ -93,6 +93,25 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         pnTimKiem.add(lblTimKiem);
         pnTimKiem.add(txtTimKiem);
 
+        txtTimKiem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            String keyword = txtTimKiem.getText().toLowerCase();
+            ArrayList<SanPhamDTO> filteredList = new ArrayList<>();
+            for (SanPhamDTO sp : dsSP) {
+                if (sp.getTenSach().toLowerCase().contains(keyword)) {
+                filteredList.add(sp);
+                }
+            }
+            JPanel mainPanel = initContent(filteredList);
+            pnContent.removeAll();
+            pnContent.add(pnTimKiem, BorderLayout.NORTH);
+            pnContent.add(mainPanel, BorderLayout.CENTER);
+            pnContent.revalidate();
+            pnContent.repaint();
+            }
+        });
+
         JPanel mainPanel = initContent(dsSP);
         pnContent.add(pnTimKiem, BorderLayout.NORTH);
         pnContent.add(mainPanel, BorderLayout.CENTER);
@@ -145,8 +164,13 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         JLabel label = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        //Tên sản phẩm
         JLabel productName = new JLabel(sp.getTenSach(), JLabel.CENTER);
         productName.setAlignmentX(Component.CENTER_ALIGNMENT);
+        
+        // Giá sản phẩm
+        productPrice = new JLabel("Giá bìa: " + FormatInt.format(sp.getGiaBia()) + " đ", JLabel.CENTER);
+        productPrice.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
 
         JButton btnChon = new JButton("Chọn");
         btnChon.setPreferredSize(new Dimension(130, 30));
@@ -175,6 +199,8 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         productPanel.add(label);
         productPanel.add(Box.createVerticalStrut(5));
         productPanel.add(productName);
+         productPanel.add(Box.createVerticalStrut(5));
+        productPanel.add(productPrice);
         productPanel.add(Box.createVerticalStrut(5));
         productPanel.add(btnChon);
 

@@ -7,7 +7,7 @@ import DTO.LoaiDTO;
 import GUI.ShowDiaLog;
 
 public class TheLoaiBUS {
-	private ArrayList<LoaiDTO> ds;
+    private ArrayList<LoaiDTO> ds;
 	
     public TheLoaiBUS() {
         ds = new ArrayList<>();
