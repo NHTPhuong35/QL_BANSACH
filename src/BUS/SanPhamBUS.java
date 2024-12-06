@@ -50,12 +50,12 @@ public class SanPhamBUS {
         return false;
     }
 
-    public boolean delete(String maSP, Boolean ktraPN) {
+    public boolean delete(String maSP) {
         for (int i = 0; i < dsSP.size(); i++) {
             if (dsSP.get(i).getMaSach().equals(maSP)) {
                 dsSP.remove(i);
                 SanPhamDAO spDAO = new SanPhamDAO();
-                return spDAO.xoaSanPham(maSP, ktraPN);
+                return spDAO.xoaSanPham(maSP);
             }
         }
         return false;
@@ -179,5 +179,22 @@ public class SanPhamBUS {
             return "<html>Năm xuất bản không hợp lệ:<br> Phải &lt= " + namHienTai + ".</html>";
         }
         return "Hợp lệ";
+    }
+    
+    public int getSLSP(String ma) {
+        SanPhamBUS busSP = new SanPhamBUS();
+        ArrayList<SanPhamDTO> ds = busSP.getDsSP();
+        for(SanPhamDTO sp : ds) {
+            if(sp.getMaSach().equals(ma)){
+                return sp.getSoLuong();
+            }
+        }
+        return 0;
+    }
+    
+    public static void main(String[] agrs) {
+        SanPhamBUS bus = new SanPhamBUS();
+        int x = bus.getSLSP("SP01");
+        System.out.println(x);
     }
 }

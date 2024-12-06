@@ -54,12 +54,12 @@ public class TaiKhoanBUS {
         return false;
     }
 
-    public boolean delete(String tenDN, Boolean ktra) {
+    public boolean delete(String tenDN) {
         for (int i = 0; i < dsTK.size(); i++) {
             if (dsTK.get(i).getTenDN().equals(tenDN)) {
                 dsTK.remove(i);
                 TaiKhoanDAO tkDAO = new TaiKhoanDAO();
-                return tkDAO.xoaTaiKhoan(tenDN, ktra);
+                return tkDAO.xoaTaiKhoan(tenDN);
             }
         }
         return false;

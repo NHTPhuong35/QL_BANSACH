@@ -32,10 +32,11 @@ public class TaiKhoanDAO {
         ArrayList<TaiKhoanDTO> dsTK = new ArrayList<>();
         try {
             conn.connect();
-            // Câu truy vấn kết hợp giữa bảng 'taikhoan' và 'quyen'
+            // Câu truy vấn thêm điều kiện trạng thái khác 2
             String sql = "SELECT tk.TENDN, tk.TENNV, tk.DIACHI, tk.SDT, tk.EMAIL, tk.MATKHAU, tk.TRANGTHAI, q.MAQUYEN, q.TENQUYEN "
                     + "FROM taikhoan tk "
-                    + "JOIN quyen q ON tk.MAQUYEN = q.MAQUYEN";
+                    + "JOIN quyen q ON tk.MAQUYEN = q.MAQUYEN "
+                    + "WHERE tk.TRANGTHAI != 2"; // Điều kiện trạng thái khác 2
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
 
@@ -116,42 +117,61 @@ public class TaiKhoanDAO {
     }
 
     // Phương thức xoá tài khoản
-    public boolean xoaTaiKhoan(String tenDN, Boolean ktra) {
+    public boolean xoaTaiKhoan(String tenDN) {
         boolean result = false;
         try {
             conn.connect();
-            // Nếu ktra là true, chỉ cập nhật trạng thái
-            if (ktra) {
-                String sql = "UPDATE taikhoan SET TRANGTHAI = 0 WHERE TENDN = ?";
-                PreparedStatement pre = conn.getConn().prepareStatement(sql);
-                pre.setString(1, tenDN);
-                int rowsAffected = pre.executeUpdate();
+
+            // Kiểm tra tài khoản có liên kết với bảng phieunhap hoặc hoadon hay không
+            String checkSql = "SELECT COUNT(*) FROM ( "
+                    + "SELECT TENDN FROM phieunhap WHERE TENDN = ? "
+                    + "UNION "
+                    + "SELECT TENDN FROM hoadon WHERE TENDN = ? "
+                    + ") AS temp";
+            PreparedStatement checkStmt = conn.getConn().prepareStatement(checkSql);
+            checkStmt.setString(1, tenDN);
+            checkStmt.setString(2, tenDN);
+
+            ResultSet rs = checkStmt.executeQuery();
+            boolean hasReferences = false;
+            if (rs.next()) {
+                hasReferences = rs.getInt(1) > 0;
+            }
+
+            if (hasReferences) {
+                // Nếu có liên kết, cập nhật trạng thái về 2
+                String updateSql = "UPDATE taikhoan SET TRANGTHAI = 2 WHERE TENDN = ?";
+                PreparedStatement updateStmt = conn.getConn().prepareStatement(updateSql);
+                updateStmt.setString(1, tenDN);
+                int rowsAffected = updateStmt.executeUpdate();
                 result = rowsAffected > 0;
-            } else { // Nếu ktra là false, thực hiện xóa
-                String sql = "DELETE FROM taikhoan WHERE TENDN = ?";
-                PreparedStatement pre = conn.getConn().prepareStatement(sql);
-                pre.setString(1, tenDN);
-                int rowsAffected = pre.executeUpdate();
+            } else {
+                // Nếu không có liên kết, xóa tài khoản
+                String deleteSql = "DELETE FROM taikhoan WHERE TENDN = ?";
+                PreparedStatement deleteStmt = conn.getConn().prepareStatement(deleteSql);
+                deleteStmt.setString(1, tenDN);
+                int rowsAffected = deleteStmt.executeUpdate();
                 result = rowsAffected > 0;
             }
+
             conn.disconnect();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return result;
     }
-    
-    public TaiKhoanDTO timTaiKhoan(String userName)throws SQLException {
-			conn.connect();
-			String sql = "SELECT * FROM taikhoan WHERE taikhoan.TENDN = '" + userName + "'";
-			PreparedStatement pre = conn.getConn().prepareStatement(sql);
-			ResultSet rs = pre.executeQuery();
-			if (rs.next()) {
-				TaiKhoanDTO taikhoan = TaiKhoanDTO.getFromResultSet(rs);
-				return taikhoan;
-			}	
-			return null;
-	}
+
+    public TaiKhoanDTO timTaiKhoan(String userName) throws SQLException {
+        conn.connect();
+        String sql = "SELECT * FROM taikhoan WHERE taikhoan.TENDN = '" + userName + "'";
+        PreparedStatement pre = conn.getConn().prepareStatement(sql);
+        ResultSet rs = pre.executeQuery();
+        if (rs.next()) {
+            TaiKhoanDTO taikhoan = TaiKhoanDTO.getFromResultSet(rs);
+            return taikhoan;
+        }
+        return null;
+    }
 
     public static void main(String[] args) {
         TaiKhoanDAO tk = new TaiKhoanDAO();

@@ -40,9 +40,10 @@ public class TaoPhieuNhap extends JPanel {
 
         // Mã phiếu nhập
         addLabel("Mã phiếu nhập:", 0, 0, gbc);
-        maPhieuNhapField = addTextField(PhieuNhapBUS.getLatestMaPN(), 1, 0, gbc);
+        String maPN = PhieuNhapBUS.getLatestMaPN();
+        System.out.println(maPN);
+        maPhieuNhapField = addTextField(maPN, 1, 0, gbc);
         maPhieuNhapField.setEditable(false);
-        
 
         // Ngày
         addLabel("Ngày:", 2, 0, gbc);
@@ -57,6 +58,7 @@ public class TaoPhieuNhap extends JPanel {
         // Nhà cung cấp
         addLabel("Nhà cung cấp:", 0, 1, gbc);
         nhaCungCapComboBox = new JComboBox<String>(suppliers.toArray(new String[0]));
+        nhaCungCapComboBox.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridx = 1;
         gbc.gridy = 1;
         add(nhaCungCapComboBox, gbc);
@@ -64,10 +66,58 @@ public class TaoPhieuNhap extends JPanel {
         // Lợi nhuận
         addLabel("Lợi nhuận:", 2, 1, gbc);
         loiNhuanField = addTextField("0", 3, 1, gbc);
+        
+        // Ensure Lợi nhuận field is a number
+        loiNhuanField.setInputVerifier(new InputVerifier() {
+            @Override
+            public boolean verify(JComponent input) {
+            JTextField textField = (JTextField) input;
+            try {
+                String text = textField.getText();
+                if (text == null || text.trim().isEmpty()) {
+                textField.setText("0");
+                } else {
+                Double.parseDouble(text);
+                }
+                return true;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Vui lòng nhập số hợp lệ cho lợi nhuận.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            }
+        });
+
+
+        loiNhuanField.addActionListener(e -> {
+            try {
+            double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
+            for (int i = 0; i < bookTable.getRowCount(); i++) {
+                double giaNhap = Double.parseDouble(bookTable.getValueAt(i, 2).toString());
+                double donGia = giaNhap * (1 + loiNhuan);
+                double giaBia = PhieuNhapBUS.getGiaBia(bookTable.getValueAt(i, 0).toString());
+                if (donGia >= giaBia) {
+                donGia = giaBia;
+                }
+                bookTable.setValueAt(donGia, i, 3);
+                int soLuong = Integer.parseInt(bookTable.getValueAt(i, 1).toString());
+                double thanhTien = soLuong * giaNhap;
+                bookTable.setValueAt(thanhTien, i, 4);
+            }
+            // Update tổng tiền
+            double tongTien = 0;
+            for (int i = 0; i < bookTable.getRowCount(); i++) {
+                tongTien += Double.parseDouble(bookTable.getValueAt(i, 4).toString());
+            }
+            tongTienField.setText(String.valueOf(tongTien));
+            } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ cho lợi nhuận.", "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
+            }
+        });
 
         // Chọn sách button
         chonSachButton = new JButton("+ Chọn sách");
         chonSachButton.setBackground(Color.decode("#249171"));
+        chonSachButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         gbc.gridx = 4;
         gbc.gridy = 1;
         add(chonSachButton, gbc);
@@ -112,7 +162,7 @@ public class TaoPhieuNhap extends JPanel {
         gbc.weighty = 0;
         addLabel("Tổng tiền:", 2, 3, gbc);
         tongTienField = addTextField("0", 3, 3, gbc);
-        
+        tongTienField.setEditable(false);
 
         // Center the Tổng tiền field
         gbc.gridx = 3;
@@ -125,8 +175,10 @@ public class TaoPhieuNhap extends JPanel {
         JPanel buttonPanel = new JPanel();
         xacNhanButton = new JButton("Xác nhận");
         xacNhanButton.setBackground(Color.decode("#56B7C0"));
+        xacNhanButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         huyButton = new JButton("Hủy");
         huyButton.setBackground(Color.decode("#56B7C0"));
+        huyButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         buttonPanel.add(xacNhanButton);
         buttonPanel.add(huyButton);
 
@@ -148,35 +200,44 @@ public class TaoPhieuNhap extends JPanel {
                 int row = e.getFirstRow();
                 int column = e.getColumn();
                 if (column == 1 || column == 2) { // Only update if quantity or price is changed
-                    int soLuong = Integer.parseInt(model.getValueAt(row, 1).toString());
-                    double giaNhap = Double.parseDouble(model.getValueAt(row, 2).toString());
-                    double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
-                    double donGia = giaNhap * (1 + loiNhuan);
-                    // Get giá bìa
-                    double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(row, 0).toString());
-                    if (donGia >= giaBia) {
-                        donGia = giaBia;
-                    }
-                    double thanhTien = soLuong * giaNhap;
+                    try {
+                        int soLuong = Integer.parseInt(model.getValueAt(row, 1).toString());
+                        double giaNhap = Double.parseDouble(model.getValueAt(row, 2).toString());
+                        double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
+                        double donGia = giaNhap * (1 + loiNhuan);
+                        // Get giá bìa
+                        double giaBia = PhieuNhapBUS.getGiaBia(model.getValueAt(row, 0).toString());
+                        if (giaNhap > giaBia) {
+                            JOptionPane.showMessageDialog(this, "Giá nhập cần bé hơn hoặc bằng giá bìa: " + giaBia,
+                                    "Cảnh báo",
+                                    JOptionPane.WARNING_MESSAGE);
+                            return;
+                        }
+                        if (donGia >= giaBia) {
+                            donGia = giaBia;
+                        }
+                        double thanhTien = soLuong * giaNhap;
 
-                    model.setValueAt(donGia, row, 3);
-                    model.setValueAt(thanhTien, row, 4);
+                        model.setValueAt(donGia, row, 3);
+                        model.setValueAt(thanhTien, row, 4);
 
-                    // Update tổng tiền
-                    double tongTien = 0;
-                    for (int i = 0; i < model.getRowCount(); i++) {
-                        tongTien += Double.parseDouble(model.getValueAt(i, 4).toString());
+                        // Update tổng tiền
+                        double tongTien = 0;
+                        for (int i = 0; i < model.getRowCount(); i++) {
+                            tongTien += Double.parseDouble(model.getValueAt(i, 4).toString());
+                        }
+                        tongTienField.setText(String.valueOf(tongTien));
+                    } catch (NumberFormatException ex) {
+                        JOptionPane.showMessageDialog(this, "Vui lòng nhập số hợp lệ cho số lượng và giá nhập.",
+                                "Lỗi nhập liệu", JOptionPane.ERROR_MESSAGE);
                     }
-                    tongTienField.setText(String.valueOf(tongTien));
                 }
             }
         });
 
         List<ChiTietPhieuNhapDTO> chiTietPhieuNhapDTOs = new ArrayList<>();
-        
 
         xacNhanButton.addActionListener(e -> {
-            String maPN = PhieuNhapBUS.getLatestMaPN();
             String maNCC = (String) nhaCungCapComboBox.getSelectedItem();
             String tenDN = maNhanVienField.getText();
             String ngayNhapStr = ngayField.getText();
@@ -190,15 +251,24 @@ public class TaoPhieuNhap extends JPanel {
                 String tenSach = (String) model.getValueAt(i, 0);
                 int soLuong = Integer.parseInt(model.getValueAt(i, 1).toString());
                 double giaNhap = Double.parseDouble(model.getValueAt(i, 2).toString());
+                if (soLuong <= 0 || giaNhap <= 0) {
+                    JOptionPane.showMessageDialog(this, "Số lượng và giá nhập phải lớn hơn 0.", "Lỗi nhập liệu",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 double thanhTien = Double.parseDouble(model.getValueAt(i, 4).toString());
+                if(thanhTien <= 0) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng kiểm tra lại số lượng và giá nhập.", "Cảnh báo",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
                 chiTietPhieuNhapDTOs.add(new ChiTietPhieuNhapDTO(maPN, tenSach, soLuong, thanhTien, giaNhap));
             }
             PhieuNhapDTO phieuNhapDTO = new PhieuNhapDTO(maPN, maNCC, tenDN, ngayNhap, tongTien, trangThai);
             phieuNhapBUS.addPhieuNhapWithDetails(phieuNhapDTO, new ArrayList<>(chiTietPhieuNhapDTOs));
-            
-
 
             for (int j = 0; j < model.getRowCount(); j++) {
+                String maSP = model.getValueAt(j, 0).toString();
                 double giaNhap = Double.parseDouble(model.getValueAt(j, 2).toString());
                 double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
                 double donGia = giaNhap * (1 + loiNhuan);
@@ -207,11 +277,12 @@ public class TaoPhieuNhap extends JPanel {
                 if (donGia >= giaBia) {
                     donGia = giaBia;
                 }
-                phieuNhapBUS.checkGiaBan(ngayNhapStr, donGia);
+                phieuNhapBUS.checkGiaBan(maSP, donGia);
             }
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();
+
         });
 
         huyButton.addActionListener(e -> {
@@ -306,7 +377,7 @@ public class TaoPhieuNhap extends JPanel {
                 "Xóa"
         });
     }
-    
+
     // Custom cell renderer for numeric columns
     private DefaultTableCellRenderer numberRenderer = new DefaultTableCellRenderer() {
         @Override
@@ -315,7 +386,7 @@ public class TaoPhieuNhap extends JPanel {
                 if (value instanceof Integer) {
                     setText(String.valueOf(value));
                 } else {
-                    setText(String.format("%.0f", ((Number)value).doubleValue()));
+                    setText(String.format("%.0f", ((Number) value).doubleValue()));
                 }
             } else {
                 super.setValue(value);
@@ -323,14 +394,14 @@ public class TaoPhieuNhap extends JPanel {
         }
     };
 
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Tạo Phiếu Nhập");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(700, 700);
             QuyenDTO q = new QuyenDTO("QL", "Quản lý");
-            TaiKhoanDTO tkDTO = new TaiKhoanDTO("NV07", "Phương123", "Quận 8", "0983456789", "Phuong579@gmail.com", "55345678", q, 0);
+            TaiKhoanDTO tkDTO = new TaiKhoanDTO("NV07", "Phương123", "Quận 8", "0983456789", "Phuong579@gmail.com",
+                    "55345678", q, 0);
             frame.add(new TaoPhieuNhap(tkDTO));
             frame.setVisible(true);
         });

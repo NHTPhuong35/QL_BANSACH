@@ -4,13 +4,6 @@
  */
 package GUI;
 
-
-import BUS.ChiTietHoaDonBUS;
-import BUS.HoaDonBUS;
-import BUS.SanPhamBUS;
-import DTO.ChiTietHoaDonDTO;
-import DTO.HoaDonDTO;
-import DTO.SanPhamDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -21,15 +14,18 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
@@ -38,16 +34,21 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
+import BUS.ChiTietHoaDonBUS;
+import BUS.HoaDonBUS;
+import BUS.SanPhamBUS;
+import DTO.ChiTietHoaDonDTO;
+import DTO.HoaDonDTO;
+import DTO.SanPhamDTO;
+
 public class HoaDonGUI extends JPanel {
 
     private JPanel pnTool, pnMain;
-    private  JButton btSearch, btRefresh, btDel, btPrint;
+    private JButton btSearch, btRefresh, btDel, btPrint;
     private JTextField tfSearch;
     private JSpinner startDate, endDate;
     private DefaultTableModel dtm;
@@ -98,24 +99,25 @@ public class HoaDonGUI extends JPanel {
 
         //endDate
         endDate = new JSpinner(new SpinnerDateModel());
+
         JPanel pnEndDate = pnDate("Ngày kết thúc", endDate);
 
         MouseAdapter commonMouseListener = createCommonMouseListener();
 
         //bt Search 
-        btSearch = createButtonWithIcon("Tìm kiếm", "./src/image/search.png", BASE.color_btTim, BASE.font, new Dimension(130,35));
+        btSearch = createButtonWithIcon("Tìm kiếm", "./src/image/search.png", BASE.color_btTim, BASE.font, new Dimension(130, 35));
         btSearch.addMouseListener(commonMouseListener);
 
         //bt Refresh
-        btRefresh = createButtonWithIcon("Làm mới", "./src/image/refresh.png", BASE.color_btLamMoi, BASE.font, new Dimension(130,35));
+        btRefresh = createButtonWithIcon("Làm mới", "./src/image/refresh.png", BASE.color_btLamMoi, BASE.font, new Dimension(130, 35));
         btRefresh.addMouseListener(commonMouseListener);
 
         //bt Del
-        btDel = createButtonWithIcon("Xóa", "./src/image/bin.png", BASE.color_btLamXoa, BASE.font, new Dimension(100,35));
+        btDel = createButtonWithIcon("Xóa", "./src/image/bin.png", BASE.color_btLamXoa, BASE.font, new Dimension(100, 35));
         btDel.addMouseListener(commonMouseListener);
 
         //bt print
-        btPrint = createButtonWithIcon("In hóa đơn", "./src/image/print.png", BASE.color_btBFD, BASE.font, new Dimension(150,35));
+        btPrint = createButtonWithIcon("In hóa đơn", "./src/image/print.png", BASE.color_btBFD, BASE.font, new Dimension(150, 35));
         btPrint.addMouseListener(commonMouseListener);
 
         // add pnTool
@@ -142,22 +144,6 @@ public class HoaDonGUI extends JPanel {
         JScrollPane scrollTbl = new JScrollPane(tbl);
         pnMain.add(scrollTbl, BorderLayout.CENTER);
 
-        tfSearch.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                Search();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                Search();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-
         tbl.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -175,10 +161,9 @@ public class HoaDonGUI extends JPanel {
 
                         HoaDonDTO hd = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
 
-                        new invoiceDetails(hd);
+                        new CTHoaDon(hd);
                     }
-                }
-                else if(e.getClickCount() == 1){
+                } else if (e.getClickCount() == 1) {
                     int row = tbl.rowAtPoint(e.getPoint());
 
                     if (row != -1) { // Kiểm tra dòng có tồn tại
@@ -190,7 +175,7 @@ public class HoaDonGUI extends JPanel {
                         double tienGiamGia = Double.parseDouble(tbl.getValueAt(row, 5) + "");
                         double tongTien = Double.parseDouble(tbl.getValueAt(row, 6) + "");
 
-                       billPrint = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
+                        billPrint = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
                     }
                 }
             }
@@ -223,7 +208,8 @@ public class HoaDonGUI extends JPanel {
         date.setFont(BASE.font_header);
         date.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        JSpinner.DateEditor startDateEditor = new JSpinner.DateEditor(date, "yyyy/MM/dd");
+//        JSpinner.DateEditor startDateEditor = new JSpinner.DateEditor(date, "yyyy/MM/dd");
+        JSpinner.DateEditor startDateEditor = new JSpinner.DateEditor(date, "dd/MM/yyyy");
         date.setEditor(startDateEditor);
 
         lbl.setMaximumSize(new Dimension(200, lbl.getPreferredSize().height));
@@ -238,9 +224,20 @@ public class HoaDonGUI extends JPanel {
 
     private void reload(ArrayList<HoaDonDTO> ds) {
         dtm.setRowCount(0);
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+
         for (HoaDonDTO hd : ds) {
+            String formattedDate = hd.getNgayHD();
+            try {
+                Date date = inputFormat.parse(hd.getNgayHD());
+                formattedDate = outputFormat.format(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
             String TrangThai = hd.getTrangThai() == 1 ? "Đã xác nhận" : "Hủy";
-            dtm.addRow(new Object[]{hd.getSoHD(), hd.getTenDN(), hd.getMaKH(), hd.getTGian(), hd.getNgayHD(), hd.getTienGiamGia(), hd.getTongTien(), TrangThai});
+            dtm.addRow(new Object[]{hd.getSoHD(), hd.getTenDN(), hd.getMaKH(), hd.getTGian(), formattedDate, hd.getTienGiamGia(), hd.getTongTien(), TrangThai});
         }
     }
 
@@ -250,33 +247,41 @@ public class HoaDonGUI extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getSource() instanceof JButton) {
                     JButton clickedPanel = (JButton) e.getSource();
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                     if (clickedPanel == btDel) {
-                        Date currentDate = new Date();
-
-                        String formattedCurrentDate = formatter.format(currentDate);
-
                         int selectedRow = tbl.getSelectedRow();
-                        if (selectedRow != -1) {
-                            String ngayHDStr = dtm.getValueAt(selectedRow, 4).toString();
-                            if (ngayHDStr.equals(formattedCurrentDate)) {
-                                HoaDonBUS bus = new HoaDonBUS();
-                                String soHD = dtm.getValueAt(selectedRow, 0).toString();
+                        if (selectedRow == -1) { // Nếu chưa chọn dòng
+                            JOptionPane.showMessageDialog(null, "Vui lòng chọn một hóa đơn để hủy!", "Thông báo", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            // Hiển thị hộp thoại xác nhận
+                            int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn hủy hóa đơn?", "Xác nhận hủy hóa đơn", JOptionPane.YES_NO_OPTION);
+                            if (choice == JOptionPane.YES_OPTION) {
+                                Date currentDate = new Date();
+                                String formattedCurrentDate = formatter.format(currentDate);
 
-                                if (bus.CapNhatTrangThaiHD(soHD)) {
-                                    ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS(soHD);
-                                    ArrayList<ChiTietHoaDonDTO> dsctHD = cthdBUS.getDscthd();
-                                    HoaDonDTO hdDTO = bus.getHD(soHD);
-                                    editStatus(hdDTO);
-                                    for (ChiTietHoaDonDTO ct : dsctHD) {
-                                        SanPhamBUS spBUS = new SanPhamBUS();
-                                        SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
-                                        int sl = spDTO.getSoLuong() + ct.getSoLuong();
-                                        spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl);
+                                // Lấy thông tin từ dòng đã chọn
+                                String ngayHDStr = dtm.getValueAt(selectedRow, 4).toString();
+                                if (ngayHDStr.equals(formattedCurrentDate)) { // Chỉ hủy hóa đơn trong ngày
+                                    HoaDonBUS bus = new HoaDonBUS();
+                                    String soHD = dtm.getValueAt(selectedRow, 0).toString();
+
+                                    if (bus.CapNhatTrangThaiHD(soHD)) { // Cập nhật trạng thái hóa đơn
+                                        ChiTietHoaDonBUS cthdBUS = new ChiTietHoaDonBUS(soHD);
+                                        ArrayList<ChiTietHoaDonDTO> dsctHD = cthdBUS.getDscthd();
+                                        HoaDonDTO hdDTO = bus.getHD(soHD);
+
+                                        editStatus(hdDTO); // Cập nhật trạng thái hóa đơn trong giao diện
+                                        for (ChiTietHoaDonDTO ct : dsctHD) {
+                                            SanPhamBUS spBUS = new SanPhamBUS();
+                                            SanPhamDTO spDTO = spBUS.getSP(ct.getMaSach());
+                                            int sl = spDTO.getSoLuong() + ct.getSoLuong();
+                                            spBUS.CapNhatSoLuongSP(spDTO.getMaSach(), sl); // Cập nhật số lượng sản phẩm
+                                        }
                                     }
+                                } else {
+                                    // Thông báo nếu hóa đơn không được phép hủy vì không phải trong ngày
+                                    new ShowDiaLog("Chỉ được phép hủy hóa đơn trong Ngày", ShowDiaLog.ERROR_DIALOG);
                                 }
-                            } else {
-                                new ShowDiaLog("Chỉ được phép hủy hóa đơn trong Ngày", ShowDiaLog.ERROR_DIALOG);
                             }
                         }
                     } else if (clickedPanel == btSearch) {
@@ -286,10 +291,18 @@ public class HoaDonGUI extends JPanel {
                         String startDateStr = formatter.format(start);
                         String endDateStr = formatter.format(end);
 
+                        if (!isDateRangeValid(start, end)) {
+                            JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày kết thúc!");
+                            return;
+                        }
+
+                        System.out.println(startDateStr + " " + endDateStr);
+
                         ArrayList<HoaDonDTO> filteredList = new ArrayList<>();
 
                         for (HoaDonDTO bill : billList) {
                             String billDateStr = bill.getNgayHD();
+                            System.out.println(billDateStr);
 
                             boolean isInDateRange = (billDateStr.compareTo(startDateStr) >= 0 && billDateStr.compareTo(endDateStr) <= 0);
 
@@ -301,9 +314,7 @@ public class HoaDonGUI extends JPanel {
                             }
                         }
 
-                        // Reload the table with the filtered list
                         reload(filteredList);
-
                     } else if (clickedPanel == btRefresh) {
                         Date currentDate = new Date();
                         startDate.setValue(currentDate);
@@ -312,8 +323,14 @@ public class HoaDonGUI extends JPanel {
                         tfSearch.setText("");
                         reload(billList);
                     } else if (clickedPanel == btPrint) {
-                        PDFExporter exporter = new PDFExporter();
-                        exporter.exportInvoiceToPDF(billPrint);
+                        int selectedRow = tbl.getSelectedRow();
+                        if (selectedRow != -1) {
+                            int choice = JOptionPane.showConfirmDialog(null, "Bạn có chắn chắn muốn in hóa đơn?", "Xác nhận in hóa đơn", JOptionPane.YES_NO_OPTION);
+                            if (choice == JOptionPane.YES_OPTION) {
+                                PDFExporter exporter = new PDFExporter();
+                                exporter.exportInvoiceToPDF(billPrint);
+                            }
+                        }
                     }
                 }
             }
@@ -336,6 +353,10 @@ public class HoaDonGUI extends JPanel {
         };
     }
 
+    private boolean isDateRangeValid(Date start, Date end) {
+        return !start.after(end);
+    }
+
     public void editStatus(HoaDonDTO hd) {
         int rowCount = dtm.getRowCount();
         for (int i = 0; i < rowCount; i++) {
@@ -354,23 +375,11 @@ public class HoaDonGUI extends JPanel {
         dtm.fireTableDataChanged();
     }
 
-    private void Search() {
-        String key = tfSearch.getText().toLowerCase();
-        HoaDonBUS bus = new HoaDonBUS();
-        ArrayList<HoaDonDTO> ds = new ArrayList<>();
-        for (HoaDonDTO hd : billList) {
-            if (hd.getSoHD().toLowerCase().contains(key) || hd.getMaKH().toLowerCase().contains(key) || hd.getTenDN().toLowerCase().contains(key)) {
-                ds.add(hd);
-            }
-        }
-        reload(ds);
-    }
-    
     public JButton createButtonWithIcon(String text, String iconPath, Color bgColor, Font font, Dimension size) {
         ImageIcon icon = new ImageIcon(iconPath);
         Image scaledImage = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         icon = new ImageIcon(scaledImage);
-        
+
         JButton button = new JButton(text, icon);
         button.setHorizontalTextPosition(SwingConstants.RIGHT);
         button.setVerticalTextPosition(SwingConstants.CENTER);
@@ -381,7 +390,7 @@ public class HoaDonGUI extends JPanel {
         button.setOpaque(true);
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+
         return button;
     }
 

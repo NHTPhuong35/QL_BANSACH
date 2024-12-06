@@ -89,17 +89,21 @@ public class TaiKhoanDN extends JPanel {
                 String email = txtContentLeft[4].getText();
 
                 if (!xuLyKiemTraTenNV(tenND)) {
+                    txtContentLeft[1].setText(tkUSER.getTenNV());
                     return;
                 }
                 if (!xuLyKiemTraDiaChi(diaChi)) {
+                    txtContentLeft[2].setText(tkUSER.getDiaChi());
                     return;
                 }
                 if (!sdt.equals(tkUSER.getSDT())) {
                     if (!xuLyKiemTraSDT(sdt)) {
+                        txtContentLeft[3].setText(tkUSER.getSDT());
                         return;
                     }
                 }
                 if (!xuLyKiemTraEmail(email)) {
+                    txtContentLeft[4].setText(tkUSER.getEmail());
                     return;
                 }
                 Object[] options = {"Có", "Không"};
@@ -181,6 +185,9 @@ public class TaiKhoanDN extends JPanel {
                             matKhauMoi, tkUSER.getQuyen(), 1);
                     tkBUS.set(tk);
                     new ShowDiaLog("<html>Sửa mật khẩu thành công!", ShowDiaLog.SUCCESS_DIALOG);
+                    txtContentRight[1].setText("");
+                    txtContentRight[2].setText("");
+                } else {
                     txtContentRight[1].setText("");
                     txtContentRight[2].setText("");
                 }  

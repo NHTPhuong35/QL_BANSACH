@@ -46,15 +46,16 @@ import javax.swing.text.NumberFormatter;
 public class BanHangGUI extends JPanel {
 
     private String MaNV;
-    private JPanel pnProductList, pnPay, btChoose, btCustomerCreate, btPay;
+    private JPanel pnProductList, pnPay, btChoose, btCustomerCreate, btPay, btChonKH;
     private DefaultTableModel dtm;
     private JTable tbl;
     private JTextField tfMaKH, tfMaNv, tfTongCong, tfGiamGia, tfTongHD;
+//    private KhachHangDTO KhTao;
     private ArrayList<ChiTietHoaDonDTO> billList = new ArrayList<>();
     private ArrayList<ChiTietHoaDonDTO> billDetailList = new ArrayList<>();
 
-    public BanHangGUI() {
-        this.MaNV = "NV01";
+    public BanHangGUI(String MaNV) {
+        this.MaNV = MaNV;
         init();
         initComponents();
     }
@@ -105,25 +106,47 @@ public class BanHangGUI extends JPanel {
 
             @Override
             public TableCellEditor getCellEditor(int row, int column) {
-                if (column == 2) { // Chỉ áp dụng cho cột "Số lượng"
-                    // Tạo JFormattedTextField chỉ cho phép nhập số nguyên
+                if (column == 2) {
                     JFormattedTextField formattedTextField = new JFormattedTextField();
-                    formattedTextField.setValue(0); // Giá trị mặc định là 0
+                    formattedTextField.setValue(0); // Default value is 0
                     formattedTextField.setHorizontalAlignment(JFormattedTextField.RIGHT);
 
-                    // Định dạng để chỉ chấp nhận số nguyên >= 0
                     NumberFormat format = NumberFormat.getIntegerInstance();
-                    format.setGroupingUsed(false); // Không hiển thị dấu phân cách
+                    format.setGroupingUsed(false);
                     NumberFormatter formatter = new NumberFormatter(format);
                     formatter.setValueClass(Integer.class);
-                    formatter.setAllowsInvalid(false); // Không cho phép ký tự không hợp lệ
-                    formatter.setMinimum(0); // Chỉ cho phép giá trị >= 0
+                    formatter.setAllowsInvalid(false);
+                    formatter.setMinimum(0);
                     formattedTextField.setFormatterFactory(new DefaultFormatterFactory(formatter));
+
+                    String productCode = tbl.getValueAt(row, 0).toString();
+
+                    SanPhamBUS busSP = new SanPhamBUS();
+                    int remainingStock = busSP.getSLSP(productCode);
+
+                    formattedTextField.setMaximumSize(new Dimension(remainingStock, formattedTextField.getPreferredSize().height));
+
+                    formattedTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+                        @Override
+                        public void focusLost(java.awt.event.FocusEvent evt) {
+                            try {
+                                int enteredQuantity = Integer.parseInt(formattedTextField.getText());
+                                if (enteredQuantity > remainingStock) {
+                                    formattedTextField.setValue(remainingStock);
+                                    JOptionPane.showMessageDialog(null, "Số lượng không thể lớn hơn số lượng còn lại: " + remainingStock);
+                                    tbl.setValueAt(remainingStock, row, 2);
+                                }
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(null, "Vui lòng nhập một số hợp lệ.");
+                            }
+                        }
+                    });
 
                     return new DefaultCellEditor(formattedTextField);
                 }
                 return super.getCellEditor(row, column);
             }
+
         };
 
         tbl.getModel().addTableModelListener(e -> {
@@ -187,6 +210,7 @@ public class BanHangGUI extends JPanel {
         tfMaKH.setFont(BASE.font);
         tfMaKH.setPreferredSize(new Dimension(800, 35));
         tfMaKH.setMaximumSize(new Dimension(800, 35));
+        tfMaKH.setEnabled(false);
         btCustomerCreate = new JPanel();
         btCustomerCreate.setMaximumSize(new Dimension(40, 40));
         btCustomerCreate.setLayout(new BoxLayout(btCustomerCreate, BoxLayout.X_AXIS));
@@ -195,17 +219,36 @@ public class BanHangGUI extends JPanel {
         btCustomerCreate.setCursor(new Cursor(Cursor.HAND_CURSOR));
         JLabel lblCustomer = new JLabel("Tạo mới");
         lblCustomer.setFont(BASE.font);
-        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/person.png"));
+        ImageIcon CustomerIcon = new ImageIcon(getClass().getResource("/Image/btAdd.png"));
         Image CustomerImg = CustomerIcon.getImage();
         Image scaledCustomerImg = CustomerImg.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
         ImageIcon scaledCustomerIcon = new ImageIcon(scaledCustomerImg);
         JLabel lblCustomerImage = new JLabel(scaledCustomerIcon);
         btCustomerCreate.add(lblCustomer);
         btCustomerCreate.add(lblCustomerImage);
+
+        btChonKH = new JPanel();
+        btChonKH.setMaximumSize(new Dimension(40, 40));
+        btChonKH.setLayout(new BoxLayout(btChonKH, BoxLayout.X_AXIS));
+        btChonKH.setBackground(Color.decode("#F5B041"));
+        btChonKH.setBorder(new EmptyBorder(0, 10, 0, 10));
+        btChonKH.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        JLabel lblChonKH = new JLabel("Chọn KH");
+        lblChonKH.setFont(BASE.font);
+        ImageIcon KhIcon = new ImageIcon(getClass().getResource("/Image/person.png"));
+        Image khImg = KhIcon.getImage();
+        Image scaledKhImg = khImg.getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+        ImageIcon scaledkhIcon = new ImageIcon(scaledKhImg);
+        JLabel lblKhImage = new JLabel(scaledkhIcon);
+        btChonKH.add(lblChonKH);
+        btChonKH.add(lblKhImage);
+
         JPanel pnkhachhang = new JPanel();
         pnkhachhang.setLayout(new BoxLayout(pnkhachhang, BoxLayout.X_AXIS));
         pnkhachhang.add(tfMaKH);
-        pnkhachhang.add(Box.createVerticalStrut(5));
+        pnkhachhang.add(Box.createVerticalStrut(10));
+        pnkhachhang.add(btChonKH);
+        pnkhachhang.add(Box.createVerticalStrut(10));
         pnkhachhang.add(btCustomerCreate);
 
         JPanel pnKH = new JPanel();
@@ -248,6 +291,7 @@ public class BanHangGUI extends JPanel {
         btChoose.addMouseListener(commonMouseListener);
         btCustomerCreate.addMouseListener(commonMouseListener);
         btPay.addMouseListener(commonMouseListener);
+        btChonKH.addMouseListener(commonMouseListener);
 
         tfMaKH.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
@@ -281,8 +325,10 @@ public class BanHangGUI extends JPanel {
                     ChonSanPhamGUI spGUI = new ChonSanPhamGUI(BanHangGUI.this);
                     spGUI.setVisible(true);
                 } else if (clickedPanel == btCustomerCreate) {
-                    addCustomerGUI addCustomer = new addCustomerGUI(BanHangGUI.this);
-                } else if (clickedPanel == btPay) {
+                    TaoKhachHangGUI addCustomer = new TaoKhachHangGUI(BanHangGUI.this);
+                }else if(clickedPanel == btChonKH){
+                    ChonKhachHangGUI kh = new ChonKhachHangGUI(BanHangGUI.this);
+                }else if (clickedPanel == btPay) {
                     if (tfMaKH.getText().isEmpty()) {
                         new ShowDiaLog("Vui lòng nhập mã khách hàng!", ShowDiaLog.ERROR_DIALOG);
                         return;
@@ -292,27 +338,27 @@ public class BanHangGUI extends JPanel {
                         new ShowDiaLog("Danh sách sản phẩm trống!", ShowDiaLog.ERROR_DIALOG);
                         return;
                     }
-                    
-                    String MaKH = tfMaKH.getText();
+
                     KhachHangBUS khBUS = new KhachHangBUS();
+                    String MaKH = tfMaKH.getText();
                     KhachHangDTO khDTO = khBUS.layKHTheoMa(MaKH);
 
                     double TongTien = tinhTongTien();
                     double diemtichluy = khDTO.getDiemTichluy();
                     double giamgia = tinhQuyDoiDiem(diemtichluy);
-                    double ThanhTien = 0;
+                    double ThanhTien;
+
                     if (TongTien > giamgia) {
                         double diemtl = tinhDiemTichLuy(TongTien);
                         khBUS.CapNhatDiemTL(MaKH, diemtl);
                         ThanhTien = TongTien - giamgia;
-
-                    } else if (TongTien < giamgia) {
+                    } else {
                         double diemconlai = giamgia - TongTien;
                         double diemtl = tinhDiemTichLuy(TongTien);
                         khBUS.CapNhatDiemTL(MaKH, diemtl + diemconlai);
                         ThanhTien = 0;
                     }
-                    
+
                     HoaDonBUS hdBUS = new HoaDonBUS();
                     HoaDonDTO hd = new HoaDonDTO(tfMaKH.getText(), tfMaNv.getText(), giamgia, ThanhTien);
                     hd.setSoHD(hdBUS.TaoMaHD());
@@ -344,6 +390,8 @@ public class BanHangGUI extends JPanel {
                     pn.setBackground(Color.decode("#4988B2"));
                 } else if (pn == btPay) {
                     pn.setBackground(Color.decode("#DAB378"));
+                }else if (pn == btChonKH) {
+                    pn.setBackground(Color.decode("#D68910"));
                 }
             }
 
@@ -356,6 +404,9 @@ public class BanHangGUI extends JPanel {
                     pn.setBackground(BASE.color_header_tbl);
                 } else if (pn == btCustomerCreate) {
                     pn.setBackground(Color.decode("#5DADE2"));
+                }
+                else if (pn == btChonKH) {
+                    pn.setBackground(Color.decode("#F5B041"));
                 }
             }
         };
@@ -464,9 +515,10 @@ public class BanHangGUI extends JPanel {
         double TongTien = tinhTongTien();
         tfTongCong.setText(String.valueOf(TongTien));
 
+        // Kiểm tra nếu khách hàng không tồn tại
         if (khDTO == null) {
-            tfGiamGia.setText("");
-            tfTongHD.setText("");
+            tfGiamGia.setText("0.0");
+            tfTongHD.setText(String.valueOf(TongTien)); // Tổng hóa đơn bằng tổng tiền
             return;
         }
 
@@ -481,27 +533,34 @@ public class BanHangGUI extends JPanel {
             double TongHD = TongTien - giamgia;
             tfTongHD.setText(String.valueOf(TongHD));
         }
-
     }
-    
+
     public void DetailBillList(String SoHD) {
         int rowCount = dtm.getRowCount();
         for (int i = 0; i < rowCount; i++) {
             String MaSP = (String) dtm.getValueAt(i, 0);
-            int soLuong = (Integer) dtm.getValueAt(i, 2);
-            double donGia = (Double) dtm.getValueAt(i, 3);
+            int soLuong = Integer.parseInt(dtm.getValueAt(i, 2).toString());
+            double donGia = Double.parseDouble(dtm.getValueAt(i, 3).toString());
 
             ChiTietHoaDonDTO chiTiet = new ChiTietHoaDonDTO(SoHD, MaSP, soLuong, donGia);
             billDetailList.add(chiTiet);
         }
     }
 
+//    public KhachHangDTO getKhTao() {
+//        return KhTao;
+//    }
+//
+//    public void setKhTao(KhachHangDTO KhTao) {
+//        this.KhTao = KhTao;
+//    }
+
     public static void main(String[] args) {
         JFrame f = new JFrame();
         f.setSize(1500, 800);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.setLocationRelativeTo(null);
-        f.add(new BanHangGUI());
+        f.add(new BanHangGUI("NV01"));
         f.setVisible(true);
     }
 }

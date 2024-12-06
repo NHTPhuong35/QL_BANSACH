@@ -73,7 +73,7 @@ public class PhieuNhapDAO {
         String latestMaPN = null;
         try {
             conn.connect();
-            String sql = "SELECT MAPN FROM phieunhap ORDER BY NGAYNHAP DESC LIMIT 1";
+            String sql = "SELECT MAPN FROM phieunhap ORDER BY MAPN DESC LIMIT 1";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
             if (rs.next()) {
@@ -182,10 +182,31 @@ public class PhieuNhapDAO {
     public boolean xoaPhieuNhap(String maPN) {
         try {
             conn.connect();
+            
+            // Get the details of the phieu nhap to be deleted
+            String getChiTietSql = "SELECT MASACH, SOLUONG FROM chitietphieunhap WHERE MAPN = ?";
+            PreparedStatement getChiTietPre = conn.getConn().prepareStatement(getChiTietSql);
+            getChiTietPre.setString(1, maPN);
+            ResultSet rs = getChiTietPre.executeQuery();
+            
+            // Update the quantity of each product in the sach table
+            String updateSachSql = "UPDATE sach SET SOLUONG = SOLUONG - ? WHERE MASACH = ?";
+            PreparedStatement updateSachPre = conn.getConn().prepareStatement(updateSachSql);
+            while (rs.next()) {
+                String maSach = rs.getString("MASACH");
+                int soLuong = rs.getInt("SOLUONG");
+                updateSachPre.setInt(1, soLuong);
+                updateSachPre.setString(2, maSach);
+                updateSachPre.addBatch();
+            }
+            updateSachPre.executeBatch();
+            
+            // Set the TRANGTHAI of the phieu nhap to 0
             String sql = "UPDATE phieunhap SET TRANGTHAI = 0 WHERE MAPN = ?";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             pre.setString(1, maPN);
             pre.executeUpdate();
+            
             conn.disconnect();
             return true;
         } catch (SQLException e) {
@@ -410,6 +431,17 @@ public class PhieuNhapDAO {
             preChiTiet.addBatch();
         }
         preChiTiet.executeBatch();
+
+
+        String updateSachSql = "UPDATE sach SET SOLUONG = SOLUONG + ? WHERE MASACH = ?";
+        PreparedStatement updateSachPre = conn.getConn().prepareStatement(updateSachSql);
+        for (ChiTietPhieuNhapDTO chiTiet : chiTietList) {
+            updateSachPre.setInt(1, chiTiet.getSOLUONG());
+            updateSachPre.setString(2, chiTiet.getMASACH());
+            updateSachPre.addBatch();
+        }
+        updateSachPre.executeBatch();
+        
 
         conn.getConn().commit(); // Commit transaction
         conn.disconnect();

@@ -10,8 +10,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.regex.Pattern;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -21,113 +24,174 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class SuaKhachHangGUI extends JFrame implements MouseListener {
+public class SuaKhachHangGUI extends JFrame {
 
-    private JTextField tfTen, tfSdt;
-    private JPanel btnXacNhan, btnHuy;
-    private KhachHangGUI KHGUI;
+    private JPanel pnHeader, pnMain, pnFooter;
+    private JPanel btXacNhan, btHuy;
+    private JTextField tfName, tfPhone;
+    private JLabel errorName, errorPhone;
     private KhachHangDTO khDTO;
-    private String sdtGoc;
+    private KhachHangGUI khGUI;
+    private String phoneNumber;
 
-    public SuaKhachHangGUI(KhachHangDTO khDTO, KhachHangGUI KHGUI) {
-        this.KHGUI = KHGUI;
+    public SuaKhachHangGUI(KhachHangDTO khDTO, KhachHangGUI khGUI) {
         this.khDTO = khDTO;
-        this.tfTen = new JTextField(khDTO.getTenKh());
-        this.tfTen.setPreferredSize(new Dimension(300, 30));
-        this.tfTen.setFont(BASE.font);
-        this.tfTen.setMaximumSize(new Dimension(400, 30));
-        this.tfSdt = new JTextField(khDTO.getSdt());
-        this.tfSdt.setPreferredSize(new Dimension(300, 30));
-        this.tfSdt.setFont(BASE.font);
-        this.tfSdt.setMaximumSize(new Dimension(400, 30));
-        this.sdtGoc = khDTO.getSdt();
-        init();
-    }
-
-    public SuaKhachHangGUI() {
+        this.khGUI = khGUI;
+        this.tfName = new JTextField(khDTO.getTenKh());
+        this.tfPhone = new JTextField(khDTO.getSdt());
+        this.phoneNumber = khDTO.getSdt();
         init();
     }
 
     public void init() {
+        // Tạo một JPanel cho viền
+        JPanel borderPanel = new JPanel();
+        borderPanel.setBackground(Color.BLACK); // Màu viền
+        borderPanel.setBorder(new EmptyBorder(1, 1, 1, 1)); // Khoảng cách bên trong
+        borderPanel.setLayout(new BorderLayout());
+
         setLayout(new BorderLayout());
-        setSize(300, 185);
-        setPreferredSize(new Dimension(300, 185));
+        setSize(340, 240);
         setUndecorated(true);
+        setPreferredSize(new Dimension(300, 240));
+        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Tạo tiêu đề giao diện
-        JPanel titleGUI_wrap = new JPanel(new BorderLayout());
-        titleGUI_wrap.setPreferredSize(new Dimension(360, 35));
-        JLabel titleGUI = new JLabel("Sửa Khách hàng", JLabel.CENTER);
-        titleGUI.setFont(BASE.font_header);
-        titleGUI_wrap.add(titleGUI, BorderLayout.CENTER);
-        titleGUI_wrap.setBackground(BASE.color_header_tbl);
+        pnHeader = new JPanel(new BorderLayout());
+        pnHeader.setBackground(BASE.color_header_tbl);
+        pnHeader.setPreferredSize(new Dimension(0, 35));
+        JLabel lblHeader = new JLabel("Sửa khách hàng", JLabel.CENTER);
+        lblHeader.setFont(BASE.font_header);
+        pnHeader.add(lblHeader, BorderLayout.CENTER);
 
-        add(titleGUI_wrap, BorderLayout.NORTH);
-
-        JPanel pnMain = new JPanel();
+        pnMain = new JPanel();
         pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS));
-        pnMain.setBorder(new EmptyBorder(10, 15, 0, 15));
-        pnMain.setBackground(Color.WHITE);
+        pnMain.setBorder(new EmptyBorder(10, 10, 0, 10));
 
-        JPanel pnTenKH = new JPanel();
-        pnTenKH.setBackground(Color.WHITE);
-        pnTenKH.setLayout(new BoxLayout(pnTenKH, BoxLayout.X_AXIS));
+        JPanel pnName = new JPanel();
+        pnName.setLayout(new BoxLayout(pnName, BoxLayout.X_AXIS));
+        JLabel lblName = new JLabel("Tên khách hàng");
+        lblName.setFont(BASE.font);
+//        tfName = new JTextField();
+        tfName.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        pnName.add(lblName);
+        pnName.add(Box.createHorizontalStrut(10));
+        pnName.add(tfName);
+        pnName.add(Box.createHorizontalGlue());
 
-        JLabel lbTen = new JLabel("Tên khách hàng:");
-        lbTen.setFont(BASE.font);
+        errorName = new JLabel("  ");
+        errorName.setFont(BASE.font_error);
+        errorName.setForeground(Color.RED);
+        errorName.setPreferredSize(new Dimension(300, 30));
+        errorName.setMaximumSize(new Dimension(300, 30));
+        errorName.setMinimumSize(new Dimension(300, 30));
 
-//        tfTen = new JTextField();
-//        tfTen.setPreferredSize(new Dimension(300, 30));
-//        tfTen.setMaximumSize(new Dimension(400, 30));
-        JPanel pnSDT = new JPanel();
-        pnSDT.setBackground(Color.WHITE);
-        pnSDT.setLayout(new BoxLayout(pnSDT, BoxLayout.X_AXIS));
+        JPanel pnPhone = new JPanel();
+        pnPhone.setLayout(new BoxLayout(pnPhone, BoxLayout.X_AXIS));
+        JLabel lblPhone = new JLabel("Số điện thoại");
+        lblPhone.setFont(BASE.font);
+//        tfPhone = new JTextField();
+        tfPhone.setMaximumSize(new Dimension(Integer.MAX_VALUE, 35));
+        pnPhone.add(lblPhone);
+        pnPhone.add(Box.createHorizontalStrut(28));
+        pnPhone.add(tfPhone);
+        pnPhone.add(Box.createHorizontalGlue());
 
-        JLabel lbSdt = new JLabel("Số điện thoại:");
-        lbSdt.setFont(BASE.font);
+        errorPhone = new JLabel(" ");
+        errorPhone.setFont(BASE.font_error);
+        errorPhone.setForeground(Color.RED);
+        errorPhone.setPreferredSize(new Dimension(300, 30));
+        errorPhone.setMaximumSize(new Dimension(300, 30));
+        errorPhone.setMinimumSize(new Dimension(300, 30));
 
-//        tfSdt = new JTextField();
-//        tfSdt.setPreferredSize(new Dimension(300, 30));
-//        tfSdt.setMaximumSize(new Dimension(300, 30));
-        JPanel pnBTN = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-        pnBTN.setBackground(Color.WHITE);
-        btnXacNhan = new JPanel();
-        btnXacNhan.setPreferredSize(new Dimension(120, 30));
-        cssBtn(btnXacNhan, "Xác nhận", "btnXacNhan", BASE.color_btXacNhan);
-        btnXacNhan.addMouseListener(this);
+        pnMain.add(pnName);
+        pnMain.add(errorName);
+        pnMain.add(Box.createVerticalStrut(10));
+        pnMain.add(pnPhone);
+        pnMain.add(errorPhone);
 
-        btnHuy = new JPanel();
-        btnHuy.setPreferredSize(new Dimension(120, 30));
-        cssBtn(btnHuy, "Hủy", "btnHuy", BASE.color_btHuy);
-        btnHuy.addMouseListener(this);
+        MouseAdapter commonMouseListener = createCommonMouseListener();
 
-        pnTenKH.add(lbTen);
-        pnTenKH.add(Box.createRigidArea(new Dimension(10, 10)));
-        pnTenKH.add(tfTen);
+        pnFooter = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        btXacNhan = new JPanel();
+        btXacNhan.setPreferredSize(new Dimension(120, 30));
+        cssBtn(btXacNhan, "Xác nhận", "btnXacNhan", BASE.color_btXacNhan);
+        btXacNhan.addMouseListener(commonMouseListener);
 
-        pnSDT.add(lbSdt);
-        pnSDT.add(Box.createRigidArea(new Dimension(28, 10)));
-        pnSDT.add(tfSdt);
+        btHuy = new JPanel();
+        btHuy.setPreferredSize(new Dimension(120, 30));
+        cssBtn(btHuy, "Hủy", "btnHuy", BASE.color_btHuy);
+        btHuy.addMouseListener(commonMouseListener);
 
-        pnBTN.add(btnXacNhan);
-        pnBTN.add(btnHuy);
+        pnFooter.add(btXacNhan);
+        pnFooter.add(btHuy);
 
-        pnMain.add(pnTenKH);
-        pnMain.add(Box.createRigidArea(new Dimension(0, 20)));
-        pnMain.add(pnSDT);
-        pnMain.add(Box.createRigidArea(new Dimension(0, 20)));
-        pnMain.add(pnBTN);
-        add(pnMain, BorderLayout.CENTER);
+        // Thêm các thành phần vào borderPanel
+        borderPanel.add(pnHeader, BorderLayout.NORTH);
+        borderPanel.add(pnMain, BorderLayout.CENTER);
+        borderPanel.add(pnFooter, BorderLayout.SOUTH);
 
-        pack();
-        setLocationRelativeTo(null);  // Canh giữa màn hình
-        setVisible(true);
+        // Thêm borderPanel vào JFrame
+        add(borderPanel);
+
+        this.setVisible(true);
+
+        tfName.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validateName();
+            }
+        });
+
+        tfPhone.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                validatePhone();
+            }
+        });
+    }
+
+    private void validateName() {
+        String name = tfName.getText();
+        Pattern validNamePattern = Pattern.compile("^[\\p{L} .'-]+$");
+        int maxLength = 35;
+
+        if (name.isEmpty()) {
+            errorName.setText("Tên không được để trống.");
+        } else if (name.length() > maxLength) {
+            errorName.setText("Tên không được quá 35 ký tự.");
+        } else if (name.startsWith(" ")) {
+            errorName.setText("Tên không được chứa khoảng trắng ở đầu.");
+        } else if (name.endsWith(" ")) {
+            errorName.setText("Tên không được chứa khoảng trắng ở cuối.");
+        } else if (!validNamePattern.matcher(name).matches()) {
+            errorName.setText("Tên không được chứa ký tự đặc biệt.");
+        } else {
+            errorName.setText("");
+        }
+    }
+
+    private void validatePhone() {
+        String phone = tfPhone.getText();
+        Pattern digitPattern = Pattern.compile("^[0-9]+$");
+
+        KhachHangBUS khBUS = new KhachHangBUS();
+
+        if (phone.isEmpty()) {
+            errorPhone.setText("Số điện thoại không được để trống.");
+        } else if (!phone.startsWith("0")) {
+            errorPhone.setText("Số điện thoại phải bắt đầu bằng số 0.");
+        } else if (!digitPattern.matcher(phone).matches()) {
+            errorPhone.setText("Số điện thoại là chữ số.");
+        } else if (phone.length() != 10) {
+            errorPhone.setText("Số điện thoại có độ dài 10 chữ số.");
+        } else {
+            errorPhone.setText("");
+        }
     }
 
     private void cssBtn(JPanel b, String text, String name, Color color) {
         JLabel t = new JLabel(text, JLabel.CENTER);
-//        t.setForeground(Color.WHITE);  // Đảm bảo chữ trắng để nổi bật
         b.setBackground(color);
         b.setName(name);
         b.add(t);
@@ -135,80 +199,44 @@ public class SuaKhachHangGUI extends JFrame implements MouseListener {
         b.setOpaque(true);
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        try {
-            JPanel btn = (JPanel) e.getSource();
-            switch (btn.getName()) {
-                case "btnHuy":
-                    Object[] options = {"Có", "Không"};
-                    int r1 = JOptionPane.showOptionDialog(null, "Những thông tin sẽ không được lưu sau khi thoát!\nBạn có muốn tiếp tục thoát?", "Thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                    if (r1 == JOptionPane.YES_OPTION) {
-                        dispose();
-                    }
-                    break;
-                case "btnXacNhan":
-                    String ten = tfTen.getText();
-                    String sdt = tfSdt.getText();
-                    khDTO.setTenKh(ten);
-                    khDTO.setSdt(sdt);
-                    KhachHangBUS busKH = new KhachHangBUS();
-                    boolean success = true;
-                    for (KhachHangDTO kh : busKH.getDs()) {
-                        if (kh.getSdt().equals(khDTO.getSdt()) && !khDTO.getSdt().equals(sdtGoc)) {
-                            success = false;
-                            break;
-                        }
-                    }
-                    if (success) {
-                        KhachHangBUS khBUS = new KhachHangBUS();
-                        if (khBUS.SuaKhachHang(khDTO)) {
-                            KHGUI.EditRow(khDTO);
+    private MouseAdapter createCommonMouseListener() {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getSource() instanceof JPanel) {
+                    JPanel clickedPanel = (JPanel) e.getSource();
+                    if (clickedPanel == btHuy) {
+                        Object[] options = {"Có", "Không"};
+                        int r1 = JOptionPane.showOptionDialog(null, "Những thông tin sẽ không được lưu sau khi thoát!\nBạn có muốn tiếp tục thoát?", "Thoát", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                        if (r1 == JOptionPane.YES_OPTION) {
                             dispose();
-                        }else{
-                            new ShowDiaLog("Sửa khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
                         }
-                    }else {
-                        new ShowDiaLog("Số điện thoại đã tồn tại", ShowDiaLog.ERROR_DIALOG);
+                    } else if (clickedPanel == btXacNhan) {
+
+                        if (!errorName.getText().trim().isEmpty() || !errorPhone.getText().trim().isEmpty()) {
+                            return;
+                        }
+                        String name = tfName.getText();
+                        String phone = tfPhone.getText();
+                        KhachHangBUS khBUS = new KhachHangBUS();
+                        boolean success = true;
+                        if (khBUS.validatePhone(phone) && !phone.equals(phoneNumber)) {
+                            success = false;
+                        }
+                        if (success) {
+                            khDTO.setTenKh(name);
+                            khDTO.setSdt(phone);
+                            khGUI.EditRow(khDTO);
+                            if (khBUS.SuaKhachHang(khDTO)) {
+                                dispose();
+                                new ShowDiaLog("<html>Sửa khách hàng thành công</html>", ShowDiaLog.SUCCESS_DIALOG);
+                            }
+                        } else {
+                            new ShowDiaLog("<html>Sửa khách hàng thất bại <br>Số điện thoại đã tồn tại</html> ", ShowDiaLog.ERROR_DIALOG);
+                        }
                     }
-                    break;
+                }
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-//        try {
-//            JPanel btn = (JPanel) e.getSource();
-//            btn.setBackground(BASE.color_table_heaer);
-//            btn.setOpaque(true);
-//        } catch (Exception ex) {
-//            System.out.println(ex.getMessage());
-//        }
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-//        try {
-//            JPanel btn = (JPanel) e.getSource();
-//            btn.setBackground(BASE.color_heaer);
-//            btn.setOpaque(true);
-//        } catch (Exception ex) {
-//            System.out.println(ex.getMessage());
-//        }
-    }
-
-    public static void main(String[] args) {
-        new SuaKhachHangGUI();
+        };
     }
 }

@@ -46,7 +46,7 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
     public ChonSanPhamPhieuNhapGUI(TaoPhieuNhap taoPhieuNhap) {
         this.taoPhieuNhap = taoPhieuNhap;
         SanPhamBUS spBUS = new SanPhamBUS();
-        dsSP = spBUS.getDanhSachBan();
+        dsSP = spBUS.getDsSP();
 
         init();
     }
@@ -139,7 +139,7 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         productPanel.setAlignmentY(TOP_ALIGNMENT);
         productPanel.setBackground(Color.WHITE);
 
-        String imagePath = sp.getTenHinh().size() > 0 ? "./src/Image/" + sp.getTenHinh().get(0) : "./src/Image/product.png";
+        String imagePath = sp.getTenHinh().size() > 0 ? "./src/Image/" + sp.getTenHinh().get(0) : "./src/Image/iconBook.jpg";
         ImageIcon icon = new ImageIcon(imagePath);
         Image scaledImage = icon.getImage().getScaledInstance(180, 210, Image.SCALE_SMOOTH);
         JLabel label = new JLabel(new ImageIcon(scaledImage), JLabel.CENTER);

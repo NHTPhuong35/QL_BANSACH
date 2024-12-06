@@ -20,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
-public class addCustomerGUI extends JFrame {
+public class TaoKhachHangGUI extends JFrame {
 
     private JPanel pnHeader, pnMain, pnFooter;
     private JPanel btXacNhan, btHuy;
@@ -28,11 +28,11 @@ public class addCustomerGUI extends JFrame {
     private JLabel errorName, errorPhone;
     private BanHangGUI SalesGUI;
 
-    public addCustomerGUI() {
+    public TaoKhachHangGUI() {
         init();
     }
 
-    public addCustomerGUI(BanHangGUI SalesGUI) {
+    public TaoKhachHangGUI(BanHangGUI SalesGUI) {
         this.SalesGUI = SalesGUI;
         init();
     }
@@ -178,8 +178,6 @@ public class addCustomerGUI extends JFrame {
             errorPhone.setText("Số điện thoại là chữ số.");
         } else if (phone.length() != 10) {
             errorPhone.setText("Số điện thoại có độ dài 10 chữ số.");
-        } else if (khBUS.checkPhoneExits(phone)) {
-            errorPhone.setText("Số điện thoại Đã tồn tại");
         } else {
             errorPhone.setText(" ");
         }
@@ -207,17 +205,23 @@ public class addCustomerGUI extends JFrame {
                             dispose();
                         }
                     } else if (clickedPanel == btXacNhan) {
+                        if (!errorName.getText().trim().isEmpty() || !errorPhone.getText().trim().isEmpty() || tfName.getText().isEmpty() || tfPhone.getText().isEmpty()) {
+                            return;
+                        }
+
+                        KhachHangBUS khBUS = new KhachHangBUS();
                         String name = tfName.getText();
                         String phone = tfPhone.getText();
-                        KhachHangBUS khBUS = new KhachHangBUS();
                         KhachHangDTO kh = new KhachHangDTO(name, phone);
                         kh.setMaKh(khBUS.TaoMaKH());
-                        if (khBUS.ThemKhachHang(kh)) {
+
+                        if (!khBUS.validatePhone(phone)) {
+                            khBUS.ThemKhachHang(kh);
                             SalesGUI.getTfMaKH().setText(kh.getMaKh());
                             new ShowDiaLog("Thêm khách hàng thành công", ShowDiaLog.SUCCESS_DIALOG);
                             dispose();
                         } else {
-                            new ShowDiaLog("Thêm khách hàng thất bại", ShowDiaLog.ERROR_DIALOG);
+                            new ShowDiaLog("<html>Thêm khách hàng thất bại <br>Số điện thoại đã tồn tại</html> ", ShowDiaLog.ERROR_DIALOG);
                         }
                     }
                 }
@@ -226,6 +230,6 @@ public class addCustomerGUI extends JFrame {
     }
 
     public static void main(String[] agrs) {
-        new addCustomerGUI();
+        new TaoKhachHangGUI();
     }
 }

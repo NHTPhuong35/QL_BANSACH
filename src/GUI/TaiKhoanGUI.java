@@ -62,7 +62,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     public TaiKhoanGUI(TaiKhoanDTO tkUSER) {
         this.tkUSER = tkUSER;
         PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
-        dsQuyen = quyenBUS.getTenPhanQuyenList();
+        dsQuyen = quyenBUS.getTenQuyenList();
 
         tkBUS = new TaiKhoanBUS();
         dsTK = new ArrayList<>();
@@ -79,7 +79,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
     public TaiKhoanGUI() {
         PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
-        dsQuyen = quyenBUS.getTenPhanQuyenList();
+        dsQuyen = quyenBUS.getTenQuyenList();
 
         tkBUS = new TaiKhoanBUS();
         dsTK = new ArrayList<>();
@@ -117,9 +117,9 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         ImageIcon editIcon = new ImageIcon("./src/image/btEdit.png");
         Image editImage = editIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         editIcon = new ImageIcon(editImage);
-        btnSua = new JButton("Sửa",editIcon);
+        btnSua = new JButton("Sửa", editIcon);
         btnSua.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnSua.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnSua.setVerticalTextPosition(SwingConstants.CENTER);
         btnSua.setPreferredSize(new Dimension(100, 35));
         btnSua.setMaximumSize(new Dimension(100, 35));
         btnSua.setBackground(BASE.color_btEdit);
@@ -132,9 +132,9 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         ImageIcon deleteIcon = new ImageIcon("./src/image/bin.png");
         Image deleteImage = deleteIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
         deleteIcon = new ImageIcon(deleteImage);
-        btnXoa = new JButton("Xoá",deleteIcon);
+        btnXoa = new JButton("Xoá", deleteIcon);
         btnXoa.setHorizontalTextPosition(SwingConstants.RIGHT);
-        btnXoa.setVerticalTextPosition(SwingConstants.CENTER); 
+        btnXoa.setVerticalTextPosition(SwingConstants.CENTER);
         btnXoa.setPreferredSize(new Dimension(100, 35));
         btnXoa.setMaximumSize(new Dimension(100, 35));
         btnXoa.setBackground(BASE.color_btLamXoa);
@@ -239,15 +239,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
         // Thiết lập dữ liệu cho JTable
         df = new DefaultTableModel(header, 0);  // Không khởi tạo lại dsSP tại đây!
-        for (TaiKhoanDTO row : dsTK) {
-            String trangThai = "Đang làm việc";
-            if (row.getTrangThai() == 0) {
-                trangThai = "Nghỉ việc";
-            }
-
-            Object[] data = {row.getTenDN(), row.getTenNV(), row.getQuyen().getTenQuyen(), "********", trangThai};
-            df.addRow(data);
-        }
+        reload(dsTK);
         table.setModel(df);
 
         // Canh giữa nội dung trong mỗi ô trong cột
@@ -307,10 +299,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
         // Lọc dữ liệu dựa trên từ khóa tìm kiếm
         for (TaiKhoanDTO tk : dsTK) {
-            String trangThai = "Đang làm việc";
-            if (tk.getTrangThai() == 0) {
-                trangThai = "Nghỉ việc";
-            }
+            String trangThai = (tk.getTrangThai() == 1) ? "Đang hoạt động" : "Đã khoá";
             if (tk.getTenDN().toLowerCase().contains(keyword) || tk.getTenNV().toLowerCase().contains(keyword)) {
                 df.addRow(new Object[]{tk.getTenDN(), tk.getTenNV(), tk.getQuyen().getTenQuyen(), tk.getMatKhau(), trangThai});
             }
@@ -321,10 +310,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         df.setRowCount(0);
 
         for (TaiKhoanDTO tk : dsTaiKhoan) {
-            String trangThai = "Đang làm việc";
-            if (tk.getTrangThai() == 0) {
-                trangThai = "Nghỉ việc";
-            }
+            String trangThai = (tk.getTrangThai() == 1) ? "Đang hoạt động" : "Đã khoá";
             df.addRow(new Object[]{tk.getTenDN(), tk.getTenNV(), tk.getQuyen().getTenQuyen(), "********", trangThai});
         }
     }
@@ -376,7 +362,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
                 Object[] options = {"Có", "Không"};
                 int result = JOptionPane.showOptionDialog(null, "Bạn có chắc chắn muốn xoá tài khoản này không?", "Xác nhận", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                 if (result == JOptionPane.YES_OPTION) {
-                    if (tkBUS.delete(selectedTK.getTenDN(), false)) {
+                    if (tkBUS.delete(selectedTK.getTenDN())) {
                         JOptionPane.showMessageDialog(null,
                                 "Đã xoá thành công", "Thông báo", JOptionPane.DEFAULT_OPTION);
                         dsTK.remove(selectedTK);
@@ -391,6 +377,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
             }
         }
         if (btn == btnSua) {
+            tbTaiKhoan.clearSelection();
             if (selectedTK == null || selectedTK.getTenDN() == null) {
                 new ShowDiaLog("Hãy chọn tài khoản cần sửa!", ShowDiaLog.ERROR_DIALOG);
             } else {
@@ -400,20 +387,20 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
         }
     }
-    
-    public JButton getBtnThem(){
+
+    public JButton getBtnThem() {
         return btnThem;
     }
-    
-    public JButton getBtnXoa(){
+
+    public JButton getBtnXoa() {
         return btnXoa;
     }
-    
-    public JButton getBtnSua(){
+
+    public JButton getBtnSua() {
         return btnSua;
     }
-    
-    public JPanel getPnThaoTac(){
+
+    public JPanel getPnThaoTac() {
         return pnThaoTac;
     }
 

@@ -8,6 +8,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,6 +36,7 @@ public class PhieuNhapGUI extends JPanel {
         deleteButton = createBtn("Xóa", BASE.color_btLamXoa, "btnXoa", "bin.png");
 
         refreshButton = createBtn("Làm mới", BASE.color_btLamMoi, "btnLamMoi", "refresh.png");
+        refreshButton.setPreferredSize(new Dimension(120,35));
 
         // Bố trí các nút theo dạng FlowLayout (căn ngang)
         toolBar = new JPanel();
@@ -54,10 +56,19 @@ public class PhieuNhapGUI extends JPanel {
                 taoPhieuNhapFrame.setSize(700, 700);
 
                 TaoPhieuNhap taoPhieuNhapPanel = new TaoPhieuNhap(HomeGUI.tkUSER);
+                
                 taoPhieuNhapPanel.setMaNV("NV01");
+                taoPhieuNhapFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                    @Override
+                    public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+                        loadData(); // Reload the table data after closing the tauaPhieuNhap frame
+                    }
+                });
 
                 taoPhieuNhapFrame.add(new TaoPhieuNhap(HomeGUI.tkUSER)); // Assuming TaoPhieuNhap is a JPanel
                 taoPhieuNhapFrame.setVisible(true);
+                taoPhieuNhapFrame.setLocationRelativeTo(null);
+                
             }
         });
 
@@ -78,7 +89,7 @@ public class PhieuNhapGUI extends JPanel {
                     String today = java.time.LocalDate.now().toString();
                     System.out.println("Ngày lập: " + ngayLap.toString());
                     System.out.println("Hôm nay: " + today);
-                    if (ngayLap.toString() == today) {
+                    if (ngayLap.toString().equals(today)) {
                         // Show the SuaPhieuNhap panel with data
                         JFrame suaPhieuNhapFrame = new JFrame("Sửa Phiếu Nhập");
                         suaPhieuNhapFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -98,6 +109,7 @@ public class PhieuNhapGUI extends JPanel {
 
                         suaPhieuNhapFrame.add(suaPhieuNhapPanel);
                         suaPhieuNhapFrame.setVisible(true);
+                        suaPhieuNhapFrame.setLocationRelativeTo(null);
                     } else {
                         JOptionPane.showMessageDialog(null, "Chỉ có thể sửa phiếu nhập trong ngày.");
                     }
@@ -111,15 +123,23 @@ public class PhieuNhapGUI extends JPanel {
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    String maPN = (String) table.getValueAt(selectedRow, 0);
-                    PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-                    phieuNhapBUS.XoaPhieuNhap(maPN);
-                    model.removeRow(selectedRow);
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String maPN = (String) table.getValueAt(selectedRow, 0);
+                Date ngayLap = (Date) table.getValueAt(selectedRow, 3);
+
+                // Check if today is the same day as ngayLap
+                String today = java.time.LocalDate.now().toString();
+                if (ngayLap.toString().equals(today)) {
+                PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+                phieuNhapBUS.XoaPhieuNhap(maPN);
+                model.removeRow(selectedRow);
                 } else {
-                    JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xóa.");
+                JOptionPane.showMessageDialog(null, "Chỉ có thể xóa phiếu nhập trong ngày.");
                 }
+            } else {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xóa.");
+            }
             }
         });
 
@@ -160,6 +180,17 @@ public class PhieuNhapGUI extends JPanel {
         lblSearch.setFont(BASE.font);
         searchPanel.add(lblSearch);
         searchPanel.add(searchField);
+
+        // Add action listener to the searchField
+        searchField.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchText = searchField.getText().toLowerCase();
+                TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+                table.setRowSorter(sorter);
+                sorter.setRowFilter(RowFilter.regexFilter("(?i)" + searchText));
+            }
+        });
 
         // Tạo bảng cuộn cho bảng dữ liệu
         JScrollPane scrollPane = new JScrollPane(table);

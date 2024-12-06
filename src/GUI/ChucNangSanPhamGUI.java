@@ -40,7 +40,7 @@ import javax.swing.plaf.basic.BasicSliderUI;
 public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
 
     private JLabel lblHeader;
-    private JPanel pnContent, pnThaoTac, pnDsAnh;
+    private JPanel pnContent, pnThaoTac, pnDsAnh, pnMain;
     private JTextField txtTenSach, txtNamXB, txtNhaXB, txtGiaBia;
     private JButton btnXacNhan, btnLuu, btnHuy, btnChonLoai, btnChonTacGia;
     SanPhamGUI spGUI;
@@ -52,7 +52,7 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     private SanPhamBUS spBUS = new SanPhamBUS();
     ArrayList<LoaiDTO> dsLoai = new ArrayList<>(); //Danh sách loại
     ArrayList<TacGiaDTO> dsTG = new ArrayList<>(); //Danh sách tác giả
-    private int width = 450, height = 710;
+    private int width = 450, height = 720;
     private int width_row = 200, height_row = 30;
 
     Font bh1 = new Font("Tahoma", Font.BOLD, 18);
@@ -68,11 +68,14 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
     }
 
     public void init() {
-        this.setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS)); // Sửa lại để dùng getContentPane
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setLayout(new BorderLayout()); 
         this.setSize(new Dimension(width, height));
         this.setUndecorated(true);
 
+        pnMain = new JPanel();
+        pnMain.setLayout(new BoxLayout(pnMain, BoxLayout.Y_AXIS)); 
+        pnMain.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        
         lblHeader = new JLabel("Thêm sách", JLabel.CENTER);
         lblHeader.setPreferredSize(new Dimension(width, 36));
         lblHeader.setMaximumSize(new Dimension(width, 36));
@@ -253,19 +256,20 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnThaoTac.setLayout(new BoxLayout(pnThaoTac, BoxLayout.X_AXIS));
         pnThaoTac.add(Box.createRigidArea(new Dimension(150, 0)));
 
-        this.add(lblHeader);
-        this.add(Box.createVerticalStrut(10));
-        this.add(scrollPane);
-        this.add(imageNameLabel);
-        this.add(Box.createVerticalStrut(5));
-        this.add(chooseImageButton);
+        pnMain.add(lblHeader);
+        pnMain.add(Box.createVerticalStrut(10));
+        pnMain.add(scrollPane);
+        pnMain.add(imageNameLabel);
+        pnMain.add(Box.createVerticalStrut(5));
+        pnMain.add(chooseImageButton);
 
         for (int i = 0; i <= 5; i++) {
-            this.add(Box.createVerticalStrut(20));
-            this.add(pnThuocTinh[i]);
+            pnMain.add(Box.createVerticalStrut(20));
+            pnMain.add(pnThuocTinh[i]);
         }
-        this.add(Box.createVerticalStrut(20));
+        pnMain.add(Box.createVerticalStrut(20));
 
+        this.add(pnMain, BorderLayout.CENTER);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
@@ -329,8 +333,8 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnThaoTac.add(btnXacNhan);
         pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
         pnThaoTac.add(btnHuy);
-        this.add(pnThaoTac);
-        this.add(Box.createVerticalStrut(20));
+        pnMain.add(pnThaoTac);
+        pnMain.add(Box.createVerticalStrut(20));
         setVisible(true);
     }
 
@@ -342,8 +346,8 @@ public class ChucNangSanPhamGUI extends JFrame implements MouseListener {
         pnThaoTac.add(btnLuu);
         pnThaoTac.add(Box.createRigidArea(new Dimension(10, 0)));
         pnThaoTac.add(btnHuy);
-        this.add(pnThaoTac);
-        this.add(Box.createVerticalStrut(20));
+        pnMain.add(pnThaoTac);
+        pnMain.add(Box.createVerticalStrut(20));
 
         txtTenSach.setText(spGUI.selectedSP.getTenSach());
         txtNhaXB.setText(spGUI.selectedSP.getNxb());

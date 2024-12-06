@@ -55,7 +55,6 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         }
     }
 
-
     public ChonSanPhamGUI(BanHangGUI SalesGUI) {
         this.SalesGUI = SalesGUI;
         this.SelectedListSP = SalesGUI.getBillList();
@@ -115,6 +114,31 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         this.add(pnContent, BorderLayout.CENTER);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
+
+        txtTimKiem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchQuery = txtTimKiem.getText().toLowerCase();
+                filterProducts(searchQuery);
+            }
+        });
+    }
+
+    private void filterProducts(String query) {
+        ArrayList<SanPhamDTO> filteredList = new ArrayList<>();
+
+        for (SanPhamDTO product : dsSP) {
+            if (product.getTenSach().toLowerCase().contains(query)) {
+                filteredList.add(product);
+            }
+        }
+
+        JPanel newPanel = initContent(filteredList);
+        pnContent.removeAll();
+        pnContent.add(pnTimKiem, BorderLayout.NORTH);
+        pnContent.add(newPanel, BorderLayout.CENTER);
+        pnContent.revalidate();
+        pnContent.repaint();
     }
 
     public JPanel initContent(ArrayList<SanPhamDTO> dsSP) {
@@ -179,8 +203,9 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
         btnChon.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnChon.setAlignmentX(Component.CENTER_ALIGNMENT); // Căn giữa theo chiều ngang
 
-//        productButtons.put(sp, btnChon);
         btnChon.setActionCommand(sp.getMaSach());
+        SanPhamBUS busSP = new SanPhamBUS();
+        int slKho = busSP.getSLSP(sp.getMaSach());
         btnChon.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -188,11 +213,18 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
                 boolean productExists = false;
                 for (ChiTietHoaDonDTO ct : SelectedListSP) {
                     if (ct.getMaSach().equals(maSach)) {
-                        ct.setSoLuong(ct.getSoLuong() + 1);
+                        int newQuantity = ct.getSoLuong() + 1;
+
+                        if (newQuantity > slKho) {
+                            newQuantity = slKho;
+                        }
+
+                        ct.setSoLuong(newQuantity);
                         productExists = true;
-                        break; // Break once the product is found
+                        break;
                     }
                 }
+
                 if (!productExists) {
                     for (SanPhamDTO product : dsSP) {
                         if (product.getMaSach().equals(maSach)) {
@@ -204,20 +236,25 @@ public class ChonSanPhamGUI extends JFrame implements MouseListener {
                 }
                 sendSelectedProducts();
             }
-        });
+        }
+        );
 
         // Thêm các thành phần vào productPanel
         productPanel.add(label);
+
         productPanel.add(Box.createVerticalStrut(5)); // Khoảng cách giữa các thành phần
         productPanel.add(productName);
+
         productPanel.add(Box.createVerticalStrut(5));
         productPanel.add(productPrice);
+
         productPanel.add(Box.createVerticalStrut(5));
         productPanel.add(btnChon);
 
         // Cài đặt con trỏ chuột
         productPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        productPanel.addMouseListener(this);
+        productPanel.addMouseListener(
+                this);
 
         return productPanel;
     }

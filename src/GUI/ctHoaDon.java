@@ -4,12 +4,6 @@
  */
 package GUI;
 
-import BUS.ChiTietHoaDonBUS;
-import BUS.KhachHangBUS;
-import BUS.TaiKhoanBUS;
-import DTO.ChiTietHoaDonDTO;
-import DTO.HoaDonDTO;
-import DTO.KhachHangDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -19,6 +13,7 @@ import java.awt.Font;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -32,7 +27,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 
-public class invoiceDetails extends JFrame implements MouseListener {
+import BUS.ChiTietHoaDonBUS;
+import BUS.KhachHangBUS;
+import BUS.TaiKhoanBUS;
+import DTO.ChiTietHoaDonDTO;
+import DTO.HoaDonDTO;
+
+public class CTHoaDon extends JFrame implements MouseListener {
 
     JLabel lblNgayLap, lblMaHD, lblNV, lblKH, lblTongCong, lblGiamGia, lblThanhTien;
     private JPanel pnHeader, pnMain, pnFooter;
@@ -41,7 +42,7 @@ public class invoiceDetails extends JFrame implements MouseListener {
     private JButton btnX;
     private HoaDonDTO hd;
 
-    public invoiceDetails(HoaDonDTO hd) {
+    public CTHoaDon(HoaDonDTO hd) {
         this.setLayout(new BorderLayout());
         this.setSize(750, 550);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
