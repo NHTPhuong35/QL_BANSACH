@@ -93,6 +93,25 @@ public class ChonSanPhamPhieuNhapGUI extends JFrame implements MouseListener {
         pnTimKiem.add(lblTimKiem);
         pnTimKiem.add(txtTimKiem);
 
+        txtTimKiem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            String keyword = txtTimKiem.getText().toLowerCase();
+            ArrayList<SanPhamDTO> filteredList = new ArrayList<>();
+            for (SanPhamDTO sp : dsSP) {
+                if (sp.getTenSach().toLowerCase().contains(keyword)) {
+                filteredList.add(sp);
+                }
+            }
+            JPanel mainPanel = initContent(filteredList);
+            pnContent.removeAll();
+            pnContent.add(pnTimKiem, BorderLayout.NORTH);
+            pnContent.add(mainPanel, BorderLayout.CENTER);
+            pnContent.revalidate();
+            pnContent.repaint();
+            }
+        });
+
         JPanel mainPanel = initContent(dsSP);
         pnContent.add(pnTimKiem, BorderLayout.NORTH);
         pnContent.add(mainPanel, BorderLayout.CENTER);

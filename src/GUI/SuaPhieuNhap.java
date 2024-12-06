@@ -97,6 +97,22 @@ public class SuaPhieuNhap extends JPanel {
         bookTable.getTableHeader().setFont(BASE.font_header_frame);
         bookTable.getTableHeader().setBackground(BASE.color_table_heaer);
 
+        bookTable.getModel().addTableModelListener(e -> {
+            int row = e.getFirstRow();
+            int column = e.getColumn();
+            if (column == 1) { // Only validate the "Số lượng" column
+                String value = bookTable.getValueAt(row, column).toString();
+                try {
+                    Integer.parseInt(value);
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Số lượng phải là số nguyên", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                    bookTable.setValueAt("0", row, column); // Reset to a default value
+                }
+            }
+        });
+
+
+
         JScrollPane scrollPane = new JScrollPane(bookTable);
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -128,6 +144,12 @@ public class SuaPhieuNhap extends JPanel {
         });
 
         xacNhanButton.addActionListener(e -> {
+            String soluong = bookTable.getValueAt(0, 1).toString();
+            if (Integer.parseInt(soluong) <= 0) {
+                JOptionPane.showMessageDialog(this, "Số lượng phải lớn hơn 0", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             phieuNhapDTO.setMaPN(maPhieuNhapField.getText());
             phieuNhapDTO.setMaNCC(nhaCungCapComboBox.getSelectedItem().toString());
             phieuNhapDTO.setTenDN(maNhanVienField.getText());
@@ -140,6 +162,7 @@ public class SuaPhieuNhap extends JPanel {
                     phieuNhapDTO.getNgayNhap(),
                     phieuNhapDTO.getTongTien(),
                     phieuNhapDTO.getTrangThai());
+            
 
             // Add data to afterArrayList
             DefaultTableModel updatedTableModel = (DefaultTableModel) bookTable.getModel();
@@ -179,6 +202,8 @@ public class SuaPhieuNhap extends JPanel {
                 int soLuong = Integer.parseInt(parts[1]);
                 phieuNhapBUS.capNhatChiTietPhieuNhap(phieuNhapDTO.getMaPN(), maSach, soLuong);
             }
+
+            
 
             JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
             topFrame.dispose();

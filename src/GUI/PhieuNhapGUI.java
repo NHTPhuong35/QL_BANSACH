@@ -7,12 +7,13 @@ import DTO.PhieuNhapDTO; // Import the PhieuNhapDTO class
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Date;
@@ -162,6 +163,9 @@ public class PhieuNhapGUI extends JPanel {
         // Custom renderer and editor for the "Chi tiết" column
         table.getColumnModel().getColumn(5).setCellRenderer(new ButtonRenderer());
         table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox()));
+
+        // Custom renderer for the "Tổng tiền" column
+        table.getColumnModel().getColumn(4).setCellRenderer(new DecimalFormatRenderer());
 
         // Load data into the table
         loadData();
@@ -332,9 +336,12 @@ public class PhieuNhapGUI extends JPanel {
             if (isPushed) {
                 // Show the description in a new table
                 int selectedRow = table.getSelectedRow();
-                String maPN = (String) table.getValueAt(selectedRow, 0);
-                PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-                ArrayList<ChiTietPhieuNhapDTO> phieuNhap = phieuNhapBUS.LayChiTietPhieuNhap(maPN);
+                ArrayList<ChiTietPhieuNhapDTO> phieuNhap = new ArrayList<>();
+                if (selectedRow >= 0 && selectedRow < table.getRowCount()) {
+                    String maPN = (String) table.getValueAt(selectedRow, 0);
+                    PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+                    phieuNhap = phieuNhapBUS.LayChiTietPhieuNhap(maPN);
+                }
 
                 // Create a new frame to show the details
                 JFrame detailsFrame = new JFrame("Chi Tiết Phiếu Nhập");
@@ -368,6 +375,8 @@ public class PhieuNhapGUI extends JPanel {
                 detailTable.setBackground(Color.WHITE);
                 detailTable.setFont(BASE.font);
                 detailTable.setRowHeight(40); // Set row height
+                // Custom renderer for the "Thành Tiền" column
+                detailTable.getColumnModel().getColumn(2).setCellRenderer(new DecimalFormatRenderer());
 
                 // Add a "Xong" button to close the frame
                 JButton closeButton = new JButton("Xong");
@@ -406,6 +415,17 @@ public class PhieuNhapGUI extends JPanel {
         @Override
         protected void fireEditingStopped() {
             super.fireEditingStopped();
+        }
+    }
+
+    // Custom renderer for decimal formatting
+    class DecimalFormatRenderer extends DefaultTableCellRenderer {
+        private final DecimalFormat formatter = new DecimalFormat("#,###");
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof Number) {
+                value = formatter.format((Number) value);
+            }
+            return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     }
 }
