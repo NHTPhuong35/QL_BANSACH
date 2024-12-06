@@ -90,6 +90,10 @@ public class TaoPhieuNhap extends JPanel {
         });
 
         loiNhuanField.addActionListener(e -> {
+            if (bookTable == null) {
+                JOptionPane.showMessageDialog(this, "Vui lòng thêm sản phẩm vào phiếu nhập!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             try {
                 double loiNhuan = Double.parseDouble(loiNhuanField.getText()) / 100;
                 for (int i = 0; i < bookTable.getRowCount(); i++) {
@@ -253,6 +257,8 @@ public class TaoPhieuNhap extends JPanel {
             int trangThai = 1;
 
             PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+
+            
 
             for (int i = 0; i < model.getRowCount(); i++) {
                 String tenSach = (String) model.getValueAt(i, 0);
