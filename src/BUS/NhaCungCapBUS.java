@@ -19,10 +19,6 @@ public class NhaCungCapBUS {
         ds = dao.dsNhaCungCap();
     }
 	
-    private boolean KT_Ten(String ten) {
-        String regex = "^[a-zA-ZÀ-ỹ\\s-/]{2,}$";
-        return ten.matches(regex);
-    }
     
     public String TaoMaNCC() {
         String maLonNhat = "NCC01";  // Khởi tạo mã lớn nhất ban đầu
@@ -53,40 +49,28 @@ public class NhaCungCapBUS {
     }
     
     public boolean ThemNhaCungCap(NhaCungCapDTO l) {
-        if (KT_Ten(l.getTenNhaCungCap())) {
-            l.setMaNhaCungCap(TaoMaNCC());
-            NhaCungCapDAO nccDAO = new NhaCungCapDAO();
-            if (nccDAO.ThemNhaCungCap(l)) {
-                new ShowDiaLog("Thêm nhà cung cấp thành công", ShowDiaLog.SUCCESS_DIALOG);
-                return true;
-            } else {
-                new ShowDiaLog("Thêm nhà cung cấp thất bại", ShowDiaLog.ERROR_DIALOG);
-                return false;
-            }
-        }
-        if (!KT_Ten(l.getTenNhaCungCap())) {
-            new ShowDiaLog("<html>Tên nhà cung cấp phải chứa tối thiểu 2 ký tự <br> ( Không nhập số ) )</html>", ShowDiaLog.ERROR_DIALOG);
+
+        l.setMaNhaCungCap(TaoMaNCC());
+        NhaCungCapDAO nccDAO = new NhaCungCapDAO();
+        if (nccDAO.ThemNhaCungCap(l)) {
+            new ShowDiaLog("Thêm nhà cung cấp thành công", ShowDiaLog.SUCCESS_DIALOG);
+            return true;
+        } else {
+            new ShowDiaLog("Thêm nhà cung cấp thất bại", ShowDiaLog.ERROR_DIALOG);
             return false;
         }
-        return false;
     }
+    
 
     public boolean SuaNhaCungCap(NhaCungCapDTO l) {
-        if (KT_Ten(l.getTenNhaCungCap())) {
-            NhaCungCapDAO nccDAO = new NhaCungCapDAO();
-            if (nccDAO.SuaNhaCungCap(l)) {
-                new ShowDiaLog("Sửa nhà cung cấp thành công", ShowDiaLog.SUCCESS_DIALOG);
-                return true;
-            } else {
-                new ShowDiaLog("Sửa nhà cung cấp thất bại", ShowDiaLog.ERROR_DIALOG);
-                return false;
-            }
-        }
-        if (!KT_Ten(l.getTenNhaCungCap())) {
-            new ShowDiaLog("<html>Tên nhà cung cấp phải chứa tối thiểu 2 ký tự <br>( Không nhập số )</html>", ShowDiaLog.ERROR_DIALOG);
+        NhaCungCapDAO nccDAO = new NhaCungCapDAO();
+        if (nccDAO.SuaNhaCungCap(l)) {
+            new ShowDiaLog("Sửa nhà cung cấp thành công", ShowDiaLog.SUCCESS_DIALOG);
+            return true;
+        } else {
+            new ShowDiaLog("Sửa nhà cung cấp thất bại", ShowDiaLog.ERROR_DIALOG);
             return false;
         }
-        return false;
     }
     
     public boolean XoaNhaCungCap(String maTL) {
@@ -114,10 +98,5 @@ public class NhaCungCapBUS {
     public ArrayList<NhaCungCapDTO> getDs() {
         return ds;
     }
-    
-    public static void main(String[] agrs) {
-        NhaCungCapBUS nccBUS = new NhaCungCapBUS();
-    }
-    
-    
+   
 }

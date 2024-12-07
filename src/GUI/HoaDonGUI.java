@@ -286,11 +286,13 @@ public class HoaDonGUI extends JPanel {
                             }
                         }
                     } else if (clickedPanel == btSearch) {
+                        SimpleDateFormat formatSearch = new SimpleDateFormat("yyyy-MM-dd");
                         String searchText = tfSearch.getText().toLowerCase();
                         Date start = (Date) startDate.getValue();
                         Date end = (Date) endDate.getValue();
-                        String startDateStr = formatter.format(start);
-                        String endDateStr = formatter.format(end);
+                        String startDateStr = formatSearch.format(start);
+                        String endDateStr = formatSearch.format(end);
+
 
                         if (!isDateRangeValid(start, end)) {
                             JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày kết thúc!");

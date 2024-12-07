@@ -1,8 +1,5 @@
-package GUI;
+	package GUI;
 
-import BUS.TacGiaBUS;
-import DTO.SanPhamDTO;
-import DTO.TacGiaDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -10,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -29,6 +27,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumnModel;
+
+import BUS.TacGiaBUS;
+import DTO.TacGiaDTO;
 
 public class ChonTacGiaGUI extends JFrame {
 

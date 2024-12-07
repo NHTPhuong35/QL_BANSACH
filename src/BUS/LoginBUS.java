@@ -48,10 +48,12 @@ public class LoginBUS {
 			
 				return;
 			}
-                        if (taikhoan.getTrangThai()== 0){
-                            new ShowDiaLog("Tài khoản đã bị khoá", 1);
-                            return;
-                        }
+
+             if (taikhoan.getTrangThai()== 0){
+                new ShowDiaLog("Tài khoản đã bị khoá", 1);
+                return;
+             }
+
                         HomeGUI homeGUI = new HomeGUI(taikhoan); 
 			HomeBUS home = new HomeBUS(homeGUI);
                         TaiKhoanDTO tk = homeGUI.tkUSER;
@@ -63,9 +65,7 @@ public class LoginBUS {
 		}
 	}
 
-	// Tạo sự kiện
 	public void addEvent() {
-		// Sự kiện login
 		view.getTxtPassword().addKeyListener(new java.awt.event.KeyAdapter() {
 			@Override
 			public void keyPressed(java.awt.event.KeyEvent evt) {
