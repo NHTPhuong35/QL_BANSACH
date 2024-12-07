@@ -53,7 +53,7 @@ public class TaiKhoanDN extends JPanel {
         lblHeadLeft.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         //Thứ tự {0: Tên đăng nhập, 1: Tên người dùng, 2: Địa chỉ, 3: Số điện thoại, 4: Email}
-        String[] textLableLeft = {"Tên đăng nhập", "Tên người dùng", "Địa chỉ", "Số điện thoại", "Email"}; //Nội dung JLable
+        String[] textLableLeft = {"Tên đăng nhập", "Tên nhân viên", "Địa chỉ", "Số điện thoại", "Email"}; //Nội dung JLable
         JPanel[] pnContentLeft = new JPanel[textLableLeft.length]; //JPanel cho từng trường thông tin
 
         txtContentLeft = new JTextField[textLableLeft.length]; //JTextField cho từng nội dung
@@ -170,6 +170,10 @@ public class TaiKhoanDN extends JPanel {
                 String nhapLai = new String(txtContentRight[2].getPassword());
                 
                 if(!xuLyKiemTraMatKhau(matKhauMoi)){
+                    return;
+                }
+                if(nhapLai.equals("")){
+                    new ShowDiaLog("<html>Mật khẩu nhập lại không được để trống</html>", ShowDiaLog.ERROR_DIALOG);
                     return;
                 }
                 if(!nhapLai.equals(matKhauMoi)){

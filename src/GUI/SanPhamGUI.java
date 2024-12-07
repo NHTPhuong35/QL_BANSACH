@@ -4,15 +4,12 @@ import BUS.SanPhamBUS;
 import BUS.TheLoaiBUS;
 import DTO.LoaiDTO;
 import DTO.SanPhamDTO;
-import DTO.TacGiaDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -76,14 +73,14 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         spBUS = new SanPhamBUS();
         dsSP = spBUS.getDsSP();
 
+        //Load lại pnTimKiem
         TheLoaiBUS loaiBUS = new TheLoaiBUS();
-        int n = loaiBUS.getDs().size() - loai.size();
-        while (n > 0){
-            int i = loai.size();
-            cbxLoai.addItem(loaiBUS.getDs().get(i));
-            i++;
-            n--;
-        } 
+        loai = loaiBUS.getDs();
+        pnTimKiem.remove(cbxLoai);
+        cbxLoai = createComboboxLoai(loai);
+        pnTimKiem.add(cbxLoai,6);
+        pnTimKiem.repaint();
+        pnTimKiem.revalidate();
 
         pnRight.remove(jpSanPham);
         tbSanPham = initContent(dsSP);
@@ -91,6 +88,8 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnRight.add(jpSanPham, BorderLayout.CENTER);
         pnRight.revalidate();
         pnRight.repaint();
+
+//        reload(dsSP);
 
         // Cập nhật panel chi tiết sản phẩm
         selectedSP = new SanPhamDTO();
@@ -100,8 +99,43 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         pnChiTietSP.repaint();  
     }
     
-    public void addLoaiToComboBox(LoaiDTO loaiMoi) {
-    cbxLoai.addItem(loaiMoi);
+    public JComboBox<LoaiDTO> createComboboxLoai(ArrayList<LoaiDTO> dsLoai){
+        JComboBox<LoaiDTO> cbx = new JComboBox<>();
+        cbx.setFont(BASE.font);
+        cbx.setPreferredSize(new Dimension(120, 25));
+        cbx.setMaximumSize(new Dimension(120, 25));
+        cbx.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        cbx.addItem(new LoaiDTO("L00", "Tất cả"));
+        for (int i = 0; i < loai.size(); i++) {
+            cbx.addItem(loai.get(i));
+        }
+        
+        cbx.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedSP = new SanPhamDTO();
+                LoaiDTO selected = (LoaiDTO) cbx.getSelectedItem();
+
+                ArrayList<SanPhamDTO> dsTimKiem = new ArrayList<>();
+                // Thực hiện tìm kiếm theo giá trị đã chọn (Lấy mã loại để tìm)
+                if (!selected.getMaLoai().equals("L00")) {
+                    for (int i = 0; i < dsSP.size(); i++) {
+                        for (LoaiDTO loai : dsSP.get(i).getLoai()) {
+                            if (loai.getMaLoai().equals(selected.getMaLoai())) {
+                                dsTimKiem.add(dsSP.get(i));
+                                break;
+                            }
+                        }
+
+                    }
+                    timKiemSanPham((dsTimKiem));
+                } else {
+                    timKiemSanPham((dsSP));
+                }
+            }
+        });
+        return cbx;
     }
 
 
@@ -181,40 +215,41 @@ public class SanPhamGUI extends JPanel implements MouseListener {
         JLabel lblLoai = new JLabel("Thể loại");
         lblLoai.setFont(BASE.font);
         cbxLoai = new JComboBox<>();
-        cbxLoai.setFont(BASE.font);
-        cbxLoai.setPreferredSize(new Dimension(120, 25));
-        cbxLoai.setMaximumSize(new Dimension(120, 25));
-        cbxLoai.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        cbxLoai = createComboboxLoai(loai);
+//        cbxLoai.setFont(BASE.font);
+//        cbxLoai.setPreferredSize(new Dimension(120, 25));
+//        cbxLoai.setMaximumSize(new Dimension(120, 25));
+//        cbxLoai.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//
+//        cbxLoai.addItem(new LoaiDTO("L00", "Tất cả"));
+//        for (int i = 0; i < loai.size(); i++) {
+//            cbxLoai.addItem(loai.get(i));
+//        }
 
-        cbxLoai.addItem(new LoaiDTO("L00", "Tất cả"));
-        for (int i = 0; i < loai.size(); i++) {
-            cbxLoai.addItem(loai.get(i));
-        }
-
-        cbxLoai.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedSP = new SanPhamDTO();
-                LoaiDTO selected = (LoaiDTO) cbxLoai.getSelectedItem();
-
-                ArrayList<SanPhamDTO> dsTimKiem = new ArrayList<>();
-                // Thực hiện tìm kiếm theo giá trị đã chọn (Lấy mã loại để tìm)
-                if (!selected.getMaLoai().equals("L00")) {
-                    for (int i = 0; i < dsSP.size(); i++) {
-                        for (LoaiDTO loai : dsSP.get(i).getLoai()) {
-                            if (loai.getMaLoai().equals(selected.getMaLoai())) {
-                                dsTimKiem.add(dsSP.get(i));
-                                break;
-                            }
-                        }
-
-                    }
-                    timKiemSanPham((dsTimKiem));
-                } else {
-                    timKiemSanPham((dsSP));
-                }
-            }
-        });
+//        cbxLoai.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                selectedSP = new SanPhamDTO();
+//                LoaiDTO selected = (LoaiDTO) cbxLoai.getSelectedItem();
+//
+//                ArrayList<SanPhamDTO> dsTimKiem = new ArrayList<>();
+//                // Thực hiện tìm kiếm theo giá trị đã chọn (Lấy mã loại để tìm)
+//                if (!selected.getMaLoai().equals("L00")) {
+//                    for (int i = 0; i < dsSP.size(); i++) {
+//                        for (LoaiDTO loai : dsSP.get(i).getLoai()) {
+//                            if (loai.getMaLoai().equals(selected.getMaLoai())) {
+//                                dsTimKiem.add(dsSP.get(i));
+//                                break;
+//                            }
+//                        }
+//
+//                    }
+//                    timKiemSanPham((dsTimKiem));
+//                } else {
+//                    timKiemSanPham((dsSP));
+//                }
+//            }
+//        });
 
         ImageIcon resetIcon = new ImageIcon("./src/image/refresh.png");
         Image resetImage = resetIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);

@@ -35,8 +35,7 @@ public class TaiKhoanDAO {
             // Câu truy vấn thêm điều kiện trạng thái khác 2
             String sql = "SELECT tk.TENDN, tk.TENNV, tk.DIACHI, tk.SDT, tk.EMAIL, tk.MATKHAU, tk.TRANGTHAI, q.MAQUYEN, q.TENQUYEN "
                     + "FROM taikhoan tk "
-                    + "JOIN quyen q ON tk.MAQUYEN = q.MAQUYEN "
-                    + "WHERE tk.TRANGTHAI != 2"; // Điều kiện trạng thái khác 2
+                    + "JOIN quyen q ON tk.MAQUYEN = q.MAQUYEN ";
             PreparedStatement pre = conn.getConn().prepareStatement(sql);
             ResultSet rs = pre.executeQuery();
 

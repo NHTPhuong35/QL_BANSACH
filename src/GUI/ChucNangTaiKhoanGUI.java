@@ -230,6 +230,8 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
     }
 
     public void addTK() {
+        String matKhau = new String(txtMatKhau.getPassword());
+        String nhapLai = new String(txtNhapLaiMK.getPassword());
         if (!xuLyKiemTraTenNV(txtTenNV.getText())) {
             return;
         }
@@ -245,7 +247,11 @@ public class ChucNangTaiKhoanGUI extends JFrame implements MouseListener {
         if (!xuLyKiemTraMatKhau(new String(txtMatKhau.getPassword()))) {
             return;
         }
-        if (!txtNhapLaiMK.equals(txtMatKhau)) {
+        if (nhapLai.equals("")) {
+            new ShowDiaLog("<html>Mật khẩu nhập không được để trống</html>", ShowDiaLog.ERROR_DIALOG);
+            return;
+        }
+        if (!nhapLai.equals(matKhau)) {
             new ShowDiaLog("<html>Mật khẩu nhập lại phải giống với mật khẩu!</html>", ShowDiaLog.ERROR_DIALOG);
             return;
         }

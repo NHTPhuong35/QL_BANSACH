@@ -87,6 +87,48 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
 
         init();
     }
+    
+    public void updateComboboxQuyen(){
+        PhanQuyenBUS quyenBUS = new PhanQuyenBUS();
+        dsQuyen = quyenBUS.getTenQuyenList();
+        pnTimKiem.remove(cbxQuyen);
+        cbxQuyen = createComboboxQuyen(dsQuyen);
+        pnTimKiem.add(cbxQuyen);
+        pnTimKiem.repaint();
+        pnTimKiem.revalidate();
+    }
+    
+    public JComboBox<String> createComboboxQuyen(String[] dsQuyen){
+        JComboBox<String> cbx = new JComboBox<>();
+        cbx.setFont(BASE.font);
+        cbx.setPreferredSize(new Dimension(150, 25));
+        cbx.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cbx.addItem("Tất cả");
+        for (int i = 0; i < dsQuyen.length; i++) {
+            cbx.addItem(dsQuyen[i]);
+        }
+        cbx.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                selectedTK = new TaiKhoanDTO();
+                String selected = (String) cbx.getSelectedItem();
+
+                ArrayList<TaiKhoanDTO> dsTimKiem = new ArrayList<>();
+                // Thực hiện tìm kiếm theo giá trị đã chọn
+                if (!selected.equals("Tất cả")) {
+                    for (int i = 0; i < dsTK.size(); i++) {
+                        if (dsTK.get(i).getQuyen().getTenQuyen().equals(selected)) {
+                            dsTimKiem.add(dsTK.get(i));
+                        }
+                    }
+                    timKiemTaiKhoan((dsTimKiem));
+                } else {
+                    timKiemTaiKhoan((dsTK));
+                }
+            }
+        });
+        return cbx;
+    }
 
     private void init() {
         this.setPreferredSize(new Dimension(width, height));
@@ -181,34 +223,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
         JLabel lblQuyen = new JLabel("Quyền");
         lblQuyen.setFont(BASE.font);
         cbxQuyen = new JComboBox<>();
-        cbxQuyen.setFont(BASE.font);
-        cbxQuyen.setPreferredSize(new Dimension(150, 25));
-        cbxQuyen.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cbxQuyen.addItem("Tất cả");
-        for (int i = 0; i < dsQuyen.length; i++) {
-            cbxQuyen.addItem(dsQuyen[i]);
-        }
-
-        cbxQuyen.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                selectedTK = new TaiKhoanDTO();
-                String selected = (String) cbxQuyen.getSelectedItem();
-
-                ArrayList<TaiKhoanDTO> dsTimKiem = new ArrayList<>();
-                // Thực hiện tìm kiếm theo giá trị đã chọn
-                if (!selected.equals("Tất cả")) {
-                    for (int i = 0; i < dsTK.size(); i++) {
-                        if (dsTK.get(i).getQuyen().getTenQuyen().equals(selected)) {
-                            dsTimKiem.add(dsTK.get(i));
-                        }
-                    }
-                    timKiemTaiKhoan((dsTimKiem));
-                } else {
-                    timKiemTaiKhoan((dsTK));
-                }
-            }
-        });
+        cbxQuyen = createComboboxQuyen(dsQuyen);
 
         pnTimKiem.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
         pnTimKiem.add(lblTimKiem);
@@ -318,6 +333,7 @@ public class TaiKhoanGUI extends JPanel implements MouseListener {
     public void themTaiKhoan(TaiKhoanDTO tk) {
         if (tkBUS.add(tk)) {
             new ShowDiaLog("Thêm tài khoản thành công!", ShowDiaLog.SUCCESS_DIALOG);
+            System.out.println(dsTK.get(dsTK.size()-1).getTenNV());
             reload(dsTK);
         } else {
             new ShowDiaLog("Thêm tài khoản thất bại!", ShowDiaLog.ERROR_DIALOG);

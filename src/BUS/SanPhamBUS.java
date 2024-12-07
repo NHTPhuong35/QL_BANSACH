@@ -28,7 +28,12 @@ public class SanPhamBUS {
 
     private void getList() {
         SanPhamDAO spDAO = new SanPhamDAO();
-        dsSP = spDAO.DanhSachSanPham();
+        dsSP = new ArrayList<>();
+        for(SanPhamDTO sp : spDAO.DanhSachSanPham()){
+            if(sp.getTrangthai()==1){
+                dsSP.add(sp);
+            }
+        }
     }
 
     public boolean add(SanPhamDTO sp) {
@@ -62,8 +67,9 @@ public class SanPhamBUS {
     }
 
     public String TaoMaSP() {
+        SanPhamDAO spDAO = new SanPhamDAO();
         String maLonNhat = "SP01";
-        for (SanPhamDTO sp : dsSP) {
+        for (SanPhamDTO sp : spDAO.DanhSachSanPham()) {
             String maSP = sp.getMaSach();
             if (maSP.compareTo(maLonNhat) > 0) {
                 maLonNhat = maSP;

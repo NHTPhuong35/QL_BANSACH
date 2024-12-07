@@ -611,6 +611,7 @@ public class HomeBUS {
 			@Override
 			public void actionPerformed(ActionEvent evt) {
                             view.getShowPanel().removeAll();
+                            taikhoangui.updateComboboxQuyen();
                             view.getShowPanel().add(taikhoangui, BorderLayout.CENTER);
                             taikhoangui.setVisible(true);
 

@@ -55,8 +55,6 @@ public class SanPhamDAO {
                     + "    ctsachloai cl ON s.MASACH = cl.MASACH\n"
                     + "LEFT JOIN \n"
                     + "    loai l ON cl.MALOAI = l.MALOAI\n"
-                    + "WHERE \n"
-                    + "    s.TRANGTHAI = 1\n"
                     + "GROUP BY \n"
                     + "    s.MASACH;";
             try (PreparedStatement pre = conn.getConn().prepareStatement(sql)) {
