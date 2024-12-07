@@ -4,6 +4,12 @@
  */
 package GUI;
 
+import BUS.ChiTietHoaDonBUS;
+import BUS.HoaDonBUS;
+import BUS.SanPhamBUS;
+import DTO.ChiTietHoaDonDTO;
+import DTO.HoaDonDTO;
+import DTO.SanPhamDTO;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -14,11 +20,13 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
@@ -37,13 +45,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-
-import BUS.ChiTietHoaDonBUS;
-import BUS.HoaDonBUS;
-import BUS.SanPhamBUS;
-import DTO.ChiTietHoaDonDTO;
-import DTO.HoaDonDTO;
-import DTO.SanPhamDTO;
 
 public class HoaDonGUI extends JPanel {
 
@@ -161,7 +162,7 @@ public class HoaDonGUI extends JPanel {
 
                         HoaDonDTO hd = new HoaDonDTO(soHD, maKH, tenDN, tGian, ngayHD, tienGiamGia, tongTien);
 
-                        new CTHoaDon(hd);
+                        new ctHoaDon(hd);
                     }
                 } else if (e.getClickCount() == 1) {
                     int row = tbl.rowAtPoint(e.getPoint());
@@ -285,11 +286,13 @@ public class HoaDonGUI extends JPanel {
                             }
                         }
                     } else if (clickedPanel == btSearch) {
+                        SimpleDateFormat formatSearch = new SimpleDateFormat("yyyy-MM-dd");
                         String searchText = tfSearch.getText().toLowerCase();
                         Date start = (Date) startDate.getValue();
                         Date end = (Date) endDate.getValue();
-                        String startDateStr = formatter.format(start);
-                        String endDateStr = formatter.format(end);
+                        String startDateStr = formatSearch.format(start);
+                        String endDateStr = formatSearch.format(end);
+
 
                         if (!isDateRangeValid(start, end)) {
                             JOptionPane.showMessageDialog(null, "Ngày bắt đầu không được lớn hơn ngày kết thúc!");
